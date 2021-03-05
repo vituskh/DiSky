@@ -1,4 +1,4 @@
-package info.itsthesky.Vixio3.skript.effets;
+package info.itsthesky.Vixio3.skript.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import info.itsthesky.Vixio3.managers.BotManager;
+import info.itsthesky.Vixio3.tools.Utils;
 import org.bukkit.event.Event;
 
 @Name("Register new Discord Bot")
@@ -21,8 +22,8 @@ public class EffRegisterBot extends Effect {
 
     static {
         Skript.registerEffect(EffRegisterBot.class,
-                "[vixio3] register [new] [discord] bot with [the] [token] %string% and with [the] (name|id) %string%",
-                "[vixio3] login to [token] %string% with [the] (name|id) %string%");
+                "["+ Utils.getPrefixName() +"] register [new] [discord] bot with [the] [token] %string% and with [the] (name|id) %string%",
+                "["+ Utils.getPrefixName() +"] login to [token] %string% with [the] (name|id) %string%");
     }
 
     private Expression<String> exprName;
@@ -31,8 +32,8 @@ public class EffRegisterBot extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        exprName = (Expression<String>) exprs[0];
-        exprToken = (Expression<String>) exprs[1];
+        exprToken = (Expression<String>) exprs[0];
+        exprName = (Expression<String>) exprs[1];
         return true;
     }
 
