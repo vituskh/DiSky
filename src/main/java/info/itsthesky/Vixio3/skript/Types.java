@@ -4,15 +4,12 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.EnumUtils;
 import info.itsthesky.Vixio3.Vixio3;
 import info.itsthesky.Vixio3.managers.BotManager;
-import info.itsthesky.Vixio3.tools.SimpleType;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.TextChannel;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Types {
 	static  {
@@ -45,6 +42,36 @@ public class Types {
 							return null;
 						}
 						return BotManager.getBot(s);
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(TextChannel.class, "textchannel")
+				.user("textchannel")
+				.name("Text Channel")
+				.description("Represent a Discord text channel (where file and message can be sent)")
+				.since("1.0")
+				.parser(new Parser<TextChannel>() {
+
+					@Override
+					public String toString(TextChannel o, int flags) {
+						return "JDA: " + o;
+					}
+
+					@Override
+					public String toVariableNameString(TextChannel o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public TextChannel parse(final String s, final ParseContext context) {
+						AtomicReference<JDA> bot = new AtomicReference<>();
+						BotManager.getBots().forEach((name, key) -> bot.set(key));
+						return bot.get().getTextChannelById(s);
 					}
 				})
 		);
