@@ -1,0 +1,7 @@
+name: Vixio3
+version: 1.0-SNAPSHOT
+main: info.itsthesky.Vixio3.Vixio3
+author: ItsTheSky
+description: Remake of original Vixio addon, which allow Skript to interact with Discord.
+softdepend:
+  - Skript

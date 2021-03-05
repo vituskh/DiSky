@@ -4,9 +4,12 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.EnumUtils;
 import info.itsthesky.Vixio3.Vixio3;
 import info.itsthesky.Vixio3.managers.BotManager;
+import info.itsthesky.Vixio3.tools.SimpleType;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.OnlineStatus;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -38,7 +41,7 @@ public class Types {
 					@Override
 					public JDA parse(final String s, final ParseContext context) {
 						if (!BotManager.getBots().containsKey(s)) {
-							Vixio3.getInstance().getLogger().warning("You're trying to parse a bot wia its name, however '"+s+"' doesn't exist or is not loaded!");
+							Vixio3.getInstance().getLogger().warning("You're trying to parse a bot via its name, however '"+s+"' doesn't exist or is not loaded!");
 							return null;
 						}
 						return BotManager.getBot(s);
