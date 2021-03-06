@@ -1,4 +1,4 @@
-package info.itsthesky.Vixio3.skript.expressions;
+package info.itsthesky.Vixio3.skript.expressions.bot;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -14,8 +14,6 @@ import info.itsthesky.Vixio3.managers.BotManager;
 import info.itsthesky.Vixio3.tools.Utils;
 import net.dv8tion.jda.api.JDA;
 import org.bukkit.event.Event;
-
-import java.awt.image.BufferedImage;
 
 @Name("JDA of Bot")
 @Description("Return the JDA instance of the bot, tu use it with skript-reflect for example.")
