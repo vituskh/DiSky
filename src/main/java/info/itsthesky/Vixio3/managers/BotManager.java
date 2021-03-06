@@ -1,11 +1,14 @@
 package info.itsthesky.Vixio3.managers;
 
 import info.itsthesky.Vixio3.Vixio3;
+import info.itsthesky.Vixio3.skript.events.bukkit.JDAListener;
+import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
 public class BotManager {
@@ -29,7 +32,10 @@ public class BotManager {
 
         JDA jda = null;
         try {
-            jda = JDABuilder.createDefault(token).build();
+            jda = JDABuilder.createDefault(token)
+                    .addEventListeners(new JDAListener())
+                    .setGatewayEncoding(GatewayEncoding.ETF)
+                    .build();
         } catch (LoginException e) {
             e.printStackTrace();
             logger.severe("Can't load the bot named '"+name+"', see error above for more information.");
@@ -46,6 +52,26 @@ public class BotManager {
     public static void clearBots() {
         bots.forEach((name, jda) -> jda.shutdown());
         bots.clear();
+    }
+
+    /**
+     * Get the first bot loaded, to use it in non-bot syntaxes.
+     * @return The instance of the first bot, else null
+     */
+    public static JDA getFirstBot() {
+        AtomicReference<JDA> r = new AtomicReference<>();
+        bots.forEach((name, jda) -> r.set(jda));
+        return r.get();
+    }
+
+    /**
+     * Get the first name of the first bot loaded.
+     * @return The instance of the first bot, else null
+     */
+    public static String getFirstBotName() {
+        AtomicReference<String> r = new AtomicReference<>();
+        bots.forEach((name, jda) -> r.set(name));
+        return r.get();
     }
 
     /**
