@@ -1,7 +1,7 @@
-name: Vixio3
+name: DiSky
 version: 1.0-SNAPSHOT
-main: info.itsthesky.Vixio3.Vixio3
+main: info.itsthesky.DiSky.DiSky
 author: ItsTheSky
-description: Remake of original Vixio addon, which allow Skript to interact with Discord.
+description: Skript addon which allow you to interact with Discord through Skript.
 softdepend:
   - Skript
