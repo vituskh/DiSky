@@ -9,10 +9,7 @@ import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 
 public class Types {
 	static  {
@@ -96,6 +93,62 @@ public class Types {
 
 					@Override
 					public User parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Role.class, "role")
+				.user("role?")
+				.name("Discord Role")
+				.description("Represent a discord role, within a guild.")
+				.since("1.0")
+				.parser(new Parser<Role>() {
+
+					@Override
+					public String toString(Role o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(Role o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public Role parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Member.class, "member")
+				.user("member?")
+				.name("Discord Member")
+				.description("Represent a discord user which is in any guild.")
+				.since("1.0")
+				.parser(new Parser<Member>() {
+
+					@Override
+					public String toString(Member o, int flags) {
+						return o.getId();
+					}
+
+					@Override
+					public String toVariableNameString(Member o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public Member parse(final String s, final ParseContext context) {
 						return null;
 					}
 				})

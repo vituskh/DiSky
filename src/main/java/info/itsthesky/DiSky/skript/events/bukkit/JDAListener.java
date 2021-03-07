@@ -19,14 +19,14 @@ public class JDAListener extends ListenerAdapter {
         if (!e.getAuthor().isBot()) {
             event = new EventMessageReceive(
                     e.getTextChannel(),
-                    e.getAuthor(),
+                    e.getMember(),
                     e.getMessage(),
                     e.getGuild()
             );
         } else {
             event = new EventBotMessageReceive(
                     e.getTextChannel(),
-                    e.getAuthor(),
+                    e.getMember(),
                     e.getMessage(),
                     e.getGuild()
             );
@@ -36,7 +36,7 @@ public class JDAListener extends ListenerAdapter {
         DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
         EventCommand command = new EventCommand(
                 e.getTextChannel(),
-                e.getAuthor(),
+                e.getMember(),
                 e.getMessage(),
                 e.getGuild(),
                 discordCommand
@@ -55,7 +55,7 @@ public class JDAListener extends ListenerAdapter {
             );
         } else {
             event = new EventMemberJoin(
-                    e.getUser(),
+                    e.getMember(),
                     e.getGuild()
             );
         }
@@ -64,8 +64,8 @@ public class JDAListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
-        Event event = new EventMemberJoin(
-                e.getUser(),
+        Event event = new EventMemberLeave(
+                e.getMember(),
                 e.getGuild()
         );
         DiSky.getInstance().getServer().getPluginManager().callEvent(event);

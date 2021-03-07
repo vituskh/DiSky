@@ -13,9 +13,7 @@ import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
 @Name("Name of Discord entity")
@@ -26,7 +24,7 @@ public class ExprNameOf extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprNameOf.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] name of [the] [discord] [entity] %string/user/textchannel/guild%");
+				"["+ Utils.getPrefixName() +"] [the] [discord] name of [the] [discord] [entity] %string/role/member/user/textchannel/guild%");
 	}
 
 	private Expression<Object> exprEntity;
@@ -54,6 +52,10 @@ public class ExprNameOf extends SimpleExpression<String> {
 			return new String[] {((User) entity).getName()};
 		} else if (entity instanceof MessageChannel) {
 			return new String[] {((MessageChannel) entity).getName()};
+		} else if (entity instanceof Role) {
+			return new String[] {((Role) entity).getName()};
+		} else if (entity instanceof Member) {
+			return new String[] {((Member) entity).getEffectiveName()};
 		}
 
 		return new String[0];

@@ -34,7 +34,6 @@ public class BotManager {
         try {
             jda = JDABuilder.createDefault(token)
                     .addEventListeners(new JDAListener())
-                    .setGatewayEncoding(GatewayEncoding.ETF)
                     .build();
         } catch (LoginException e) {
             e.printStackTrace();
@@ -50,7 +49,10 @@ public class BotManager {
      * Shutdown all JDA instance of all loaded bots, and clear the bots list.
      */
     public static void clearBots() {
-        bots.forEach((name, jda) -> jda.shutdown());
+        bots.forEach((name, jda) -> {
+            jda.shutdown();
+            logger.warning("The bot '"+name+"' has been disconnected!");
+        });
         bots.clear();
     }
 
@@ -86,6 +88,7 @@ public class BotManager {
 
         final JDA jda = bots.get(name);
         jda.shutdown();
+        logger.warning("The bot '"+name+"' has been disconnected!");
         bots.remove(name);
     }
 

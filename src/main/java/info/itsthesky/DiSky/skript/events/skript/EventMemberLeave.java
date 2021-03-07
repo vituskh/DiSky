@@ -9,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -42,28 +43,38 @@ public class EventMemberLeave extends Event {
             }
         }, 0);
 
+        EventValues.registerEventValue(EventMemberJoin.class, Member.class, new Getter<Member, EventMemberJoin>() {
+            @Nullable
+            @Override
+            public Member get(final @NotNull EventMemberJoin event) {
+                return event.getMember();
+            }
+        }, 0);
+
     }
 
     public Guild getGuild() {
         return guild;
     }
-
     public User getUser() {
         return user;
     }
+    public Member getMember() { return member; }
 
     private static final HandlerList HANDLERS = new HandlerList();
 
     private final Guild guild;
     private final User user;
+    private final Member member;
 
     public EventMemberLeave(
-            final User user,
+            final Member member,
             final Guild guild
             ) {
         super(true);
         this.guild = guild;
-        this.user = user;
+        this.user = member.getUser();
+        this.member = member;
     }
 
     @NotNull

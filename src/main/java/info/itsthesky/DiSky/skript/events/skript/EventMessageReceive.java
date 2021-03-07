@@ -8,14 +8,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 
 @Name("Message Receive")
 @Description("Run when any message is sent and the bot is able to see it.")
@@ -60,6 +58,14 @@ public class EventMessageReceive extends Event {
             }
         }, 0);
 
+        EventValues.registerEventValue(EventMessageReceive.class, Member.class, new Getter<Member, EventMessageReceive>() {
+            @Nullable
+            @Override
+            public Member get(final @NotNull EventMessageReceive event) {
+                return event.getMember();
+            }
+        }, 0);
+
     }
 
     private static final HandlerList HANDLERS = new HandlerList();
@@ -67,19 +73,25 @@ public class EventMessageReceive extends Event {
     private final TextChannel channel;
     private final Guild guild;
     private final User user;
+    private final Member member;
     private final Message message;
 
     public EventMessageReceive(
             final TextChannel channel,
-            final User user,
+            final Member member,
             final Message message,
             final Guild guild
             ) {
         super(true);
         this.channel = channel;
         this.guild = guild;
-        this.user = user;
+        this.user = member.getUser();
+        this.member = member;
         this.message = message;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     @NotNull

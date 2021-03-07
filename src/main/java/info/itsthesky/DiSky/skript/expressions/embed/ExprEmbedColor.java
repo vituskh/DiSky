@@ -48,7 +48,7 @@ public class ExprEmbedColor extends SimplePropertyExpression<EmbedBuilder, Objec
     @Override
     public Class<?>[] acceptChange(Changer.ChangeMode mode) {
         if (mode == Changer.ChangeMode.RESET || mode == Changer.ChangeMode.SET) {
-            return CollectionUtils.array(Color.class, org.bukkit.Color.class);
+            return CollectionUtils.array(Object.class);
         }
         return CollectionUtils.array();
     }

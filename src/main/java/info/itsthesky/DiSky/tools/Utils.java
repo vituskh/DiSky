@@ -1,5 +1,8 @@
 package info.itsthesky.DiSky.tools;
 
+import ch.njol.skript.util.chat.ChatCode;
+import org.bukkit.ChatColor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +23,10 @@ public class Utils {
             return null;
         }
         return result.toArray(result.toArray(new Number[0]));
+    }
+
+    public static String colored(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
 }

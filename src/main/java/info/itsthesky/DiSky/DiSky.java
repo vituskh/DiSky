@@ -3,6 +3,7 @@ package info.itsthesky.DiSky;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.tools.Utils;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,10 +26,12 @@ public class DiSky extends JavaPlugin {
         pluginManager = getServer().getPluginManager();
 
         /* Skript loading */
+        getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9is loading ..."));
         if ((pluginManager.getPlugin("Skript") != null) && Skript.isAcceptRegistrations()) {
+            getServer().getConsoleSender().sendMessage(Utils.colored("&aSkript found! &6Starting registration ..."));
             SkriptAddon addon = Skript.registerAddon(this);
             try {
-                addon.loadClasses("info.itsthesky.Vixio3.skript");
+                addon.loadClasses("info.itsthesky.DiSky.skript");
             } catch (IOException e) {
                 Skript.error("Wait, this is anormal. Please report this error on GitHub.");
                 e.printStackTrace();
@@ -37,6 +40,9 @@ public class DiSky extends JavaPlugin {
             Skript.error("Skript isn't installed or doesn't accept registrations.");
             pluginManager.disablePlugin(this);
         }
+        getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9seems to be loaded correctly!"));
+        getServer().getConsoleSender().sendMessage(Utils.colored("&9Join our &bDiscord &9for new update and support:"));
+        getServer().getConsoleSender().sendMessage(Utils.colored("&bhttps://discord.gg/whWuXwaVwM"));
 
     }
 

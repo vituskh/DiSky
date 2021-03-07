@@ -14,13 +14,14 @@ import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 
 @Name("ID of Discord entity")
 @Description("Return the discord ID of a channel, user, member, role, guild, etc...")
-@Examples("set {_channel} to channel with id \"731885527762075648\" in guild with id \"731502122662625310\"")
+@Examples("set {_channel} to channel with id \"731885527762075648\"")
 @Since("1.0")
 public class ExprFromID extends SimpleExpression<Object> {
 
@@ -28,7 +29,8 @@ public class ExprFromID extends SimpleExpression<Object> {
 		Skript.registerExpression(ExprFromID.class, Object.class, ExpressionType.SIMPLE,
 				"["+ Utils.getPrefixName() +"] [text][ ][-][ ]channel with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] (user|member) with [the] id %string%",
-				"["+ Utils.getPrefixName() +"] (guild|server) with [the] id %string%"
+				"["+ Utils.getPrefixName() +"] (guild|server) with [the] id %string%",
+				"["+ Utils.getPrefixName() +"] [guild] role with [the] id %string%"
 		);
 	}
 
@@ -66,6 +68,8 @@ public class ExprFromID extends SimpleExpression<Object> {
 				return new User[] {bot.getUserById(Long.parseLong(id))};
 			case 2:
 				return new Guild[] {bot.getGuildById(Long.parseLong(id))};
+			case 3:
+				return new Role[] {bot.getRoleById(Long.parseLong(id))};
 		}
 		return new String[0];
 	}
@@ -76,7 +80,7 @@ public class ExprFromID extends SimpleExpression<Object> {
 	}
 
 	@Override
-	public Class<? extends Object> getReturnType() {
+	public Class<?> getReturnType() {
 		return Object.class;
 	}
 

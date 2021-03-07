@@ -12,10 +12,7 @@ import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -94,6 +91,14 @@ public class EventCommand extends EventMessageReceive {
             }
         }, 0);
 
+        EventValues.registerEventValue(EventCommand.class, Member.class, new Getter<Member, EventCommand>() {
+            @Nullable
+            @Override
+            public Member get(final @NotNull EventCommand event) {
+                return event.getMember();
+            }
+        }, 0);
+
 
     }
 
@@ -106,21 +111,23 @@ public class EventCommand extends EventMessageReceive {
     private final Command command;
     private final Arguments arguments;
     private final Prefix prefix;
+    private final Member member;
 
     public EventCommand(
             final TextChannel channel,
-            final User user,
+            final Member member,
             final Message message,
             final Guild guild,
             final DiscordCommand command
             ) {
         super(channel,
-                user,
+                member,
                 message,
                 guild);
         this.channel = channel;
         this.guild = guild;
-        this.user = user;
+        this.user = member.getUser();
+        this.member = member;
         this.message = message;
         this.command = command.getCommand();
         this.prefix = command.getPrefix();
@@ -140,28 +147,25 @@ public class EventCommand extends EventMessageReceive {
     public Arguments getArguments() {
         return arguments;
     }
-
     public Prefix getPrefix() {
         return prefix;
     }
-
     public TextChannel getChannel() {
         return channel;
     }
-
     public Message getMessage() {
         return message;
     }
-
     public Command getCommand() {
         return command;
     }
-
     public Guild getGuild() {
         return guild;
     }
-
     public User getUser() {
         return user;
+    }
+    public Member getMember() {
+        return member;
     }
 }

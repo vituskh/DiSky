@@ -24,7 +24,7 @@ public class ExprIdOf extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprIdOf.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] id of [the] [discord] [entity] %string/user/textchannel/message/guild%");
+				"["+ Utils.getPrefixName() +"] [the] [discord] id of [the] [discord] [entity] %string/role/user/member/textchannel/message/guild%");
 	}
 
 	private Expression<Object> exprEntity;
@@ -54,6 +54,10 @@ public class ExprIdOf extends SimpleExpression<String> {
 			return new String[] {((MessageChannel) entity).getId()};
 		} else if (entity instanceof Message) {
 			return new String[] {((Message) entity).getId()};
+		} else if (entity instanceof Role) {
+			return new String[] {((Role) entity).getId()};
+		} else if (entity instanceof Member) {
+			return new String[] {((Member) entity).getId()};
 		}
 
 		return new String[0];

@@ -8,10 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -59,6 +56,14 @@ public class EventBotMessageReceive extends EventMessageReceive {
             }
         }, 0);
 
+        EventValues.registerEventValue(EventBotMessageReceive.class, Member.class, new Getter<Member, EventBotMessageReceive>() {
+            @Nullable
+            @Override
+            public Member get(final @NotNull EventBotMessageReceive event) {
+                return event.getMember();
+            }
+        }, 0);
+
     }
 
     public Guild getGuild() {
@@ -79,21 +84,27 @@ public class EventBotMessageReceive extends EventMessageReceive {
     private final Guild guild;
     private final User user;
     private final Message message;
+    private final Member member;
 
     public EventBotMessageReceive(
             final TextChannel channel,
-            final User user,
+            final Member member,
             final Message message,
             final Guild guild
             ) {
         super(channel,
-                user,
+                member,
                 message,
                 guild);
         this.channel = channel;
         this.guild = guild;
-        this.user = user;
+        this.user = member.getUser();
+        this.member = member;
         this.message = message;
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     @NotNull

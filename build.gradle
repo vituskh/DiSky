@@ -30,7 +30,7 @@ dependencies {
 
 shadowJar {
     configurations = [project.configurations.compile]
-    archiveName 'Vixio3 ' + version + ".jar"
+    archiveName 'DiSky ' + version + ".jar"
 }
 
 compileJava.options.encoding = 'UTF-8'
