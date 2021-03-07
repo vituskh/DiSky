@@ -27,15 +27,18 @@ public class ExprIsBot extends SimpleExpression<Boolean> {
 
 	static {
 		Skript.registerExpression(ExprIsBot.class, Boolean.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] %user% (is|was) a [discord] bot");
+				"["+ Utils.getPrefixName() +"] %user% (is|was) a [discord] bot",
+		"["+ Utils.getPrefixName() +"] %user% (is not|isn't) a [discord] bot");
 	}
 
 	private Expression<User> exprUser;
+	private int pattern;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		exprUser = (Expression<User>) exprs[0];
+		pattern = matchedPattern;
 		return true;
 	}
 
@@ -43,7 +46,11 @@ public class ExprIsBot extends SimpleExpression<Boolean> {
 	protected Boolean[] get(Event e) {
 		User user = exprUser.getSingle(e);
 		if (user == null) return new Boolean[] {false};
-		return new Boolean[] {user.isBot()};
+		if (pattern == 0) {
+			return new Boolean[] {user.isBot()};
+		} else {
+			return new Boolean[] {!user.isBot()};
+		}
 	}
 
 	@Override

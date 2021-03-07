@@ -51,8 +51,8 @@ public class ExprFromID extends SimpleExpression<Object> {
 	protected Object[] get(Event e) {
 		String id = exprID.getSingle(e);
 		JDA bot = BotManager.getFirstBot();
-		Guild guild = null;
-		if (!(exprGuild == null)) guild = exprGuild.getSingle(e);
+		/* Guild guild = null;
+		if (!(exprGuild == null)) guild = exprGuild.getSingle(e); */
 		if (bot == null || id == null) return new Object[0];
 		switch (pattern) {
 			case 0:
