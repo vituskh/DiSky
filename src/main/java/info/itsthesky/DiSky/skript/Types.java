@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.*;
 public class Types {
 	static  {
 		Classes.registerClass(new ClassInfo<>(JDA.class, "bot")
-				.user("bot?")
+				.user("bots?")
 				.name("Discord Bot")
 				.description("Represent a loaded Discord Bot")
 				.since("1.0")
@@ -42,7 +42,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(TextChannel.class, "textchannel")
-				.user("textchannel?")
+				.user("textchannels?")
 				.name("Text Channel")
 				.description("Represent a Discord text channel (where file and message can be sent)")
 				.since("1.0")
@@ -70,7 +70,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(User.class, "user")
-				.user("user?")
+				.user("users?")
 				.name("Discord User")
 				.description("Represent a discord user, which is not into a guild.")
 				.since("1.0")
@@ -98,7 +98,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Role.class, "role")
-				.user("role?")
+				.user("roles?")
 				.name("Discord Role")
 				.description("Represent a discord role, within a guild.")
 				.since("1.0")
@@ -126,7 +126,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Member.class, "member")
-				.user("member?")
+				.user("members?")
 				.name("Discord Member")
 				.description("Represent a discord user which is in any guild.")
 				.since("1.0")
@@ -154,7 +154,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Message.class, "message")
-				.user("message?")
+				.user("messages?")
 				.name("Discord Message")
 				.description("Represent a discord message, with ID, author, reactions, etc...")
 				.since("1.0")
@@ -182,7 +182,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(info.itsthesky.DiSky.tools.object.messages.Message.class, "staticmessage")
-				.user("staticmessage?")
+				.user("staticmessages?")
 				.name("Static Discord Message")
 				.description("Represent a static discord message, which mean a message / embed which is not sent yet.")
 				.since("1.0")
@@ -210,7 +210,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Guild.class, "guild")
-				.user("guild?")
+				.user("guilds?")
 				.name("Discord Guild (Server)")
 				.description("Represent a discord guild")
 				.since("1.0")
@@ -238,7 +238,7 @@ public class Types {
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Command.class, "command")
-				.user("command?")
+				.user("commands?")
 				.name("Event Command")
 				.description(new String[] {
 						"Represent a core command in a command event.",
