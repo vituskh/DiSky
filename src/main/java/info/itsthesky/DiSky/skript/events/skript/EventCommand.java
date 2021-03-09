@@ -12,10 +12,14 @@ import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.xml.soap.Text;
 
 @Name("Command")
 @Description("Fired when a command is executed by any user. Have a prefix, a core command and some args")
@@ -29,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
         "\t\nreply with \":x: You have to specify a message!\""
 })
 @Since("1.0")
-public class EventCommand extends EventMessageReceive {
+public class EventCommand extends Event {
 
     static {
         // [seen by [bot] [(named|with name)]%string%]
@@ -39,6 +43,14 @@ public class EventCommand extends EventMessageReceive {
             @Nullable
             @Override
             public TextChannel get(final @NotNull EventCommand event) {
+                return event.getTextChannel();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventCommand.class, Channel.class, new Getter<Channel, EventCommand>() {
+            @Nullable
+            @Override
+            public Channel get(final @NotNull EventCommand event) {
                 return event.getChannel();
             }
         }, 0);
@@ -104,7 +116,7 @@ public class EventCommand extends EventMessageReceive {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final TextChannel channel;
+    private final Channel channel;
     private final Guild guild;
     private final User user;
     private final Message message;
@@ -114,16 +126,13 @@ public class EventCommand extends EventMessageReceive {
     private final Member member;
 
     public EventCommand(
-            final TextChannel channel,
+            final Channel channel,
             final Member member,
             final Message message,
             final Guild guild,
             final DiscordCommand command
             ) {
-        super(channel,
-                member,
-                message,
-                guild);
+        super(true);
         this.channel = channel;
         this.guild = guild;
         this.user = member.getUser();
@@ -150,8 +159,11 @@ public class EventCommand extends EventMessageReceive {
     public Prefix getPrefix() {
         return prefix;
     }
-    public TextChannel getChannel() {
+    public Channel getChannel() {
         return channel;
+    }
+    public TextChannel getTextChannel() {
+        return channel.getTextChannel();
     }
     public Message getMessage() {
         return message;

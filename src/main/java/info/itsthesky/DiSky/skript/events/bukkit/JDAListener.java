@@ -4,6 +4,7 @@ import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.events.skript.*;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -16,26 +17,17 @@ public class JDAListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {
         /* Message receive */
         Event event = null;
-        if (!e.getAuthor().isBot()) {
-            event = new EventMessageReceive(
-                    e.getTextChannel(),
-                    e.getMember(),
-                    e.getMessage(),
-                    e.getGuild()
-            );
-        } else {
-            event = new EventBotMessageReceive(
-                    e.getTextChannel(),
-                    e.getMember(),
-                    e.getMessage(),
-                    e.getGuild()
-            );
-        }
+        event = new EventMessageReceive(
+                new Channel(e.getTextChannel()),
+                e.getMember(),
+                e.getMessage(),
+                e.getGuild()
+        );
         // ***
         /* Command event */
         DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
         EventCommand command = new EventCommand(
-                e.getTextChannel(),
+                new Channel(e.getTextChannel()),
                 e.getMember(),
                 e.getMessage(),
                 e.getGuild(),

@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
@@ -54,6 +55,8 @@ public class ExprIdOf extends SimpleExpression<String> {
 			return new String[] {((MessageChannel) entity).getId()};
 		} else if (entity instanceof Message) {
 			return new String[] {((Message) entity).getId()};
+		} else if (entity instanceof Channel) {
+			return new String[] {((Channel) entity).getChannel().getId()};
 		} else if (entity instanceof Role) {
 			return new String[] {((Role) entity).getId()};
 		} else if (entity instanceof Member) {

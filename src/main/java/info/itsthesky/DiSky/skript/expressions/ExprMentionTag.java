@@ -17,15 +17,15 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
-@Name("Name of Discord entity")
-@Description("Return the discord name of a channel, user, member, role, guild, etc...")
-@Examples("set {_name} to discord name of channel with id \"731885527762075648\"")
-@Since("1.0")
-public class ExprNameOf extends SimpleExpression<String> {
+@Name("Mention Tag of Discord entity")
+@Description("Return the mention tag (@me) from a channel, user, role, etc...")
+@Examples("reply with mention tag of event-user")
+@Since("1.1")
+public class ExprMentionTag extends SimpleExpression<String> {
 
 	static {
-		Skript.registerExpression(ExprNameOf.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] name of [the] [discord] [entity] %string/role/member/user/channel/textchannel/guild%");
+		Skript.registerExpression(ExprMentionTag.class, String.class, ExpressionType.SIMPLE,
+				"["+ Utils.getPrefixName() +"] [the] [discord] mention [tag] of [the] [discord] [entity] %role/user/member/channel/textchannel%");
 	}
 
 	private Expression<Object> exprEntity;
@@ -47,18 +47,16 @@ public class ExprNameOf extends SimpleExpression<String> {
 			entity = bot.getSelfUser();
 		}
 
-		if (entity instanceof Guild) {
-			return new String[] {((Guild) entity).getName()};
-		} else if (entity instanceof User) {
-			return new String[] {((User) entity).getName()};
-		} else if (entity instanceof MessageChannel) {
-			return new String[] {((MessageChannel) entity).getName()};
+		if (entity instanceof User) {
+			return new String[] {((User) entity).getAsMention()};
+		} else if (entity instanceof TextChannel) {
+			return new String[] {((TextChannel) entity).getAsMention()};
 		} else if (entity instanceof Channel) {
-			return new String[] {((Channel) entity).getTextChannel().getName()};
+			return new String[] {((Channel) entity).getTextChannel().getAsMention()};
 		} else if (entity instanceof Role) {
-			return new String[] {((Role) entity).getName()};
+			return new String[] {((Role) entity).getAsMention()};
 		} else if (entity instanceof Member) {
-			return new String[] {((Member) entity).getEffectiveName()};
+			return new String[] {((Member) entity).getAsMention()};
 		}
 
 		return new String[0];
@@ -76,7 +74,7 @@ public class ExprNameOf extends SimpleExpression<String> {
 
 	@Override
 	public String toString(Event e, boolean debug) {
-		return "discord if of " + exprEntity.toString(e, debug);
+		return "mention tag of " + exprEntity.toString(e, debug);
 	}
 
 }

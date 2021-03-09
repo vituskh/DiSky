@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -30,6 +31,14 @@ public class EventMessageReceive extends Event {
             @Nullable
             @Override
             public TextChannel get(final @NotNull EventMessageReceive event) {
+                return event.getTextChannel();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMessageReceive.class, Channel.class, new Getter<Channel, EventMessageReceive>() {
+            @Nullable
+            @Override
+            public Channel get(final @NotNull EventMessageReceive event) {
                 return event.getChannel();
             }
         }, 0);
@@ -70,14 +79,14 @@ public class EventMessageReceive extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final TextChannel channel;
+    private final Channel channel;
     private final Guild guild;
     private final User user;
     private final Member member;
     private final Message message;
 
     public EventMessageReceive(
-            final TextChannel channel,
+            final Channel channel,
             final Member member,
             final Message message,
             final Guild guild
@@ -104,7 +113,11 @@ public class EventMessageReceive extends Event {
         return HANDLERS;
     }
 
-    public TextChannel getChannel() {
+    public TextChannel getTextChannel() {
+        return channel.getTextChannel();
+    }
+
+    public Channel getChannel() {
         return channel;
     }
 

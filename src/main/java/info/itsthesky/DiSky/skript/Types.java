@@ -7,6 +7,7 @@ import ch.njol.skript.registrations.Classes;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -177,6 +178,35 @@ public class Types {
 
 					@Override
 					public Message parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Channel.class, "channel")
+				.user("channels?")
+				.name("Discord Channel")
+				.description("Represent a discord channel in a guild. Can be both vocal or text channel." +
+						"\n Mainly made for better event value using lol")
+				.since("1.1")
+				.parser(new Parser<Channel>() {
+
+					@Override
+					public String toString(Channel o, int flags) {
+						return o.getChannel().getId();
+					}
+
+					@Override
+					public String toVariableNameString(Channel o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public Channel parse(final String s, final ParseContext context) {
 						return null;
 					}
 				})

@@ -55,8 +55,8 @@ public class EffReplyWith extends Effect {
             DiSky.getInstance().getLogger().severe("You can't use 'reply with' effect without a discord-based event!");
             return;
         }
-        JDA bot = ((EventMessageReceive) e).getChannel().getJDA();
-        TextChannel channel = ((EventMessageReceive) e).getChannel();
+        JDA bot = ((EventMessageReceive) e).getChannel().getTextChannel().getJDA();
+        TextChannel channel = ((EventMessageReceive) e).getChannel().getTextChannel();
         if (message instanceof Message) {
             bot.getTextChannelById(channel.getId()).sendMessage((Message) message).queue();
         } else if (message instanceof EmbedBuilder) {
