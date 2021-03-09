@@ -5,6 +5,7 @@ import info.itsthesky.DiSky.skript.events.bukkit.JDAListener;
 import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ public class BotManager {
         try {
             jda = JDABuilder.createDefault(token)
                     .addEventListeners(new JDAListener())
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .build();
         } catch (LoginException e) {
             e.printStackTrace();
