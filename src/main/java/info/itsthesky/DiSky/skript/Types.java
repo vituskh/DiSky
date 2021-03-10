@@ -211,6 +211,34 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(MessageReaction.ReactionEmote.class, "emote")
+				.user("emotes?")
+				.name("Discord Emote")
+				.description("Represent a discord emote in a guild, with id, image, etc...")
+				.since("1.1")
+				.parser(new Parser<MessageReaction.ReactionEmote>() {
+
+					@Override
+					public String toString(MessageReaction.ReactionEmote o, int flags) {
+						return o.getId();
+					}
+
+					@Override
+					public String toVariableNameString(MessageReaction.ReactionEmote o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public MessageReaction.ReactionEmote parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
 		Classes.registerClass(new ClassInfo<>(info.itsthesky.DiSky.tools.object.messages.Message.class, "staticmessage")
 				.user("staticmessages?")
 				.name("Static Discord Message")

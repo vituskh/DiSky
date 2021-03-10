@@ -8,33 +8,47 @@ import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.event.Event;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JDAListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent e) {
-        /* Message receive */
-        Event event = null;
-        event = new EventMessageReceive(
-                new Channel(e.getTextChannel()),
-                e.getMember(),
-                e.getMessage(),
-                e.getGuild()
-        );
-        // ***
-        /* Command event */
-        DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
-        EventCommand command = new EventCommand(
-                new Channel(e.getTextChannel()),
-                e.getMember(),
-                e.getMessage(),
-                e.getGuild(),
-                discordCommand
-        );
-        DiSky.getInstance().getServer().getPluginManager().callEvent(event);
-        DiSky.getInstance().getServer().getPluginManager().callEvent(command);
+        List<Event> event = new ArrayList<>();
+
+        if (e.isFromGuild()) {
+            /* Message receive */
+            event.add(new EventMessageReceive(
+                    new Channel(e.getTextChannel()),
+                    e.getMember(),
+                    e.getMessage(),
+                    e.getGuild(),
+                    e
+            ));
+            // ***
+            /* Command event */
+            DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
+            event.add(new EventCommand(
+                    new Channel(e.getTextChannel()),
+                    e.getMember(),
+                    e.getMessage(),
+                    e.getGuild(),
+                    discordCommand
+            ));
+        } else {
+            if (e.getAuthor().isBot()) return;
+            event.add(new EventPrivateMessage(e));
+        }
+        event.forEach((event1) -> {
+            DiSky.getInstance().getServer().getPluginManager().callEvent(event1);
+        });
     }
 
     @Override
@@ -62,5 +76,21 @@ public class JDAListener extends ListenerAdapter {
         );
         DiSky.getInstance().getServer().getPluginManager().callEvent(event);
     }
+
+    @Override
+    public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionAdd(e));
+    }
+
+    /* @Override
+    public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent e) {
+        Event event = new EventReactionRemove(
+                e.getMember(),
+                e.getGuild(),
+                e.getReactionEmote().getName(),
+                new Channel(e.getChannel())
+        );
+        DiSky.getInstance().getServer().getPluginManager().callEvent(event);
+    } */
 
 }

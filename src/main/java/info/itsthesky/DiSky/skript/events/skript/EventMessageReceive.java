@@ -10,6 +10,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -84,12 +85,14 @@ public class EventMessageReceive extends Event {
     private final User user;
     private final Member member;
     private final Message message;
+    private final MessageReceivedEvent e;
 
     public EventMessageReceive(
             final Channel channel,
             final Member member,
             final Message message,
-            final Guild guild
+            final Guild guild,
+            final MessageReceivedEvent e
             ) {
         super(true);
         this.channel = channel;
@@ -97,6 +100,7 @@ public class EventMessageReceive extends Event {
         this.user = member.getUser();
         this.member = member;
         this.message = message;
+        this.e = e;
     }
 
     public Member getMember() {
@@ -111,6 +115,10 @@ public class EventMessageReceive extends Event {
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
+    }
+
+    public MessageReceivedEvent getEvent() {
+        return e;
     }
 
     public TextChannel getTextChannel() {

@@ -14,7 +14,9 @@ import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 
 @Name("Register new Discord Bot")
@@ -26,7 +28,7 @@ public class EffSendMessage extends Effect {
 
     static {
         Skript.registerEffect(EffSendMessage.class,
-                "["+ Utils.getPrefixName() +"] send message %string/message/embed% to [the] [channel] %textchannel/channel% with [the] bot [(named|with name)] %string%");
+                "["+ Utils.getPrefixName() +"] send message %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% with [the] bot [(named|with name)] %string%");
     }
 
     private Expression<Object> exprMessage;
@@ -49,15 +51,34 @@ public class EffSendMessage extends Effect {
         Object content = exprMessage.getSingle(e);
         if (name == null || channel == null || content == null) return;
 
-        TextChannel channel1;
+        TextChannel channel1 = null;
         if (channel instanceof TextChannel) {
             channel1 = (TextChannel) channel;
         } else if (channel instanceof Channel) {
             channel1 = ((Channel) channel).getTextChannel();
+        } else if (
+                channel instanceof User ||
+                        channel instanceof Member
+        ) {
+            User user;
+            if (channel instanceof Member) {
+                user = ((Member) channel).getUser();
+            } else {
+                user = (User) channel;
+            }
+            if (content instanceof EmbedBuilder) {
+                user.openPrivateChannel()
+                        .flatMap(channel2 -> channel2.sendMessage(((EmbedBuilder) content).build()))
+                        .queue();
+            } else {
+                user.openPrivateChannel()
+                        .flatMap(channel2 -> channel2.sendMessage(content.toString()))
+                        .queue();
+            }
         } else return;
 
         JDA bot = BotManager.getBot(name);
-        if (bot == null) return;
+        if (bot == null || channel1 == null) return;
         if (content instanceof EmbedBuilder) {
             bot.getTextChannelById(channel1.getId()).sendMessage(((EmbedBuilder) content).build()).queue();
         } else {
@@ -67,7 +88,7 @@ public class EffSendMessage extends Effect {
 
     @Override
     public String toString(Event e, boolean debug) {
-        return "send discord message " + exprMessage.toString(e, debug) + " to channel " + exprChannel.toString(e, debug) + " with bot named " + exprName.toString(e, debug);
+        return "send discord message " + exprMessage.toString(e, debug) + " to channel or user " + exprChannel.toString(e, debug) + " with bot named " + exprName.toString(e, debug);
     }
 
 }
