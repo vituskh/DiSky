@@ -1,82 +1,97 @@
 package info.itsthesky.DiSky.skript.expressions;
 
-import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.util.Kleenean;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.util.coll.CollectionUtils;
+import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
-import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
-@Name("Name of Discord entity")
-@Description("Return the discord name of a channel, user, member, role, guild, etc...")
-@Examples("set {_name} to discord name of channel with id \"731885527762075648\"")
+import javax.annotation.Nullable;
+
+@Name("Name of Discord Entity")
+@Description("Get or set the discord name of any channel, member, role, etc...")
+@Examples("set discord name of event-channel to \"Iron Monger\"")
 @Since("1.0")
-public class ExprNameOf extends SimpleExpression<String> {
+public class ExprNameOf extends SimplePropertyExpression<Object, String> {
 
-	static {
-		Skript.registerExpression(ExprNameOf.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] name of [the] [discord] [entity] %string/role/member/user/channel/textchannel/guild%");
-	}
+    static {
+        register(ExprNameOf.class, String.class,
+                "discord name",
+                "member/role/channel/textchannel/guild/user"
+        );
+    }
 
-	private Expression<Object> exprEntity;
+    @Nullable
+    @Override
+    public String convert(Object entity) {
+        String finalName = null;
+        if (entity instanceof JDA) {
+            final JDA bot = BotManager.getBot(entity.toString());
+            if (bot == null) return null;
+            entity = bot.getSelfUser();
+            return ((SelfUser) entity).getName();
+        }
+        try {
+            finalName = (String) entity.getClass().getDeclaredMethod("getName").invoke(entity);
+        } catch (final Exception ignored) { }
+        if (finalName == null) {
+            if (entity instanceof Member) finalName = ((Member) entity).getEffectiveName();
+        }
+        return finalName;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		exprEntity = (Expression<Object>) exprs[0];
-		return true;
-	}
+    @Override
+    public Class<? extends String> getReturnType() {
+        return String.class;
+    }
 
-	@Override
-	protected String[] get(final Event e) {
-		Object entity = exprEntity.getSingle(e);
-		if (entity instanceof JDA) {
-			final JDA bot = BotManager.getBot(entity.toString());
-			if (bot == null)
-				return new String[0];
-			entity = bot.getSelfUser();
-		}
+    @Override
+    protected String getPropertyName() {
+        return "discord name";
+    }
 
-		if (entity instanceof Guild) {
-			return new String[] {((Guild) entity).getName()};
-		} else if (entity instanceof User) {
-			return new String[] {((User) entity).getName()};
-		} else if (entity instanceof MessageChannel) {
-			return new String[] {((MessageChannel) entity).getName()};
-		} else if (entity instanceof Channel) {
-			return new String[] {((Channel) entity).getTextChannel().getName()};
-		} else if (entity instanceof Role) {
-			return new String[] {((Role) entity).getName()};
-		} else if (entity instanceof Member) {
-			return new String[] {((Member) entity).getEffectiveName()};
-		}
+    @Nullable
+    @Override
+    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+        if (mode == Changer.ChangeMode.SET) {
+            return CollectionUtils.array(String.class);
+        }
+        return CollectionUtils.array();
+    }
 
-		return new String[0];
-	}
-
-	@Override
-	public boolean isSingle() {
-		return true;
-	}
-
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
-
-	@Override
-	public String toString(Event e, boolean debug) {
-		return "discord if of " + exprEntity.toString(e, debug);
-	}
-
+    @Override
+    public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+        if (delta == null || delta.length == 0) return;
+        if (mode == Changer.ChangeMode.SET) {
+            for (Object entity : getExpr().getArray(e)) {
+                if (entity instanceof TextChannel) {
+                    TextChannel channel = (TextChannel) entity;
+                    channel.getManager().setName(delta[0].toString()).queue();
+                    return;
+                } else if (entity instanceof Channel) {
+                    TextChannel channel = ((Channel) entity).getTextChannel();
+                    channel.getManager().setName(delta[0].toString()).queue();
+                    return;
+                } else if (entity instanceof Member) {
+                    Member member = (Member) entity;
+                    member.modifyNickname(delta[0].toString()).queue();
+                    return;
+                } else if (entity instanceof Role) {
+                    Role role = (Role) entity;
+                    role.getManager().setName(delta[0].toString()).queue();
+                    return;
+                }
+                DiSky.getInstance().getLogger().severe("Cannot change the discord name of entity '"+entity.getClass().getName()+"', since that's not a Discord entity!");
+            }
+        }
+    }
 }
