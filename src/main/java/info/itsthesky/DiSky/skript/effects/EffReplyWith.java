@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
+import info.itsthesky.DiSky.skript.events.skript.EventCommand;
 import info.itsthesky.DiSky.skript.events.skript.EventMessageReceive;
 import info.itsthesky.DiSky.skript.events.skript.EventPrivateMessage;
 import info.itsthesky.DiSky.tools.Utils;
@@ -57,13 +58,15 @@ public class EffReplyWith extends Effect {
             DiSky.getInstance().getLogger().severe("You can't use 'reply with' effect without a discord-based event!");
             return;
         }
+        TextChannel channel = null;
 
-        EventMessageReceive eventMsg = null;
         EventPrivateMessage eventPrivate = null;
         if (e.getEventName().equalsIgnoreCase("EventPrivateMessage")) {
             eventPrivate = (EventPrivateMessage) e;
-        } else {
-            eventMsg = (EventMessageReceive) e;
+        } else if (e instanceof EventMessageReceive) {
+            channel = ((EventMessageReceive) e).getTextChannel();
+        } else if (e instanceof EventCommand) {
+            channel = ((EventCommand) e).getTextChannel();
         }
 
         boolean isFromPrivate = false;
@@ -77,14 +80,9 @@ public class EffReplyWith extends Effect {
                         .getPrivateChannel()
                         .sendMessage((Message) message).queue();
             } else {
-                eventMsg
-                        .getEvent()
-                        .getJDA()
+                channel.getJDA()
                         .getTextChannelById(
-                                eventMsg
-                                        .getEvent()
-                                        .getChannel()
-                                        .getId()
+                                channel.getId()
                         ).sendMessage((Message) message).queue();
             }
         } else if (message instanceof EmbedBuilder) {
@@ -94,14 +92,9 @@ public class EffReplyWith extends Effect {
                         .getPrivateChannel()
                         .sendMessage(((EmbedBuilder) message).build()).queue();
             } else {
-                eventMsg
-                        .getEvent()
-                        .getJDA()
+                channel.getJDA()
                         .getTextChannelById(
-                                eventMsg
-                                        .getEvent()
-                                        .getChannel()
-                                        .getId()
+                                channel.getId()
                         ).sendMessage(((EmbedBuilder) message).build()).queue();
             }
         } else {
@@ -111,14 +104,9 @@ public class EffReplyWith extends Effect {
                         .getPrivateChannel()
                         .sendMessage(message.toString()).queue();
             } else {
-                eventMsg
-                        .getEvent()
-                        .getJDA()
+                channel.getJDA()
                         .getTextChannelById(
-                                eventMsg
-                                        .getEvent()
-                                        .getChannel()
-                                        .getId()
+                                channel.getId()
                         ).sendMessage(message.toString()).queue();
             }
         }
