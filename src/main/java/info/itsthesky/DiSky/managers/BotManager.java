@@ -36,6 +36,8 @@ public class BotManager {
             jda = JDABuilder.createDefault(token)
                     .addEventListeners(new JDAListener())
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS)
+                    .enableIntents(GatewayIntent.DIRECT_MESSAGES)
                     .build();
         } catch (LoginException e) {
             e.printStackTrace();
