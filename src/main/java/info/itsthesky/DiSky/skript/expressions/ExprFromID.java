@@ -12,11 +12,9 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
 @Name("ID of Discord entity")
@@ -30,12 +28,13 @@ public class ExprFromID extends SimpleExpression<Object> {
 				"["+ Utils.getPrefixName() +"] [text][ ][-][ ]channel with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] (user|member) with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] (guild|server) with [the] id %string%",
-				"["+ Utils.getPrefixName() +"] [guild] role with [the] id %string%"
+				"["+ Utils.getPrefixName() +"] [guild] role with [the] id %string%",
+				"["+ Utils.getPrefixName() +"] message with [the] id %string% in [channel] %channel/textchannel%"
 		);
 	}
 
 	private Expression<String> exprID;
-	private Expression<Guild> exprGuild;
+	private Expression<Object> exprChannel;
 	private int pattern;
 
 	@SuppressWarnings("unchecked")
@@ -43,9 +42,7 @@ public class ExprFromID extends SimpleExpression<Object> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		pattern = matchedPattern;
 		exprID = (Expression<String>) exprs[0];
-		/* if (!(exprs.length == 1)) {
-			exprGuild = (Expression<Guild>) exprs[1];
-		} */
+		if (!(exprs.length == 1)) exprChannel = (Expression<Object>) exprs[2];
 		return true;
 	}
 
@@ -53,16 +50,9 @@ public class ExprFromID extends SimpleExpression<Object> {
 	protected Object[] get(Event e) {
 		String id = exprID.getSingle(e);
 		JDA bot = BotManager.getFirstBot();
-		/* Guild guild = null;
-		if (!(exprGuild == null)) guild = exprGuild.getSingle(e); */
 		if (bot == null || id == null) return new Object[0];
 		switch (pattern) {
 			case 0:
-				/* if (guild == null) {
-					return new TextChannel[] {bot.getTextChannelById(Long.parseLong(id))};
-				} else {
-					return new TextChannel[] {guild.getTextChannelById(Long.parseLong(id))};
-				} */
 				return new TextChannel[] {bot.getTextChannelById(Long.parseLong(id))};
 			case 1:
 				return new User[] {bot.getUserById(Long.parseLong(id))};
@@ -70,6 +60,14 @@ public class ExprFromID extends SimpleExpression<Object> {
 				return new Guild[] {bot.getGuildById(Long.parseLong(id))};
 			case 3:
 				return new Role[] {bot.getRoleById(Long.parseLong(id))};
+			case 4:
+				TextChannel channel;
+				if (exprChannel.getSingle(e) instanceof Channel) {
+					channel = ((Channel) exprChannel.getSingle(e)).getTextChannel();
+				} else {
+					channel = (TextChannel) exprChannel.getSingle(e);
+				}
+				return new Message[] {channel.getHistory().getMessageById(Long.parseLong(id))};
 		}
 		return new String[0];
 	}

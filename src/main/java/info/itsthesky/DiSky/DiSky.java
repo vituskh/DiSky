@@ -3,7 +3,9 @@ package info.itsthesky.DiSky;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.managers.WebhookManager;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.Webhooktest;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,8 +51,9 @@ public class DiSky extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        /* Bot Shutdown */
+        /* Clients Shutdown */
         BotManager.clearBots();
+        WebhookManager.clearClients();
 
     }
 
