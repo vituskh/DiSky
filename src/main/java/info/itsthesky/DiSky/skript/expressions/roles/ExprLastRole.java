@@ -17,10 +17,10 @@ import javax.annotation.Nullable;
 @Name("Last Role")
 @Description("Return the last role made via a role builder.")
 @Since("1.1")
-public class ExprAllowPermission extends SimpleExpression<Role> {
+public class ExprLastRole extends SimpleExpression<Role> {
 
     static {
-        Skript.registerExpression(ExprAllowPermission.class, Role.class, ExpressionType.SIMPLE,
+        Skript.registerExpression(ExprLastRole.class, Role.class, ExpressionType.SIMPLE,
                 "[the] [last] [(generated|created)] role"
         );
     }

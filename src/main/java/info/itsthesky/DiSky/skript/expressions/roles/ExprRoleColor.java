@@ -79,11 +79,13 @@ public class ExprRoleColor extends SimplePropertyExpression<Role, Object> {
             case RESET:
                 for (Role role : getExpr().getArray(e)) {
                     role.getManager().setColor(null).queue();
+                    ScopeRole.lastRole = role;
                 }
                 break;
             case SET:
                 for (Role role : getExpr().getArray(e)) {
                     role.getManager().setColor(finalColor).queue();
+                    ScopeRole.lastRole = role;
                 }
                 break;
             default:
