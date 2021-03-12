@@ -1,7 +1,11 @@
 package info.itsthesky.DiSky.tools;
 
-import ch.njol.skript.util.chat.ChatCode;
+import ch.njol.skript.lang.Variable;
+import ch.njol.skript.variables.Variables;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.ChatColor;
+import org.bukkit.event.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +14,21 @@ public class Utils {
 
     public static String getPrefixName() {
         return "disky";
+    }
+
+    public static TextChannel checkChannel(Object original) {
+        if (original instanceof Channel) {
+            return ((Channel) original).getTextChannel();
+        } else if (original instanceof TextChannel) {
+            return (TextChannel) original;
+        } else {
+            return null;
+        }
+    }
+
+    public static void setSkriptVariable(Variable variable, Object value, Event event) {
+        String name = variable.getName().toString(event);
+        Variables.setVariable(name, value, event, variable.isLocal());
     }
 
     public static Number[] toNumeric(final Object ...array) {
