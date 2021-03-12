@@ -9,6 +9,8 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.skript.effects.webhook.ScopeWebhook;
+import info.itsthesky.DiSky.skript.expressions.roles.ScopeRole;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -26,7 +28,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprNameOf.class, String.class,
                 "discord name",
-                "member/role/channel/textchannel/guild/user"
+                "member/role/webhookbuilder/channel/textchannel/guild/user"
         );
     }
 
@@ -45,6 +47,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
         } catch (final Exception ignored) { }
         if (finalName == null) {
             if (entity instanceof Member) finalName = ((Member) entity).getEffectiveName();
+            if (entity instanceof Webhook) finalName = ((Webhook) entity).getName();
         }
         return finalName;
     }
@@ -85,9 +88,15 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                     Member member = (Member) entity;
                     member.modifyNickname(delta[0].toString()).queue();
                     return;
+                } else if (entity instanceof Webhook) {
+                    Webhook webhook = (Webhook) entity;
+                    webhook.getManager().setName(delta[0].toString()).queue();
+                    ScopeWebhook.lastWebhook = webhook;
+                    return;
                 } else if (entity instanceof Role) {
                     Role role = (Role) entity;
                     role.getManager().setName(delta[0].toString()).queue();
+                    ScopeRole.lastRole = role;
                     return;
                 }
                 DiSky.getInstance().getLogger().severe("Cannot change the discord name of entity '"+entity.getClass().getName()+"', since that's not a Discord entity!");

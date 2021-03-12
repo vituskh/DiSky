@@ -239,6 +239,34 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(Webhook.class, "webhookbuilder")
+				.user("webhookbuilders?")
+				.name("Discord Webhook Builder")
+				.description("Represent a webhook which is not actually made in the guild.")
+				.since("1.2")
+				.parser(new Parser<Webhook>() {
+
+					@Override
+					public String toString(Webhook o, int flags) {
+						return o.getId();
+					}
+
+					@Override
+					public String toVariableNameString(Webhook o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public Webhook parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
 		Classes.registerClass(new ClassInfo<>(info.itsthesky.DiSky.tools.object.messages.Message.class, "staticmessage")
 				.user("staticmessages?")
 				.name("Static Discord Message")
