@@ -8,13 +8,16 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
@@ -28,11 +31,12 @@ public class EffSendMessage extends Effect {
 
     static {
         Skript.registerEffect(EffSendMessage.class,
-                "["+ Utils.getPrefixName() +"] send message %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% with [the] bot [(named|with name)] %string%");
+                "["+ Utils.getPrefixName() +"] send message %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% with [the] bot [(named|with name)] %string% [and store it in %-object%]");
     }
 
     private Expression<Object> exprMessage;
     private Expression<Object> exprChannel;
+    private Expression<Object> exprVar;
     private Expression<String> exprName;
 
     @SuppressWarnings("unchecked")
@@ -41,6 +45,7 @@ public class EffSendMessage extends Effect {
         exprMessage = (Expression<Object>) exprs[0];
         exprChannel = (Expression<Object>) exprs[1];
         exprName = (Expression<String>) exprs[2];
+        exprVar = (Expression<Object>) exprs[3];
         return true;
     }
 
@@ -50,6 +55,7 @@ public class EffSendMessage extends Effect {
         Object channel = exprChannel.getSingle(e);
         Object content = exprMessage.getSingle(e);
         if (name == null || channel == null || content == null) return;
+        Message storedMessage;
 
         TextChannel channel1 = null;
         if (channel instanceof TextChannel) {
@@ -67,23 +73,33 @@ public class EffSendMessage extends Effect {
                 user = (User) channel;
             }
             if (content instanceof EmbedBuilder) {
-                user.openPrivateChannel()
+                storedMessage = user.openPrivateChannel()
                         .flatMap(channel2 -> channel2.sendMessage(((EmbedBuilder) content).build()))
-                        .queue();
+                        .complete();
             } else {
-                user.openPrivateChannel()
+                storedMessage = user.openPrivateChannel()
                         .flatMap(channel2 -> channel2.sendMessage(content.toString()))
-                        .queue();
+                        .complete();
             }
+            ExprLastMessage.lastMessage = storedMessage;
+            if (exprVar == null) return;
+            if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
+            Variable var = (Variable) exprVar;
+            Utils.setSkriptVariable(var, storedMessage, e);
         } else return;
 
         JDA bot = BotManager.getBot(name);
         if (bot == null || channel1 == null) return;
         if (content instanceof EmbedBuilder) {
-            bot.getTextChannelById(channel1.getId()).sendMessage(((EmbedBuilder) content).build()).queue();
+            storedMessage = bot.getTextChannelById(channel1.getId()).sendMessage(((EmbedBuilder) content).build()).complete();
         } else {
-            bot.getTextChannelById(channel1.getId()).sendMessage(content.toString()).queue();
+            storedMessage = bot.getTextChannelById(channel1.getId()).sendMessage(content.toString()).complete();
         }
+        ExprLastMessage.lastMessage = storedMessage;
+        if (exprVar == null) return;
+        if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
+        Variable var = (Variable) exprVar;
+        Utils.setSkriptVariable(var, storedMessage, e);
     }
 
     @Override

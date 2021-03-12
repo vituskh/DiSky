@@ -8,23 +8,25 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.skript.events.skript.EventCommand;
 import info.itsthesky.DiSky.skript.events.skript.EventMessageReceive;
 import info.itsthesky.DiSky.skript.events.skript.EventPrivateMessage;
+import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Name("Reply with Message")
-@Description("Reply with a message to channel-based events (work with private message too!)")
+@Description("Reply with a message to channel-based events (work with private message too!). You can get the sent message using 'and store it in {_var}' pattern!")
 @Examples("reply with \"Hello World :globe_with_meridians:\"")
 @Since("1.0")
 public class EffReplyWith extends Effect {
@@ -38,15 +40,21 @@ public class EffReplyWith extends Effect {
 
     static {
         Skript.registerEffect(EffReplyWith.class,
-                "["+ Utils.getPrefixName() +"] reply with [the] [message] %string/message/embed%");
+                "["+ Utils.getPrefixName() +"] reply with [the] [message] %string/message/embed% [and store it in %-object%]");
     }
 
     private Expression<Object> exprMessage;
+    private Expression<Object> exprVar;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        exprMessage = (Expression<Object>) exprs[0];
+        if (exprs.length == 1) {
+            exprMessage = (Expression<Object>) exprs[0];
+        } else {
+            exprMessage = (Expression<Object>) exprs[0];
+            exprVar = (Expression<Object>) exprs[1];
+        }
         return true;
     }
 
@@ -55,10 +63,11 @@ public class EffReplyWith extends Effect {
         Object message = exprMessage.getSingle(e);
         if (message == null) return;
         if (!allowedEvents.contains(e.getEventName())) {
-            DiSky.getInstance().getLogger().severe("You can't use 'reply with' effect without a discord-based event!");
+            DiSky.getInstance().getLogger().severe("You can't use 'reply with' effect without a discord guild based event!");
             return;
         }
         TextChannel channel = null;
+        Message storedMessage = null;
 
         EventPrivateMessage eventPrivate = null;
         if (e.getEventName().equalsIgnoreCase("EventPrivateMessage")) {
@@ -99,17 +108,22 @@ public class EffReplyWith extends Effect {
             }
         } else {
             if (isFromPrivate) {
-                eventPrivate
+                storedMessage = eventPrivate
                         .getEvent()
                         .getPrivateChannel()
-                        .sendMessage(message.toString()).queue();
+                        .sendMessage(message.toString()).complete();
             } else {
-                channel.getJDA()
+                storedMessage = channel.getJDA()
                         .getTextChannelById(
                                 channel.getId()
-                        ).sendMessage(message.toString()).queue();
+                        ).sendMessage(message.toString()).complete();
             }
         }
+        if (exprVar == null) return;
+        if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
+        Variable var = (Variable) exprVar;
+        Utils.setSkriptVariable(var, storedMessage, e);
+        ExprLastMessage.lastMessage = storedMessage;
     }
 
     @Override
