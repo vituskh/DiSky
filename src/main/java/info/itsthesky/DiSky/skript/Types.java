@@ -214,13 +214,17 @@ public class Types {
 		Classes.registerClass(new ClassInfo<>(MessageReaction.ReactionEmote.class, "emote")
 				.user("emotes?")
 				.name("Discord Emote")
-				.description("Represent a discord emote in a guild, with id, image, etc...")
-				.since("1.1")
+				.description("Represent a discord emote in a guild, with id, url, unicode, etc...")
+				.since("1.3")
 				.parser(new Parser<MessageReaction.ReactionEmote>() {
 
 					@Override
 					public String toString(MessageReaction.ReactionEmote o, int flags) {
-						return o.getId();
+						if (o.isEmote()){
+							return o.getEmote().getAsMention();
+						} else {
+							return o.getId();
+						}
 					}
 
 					@Override

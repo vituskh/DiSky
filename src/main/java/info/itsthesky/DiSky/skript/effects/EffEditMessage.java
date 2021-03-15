@@ -8,20 +8,11 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
-import info.itsthesky.DiSky.DiSky;
-import info.itsthesky.DiSky.skript.events.skript.EventCommand;
-import info.itsthesky.DiSky.skript.events.skript.EventMessageReceive;
-import info.itsthesky.DiSky.skript.events.skript.EventPrivateMessage;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Name("Edit Message")
 @Description("Edit any message from the bot with new message or embed.")

@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
-import info.itsthesky.DiSky.skript.events.skript.EventCommand;
+import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
 import info.itsthesky.DiSky.skript.events.skript.EventMessageReceive;
 import info.itsthesky.DiSky.skript.events.skript.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
@@ -23,7 +23,6 @@ import org.bukkit.event.Event;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Name("Reply with Message")
 @Description("Reply with a message to channel-based events (work with private message too!). You can get the sent message using 'and store it in {_var}' pattern!")
