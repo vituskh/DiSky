@@ -10,79 +10,77 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.annotation.XmlSeeAlso;
 
-
-@Name("Reaction Add")
-@Description("Run when any message receive a reaction. Use event-string to get the message id.")
-@Examples("on reaction add:")
+@Name("Reaction Remove")
+@Description("Run when any member remove a reaction from a message")
+@Examples("on reaction remove:")
 @Since("1.3")
-public class EventReactionAdd extends Event {
+public class EventReactionRemove extends Event {
 
     static {
-        Skript.registerEvent("Reaction Add", SimpleEvent.class, EventReactionAdd.class, "[discord] [guild] reaction add");
+        Skript.registerEvent("Reaction Remove", SimpleEvent.class, EventReactionRemove.class, "[discord] [guild] reaction remove");
 
-        EventValues.registerEventValue(EventReactionAdd.class, Message.class, new Getter<Message, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, Message.class, new Getter<Message, EventReactionRemove>() {
             @Nullable
             @Override
-            public Message get(final @NotNull EventReactionAdd event) {
+            public Message get(final @NotNull EventReactionRemove event) {
                 return event.getEvent().getChannel()
                         .retrieveMessageById(event.getEvent().getMessageId()).complete();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, User.class, new Getter<User, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, User.class, new Getter<User, EventReactionRemove>() {
             @Nullable
             @Override
-            public User get(final @NotNull EventReactionAdd event) {
+            public User get(final @NotNull EventReactionRemove event) {
                 return event.getEvent().getUser();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, Member.class, new Getter<Member, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, Member.class, new Getter<Member, EventReactionRemove>() {
             @Nullable
             @Override
-            public Member get(final @NotNull EventReactionAdd event) {
+            public Member get(final @NotNull EventReactionRemove event) {
                 return event.getEvent().getMember();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, Channel.class, new Getter<Channel, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, Channel.class, new Getter<Channel, EventReactionRemove>() {
             @Nullable
             @Override
-            public Channel get(final @NotNull EventReactionAdd event) {
+            public Channel get(final @NotNull EventReactionRemove event) {
                 return new Channel(event.getEvent().getChannel());
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, TextChannel.class, new Getter<TextChannel, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, TextChannel.class, new Getter<TextChannel, EventReactionRemove>() {
             @Nullable
             @Override
-            public TextChannel get(final @NotNull EventReactionAdd event) {
+            public TextChannel get(final @NotNull EventReactionRemove event) {
                 return new Channel(event.getEvent().getChannel()).getTextChannel();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, Guild.class, new Getter<Guild, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, Guild.class, new Getter<Guild, EventReactionRemove>() {
             @Nullable
             @Override
-            public Guild get(final @NotNull EventReactionAdd event) {
+            public Guild get(final @NotNull EventReactionRemove event) {
                 return event.getEvent().getGuild();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, MessageReaction.ReactionEmote.class, new Getter<MessageReaction.ReactionEmote, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionRemove.class, MessageReaction.ReactionEmote.class, new Getter<MessageReaction.ReactionEmote, EventReactionRemove>() {
             @Nullable
             @Override
-            public MessageReaction.ReactionEmote get(final @NotNull EventReactionAdd event) {
+            public MessageReaction.ReactionEmote get(final @NotNull EventReactionRemove event) {
                 return event.getEvent().getReactionEmote();
             }
         }, 0);
@@ -91,10 +89,10 @@ public class EventReactionAdd extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final GuildMessageReactionAddEvent e;
+    private final GuildMessageReactionRemoveEvent e;
 
-    public EventReactionAdd(
-            final GuildMessageReactionAddEvent e
+    public EventReactionRemove(
+            final GuildMessageReactionRemoveEvent e
             ) {
         super(true);
         this.e = e;
@@ -110,7 +108,7 @@ public class EventReactionAdd extends Event {
         return HANDLERS;
     }
 
-    public GuildMessageReactionAddEvent getEvent() {
+    public GuildMessageReactionRemoveEvent getEvent() {
         return e;
     }
 }
