@@ -3,12 +3,16 @@ package info.itsthesky.DiSky.skript.events.bukkit;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.events.skript.*;
+import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
+import info.itsthesky.DiSky.skript.events.skript.nickname.EventNickChange;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GenericGuildMessageReactionEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -81,16 +85,22 @@ public class JDAListener extends ListenerAdapter {
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent e) {
         DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionAdd(e));
     }
-
-    /* @Override
+    @Override
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent e) {
-        Event event = new EventReactionRemove(
-                e.getMember(),
-                e.getGuild(),
-                e.getReactionEmote().getName(),
-                new Channel(e.getChannel())
-        );
-        DiSky.getInstance().getServer().getPluginManager().callEvent(event);
-    } */
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionRemove(e));
+    }
+    @Override
+    public void onGuildMemberUpdateNickname(GuildMemberUpdateNicknameEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventNickChange(e));
+    }
+    @Override
+    public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMessageDelete(e));
+    }
+
+    @Override
+    public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberBoost(e));
+    }
 
 }
