@@ -42,7 +42,7 @@ public class ExprFromID extends SimpleExpression<Object> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
 		pattern = matchedPattern;
 		exprID = (Expression<String>) exprs[0];
-		if (!(exprs.length == 1)) exprChannel = (Expression<Object>) exprs[2];
+		if (!(exprs.length == 1)) exprChannel = (Expression<Object>) exprs[1];
 		return true;
 	}
 
@@ -61,13 +61,9 @@ public class ExprFromID extends SimpleExpression<Object> {
 			case 3:
 				return new Role[] {bot.getRoleById(Long.parseLong(id))};
 			case 4:
-				TextChannel channel;
-				if (exprChannel.getSingle(e) instanceof Channel) {
-					channel = ((Channel) exprChannel.getSingle(e)).getTextChannel();
-				} else {
-					channel = (TextChannel) exprChannel.getSingle(e);
-				}
-				return new Message[] {channel.getHistory().getMessageById(Long.parseLong(id))};
+				TextChannel channel = Utils.checkChannel(exprChannel.getSingle(e));
+				if (channel == null) return new String[0];
+				return new Message[] {channel.retrieveMessageById(Long.parseLong(id)).complete()};
 		}
 		return new String[0];
 	}

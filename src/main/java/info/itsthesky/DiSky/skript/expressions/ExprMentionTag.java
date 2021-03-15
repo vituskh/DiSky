@@ -25,7 +25,7 @@ public class ExprMentionTag extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprMentionTag.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] mention [tag] of [the] [discord] [entity] %role/user/member/channel/textchannel%");
+				"["+ Utils.getPrefixName() +"] [the] [discord] mention [tag] of [the] [discord] [entity] %role/emote/user/member/channel/textchannel%");
 	}
 
 	private Expression<Object> exprEntity;
@@ -57,6 +57,13 @@ public class ExprMentionTag extends SimpleExpression<String> {
 			return new String[] {((Role) entity).getAsMention()};
 		} else if (entity instanceof Member) {
 			return new String[] {((Member) entity).getAsMention()};
+		} else if (entity instanceof MessageReaction.ReactionEmote) {
+			MessageReaction.ReactionEmote emote = ((MessageReaction.ReactionEmote) entity);
+			if (emote.isEmoji()) {
+				return new String[] {emote.getAsReactionCode()};
+			} else {
+				return new String[] {emote.getEmote().getAsMention()};
+			}
 		}
 
 		return new String[0];

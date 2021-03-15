@@ -25,7 +25,7 @@ public class ExprIdOf extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprIdOf.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] id of [the] [discord] [entity] %string/role/user/member/textchannel/message/guild%");
+				"["+ Utils.getPrefixName() +"] [the] [discord] id of [the] [discord] [entity] %string/role/user/member/emote/textchannel/channel/message/guild%");
 	}
 
 	private Expression<Object> exprEntity;
@@ -61,6 +61,8 @@ public class ExprIdOf extends SimpleExpression<String> {
 			return new String[] {((Role) entity).getId()};
 		} else if (entity instanceof Member) {
 			return new String[] {((Member) entity).getId()};
+		} else if (entity instanceof MessageReaction.ReactionEmote) {
+			return new String[] {((MessageReaction.ReactionEmote) entity).getId()};
 		}
 
 		return new String[0];
@@ -78,7 +80,7 @@ public class ExprIdOf extends SimpleExpression<String> {
 
 	@Override
 	public String toString(Event e, boolean debug) {
-		return "discord if of " + exprEntity.toString(e, debug);
+		return "discord id of " + exprEntity.toString(e, debug);
 	}
 
 }

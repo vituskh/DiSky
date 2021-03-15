@@ -6,6 +6,9 @@ import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
@@ -38,6 +41,9 @@ public class BotManager {
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .enableIntents(GatewayIntent.DIRECT_MESSAGES)
+                    .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                    .setChunkingFilter(ChunkingFilter.NONE)
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .build();
         } catch (LoginException e) {
             e.printStackTrace();

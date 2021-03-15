@@ -28,7 +28,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprNameOf.class, String.class,
                 "discord name",
-                "member/role/webhookbuilder/channel/textchannel/guild/user"
+                "member/role/webhookbuilder/channel/textchannel/guild/user/emote"
         );
     }
 
@@ -47,6 +47,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
         } catch (final Exception ignored) { }
         if (finalName == null) {
             if (entity instanceof Member) finalName = ((Member) entity).getEffectiveName();
+            if (entity instanceof TextChannel) finalName = ((TextChannel) entity).getName();
             if (entity instanceof Webhook) finalName = ((Webhook) entity).getName();
         }
         return finalName;
@@ -97,6 +98,11 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                     Role role = (Role) entity;
                     role.getManager().setName(delta[0].toString()).queue();
                     ScopeRole.lastRole = role;
+                    return;
+                } else if (entity instanceof MessageReaction.ReactionEmote) {
+                    MessageReaction.ReactionEmote emote = (MessageReaction.ReactionEmote) entity;
+                    if (!emote.isEmote()) return;
+                    emote.getEmote().getManager().setName(delta[0].toString()).queue();
                     return;
                 }
                 DiSky.getInstance().getLogger().severe("Cannot change the discord name of entity '"+entity.getClass().getName()+"', since that's not a Discord entity!");

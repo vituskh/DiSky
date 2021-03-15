@@ -18,10 +18,10 @@ import javax.annotation.Nullable;
 @Examples({"remove role with id \"818182471203684407\" from roles of event-user",
         "add role with id \"818182471203684407\" to roles of event-user"})
 @Since("1.0")
-public class ExprRoleOf extends MultiplyPropertyExpression<Member, Role> {
+public class ExprRoleOf extends MultiplyPropertyExpression<Member, Object> {
 
     static {
-        register(ExprRoleOf.class, Role.class,
+        register(ExprRoleOf.class, Object.class,
                 "[discord] [member] role[s]",
                 "member"
         );
@@ -47,13 +47,14 @@ public class ExprRoleOf extends MultiplyPropertyExpression<Member, Role> {
     @Override
     public Class<?>[] acceptChange(Changer.ChangeMode mode) {
         if (mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) {
-            return CollectionUtils.array(Role[].class);
+            return CollectionUtils.array(Object[].class);
         }
         return CollectionUtils.array();
     }
 
     @Override
     public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+        if (delta == null || delta[0] == null || !(delta[0] instanceof Role)) return;
         switch (mode) {
             case ADD:
                 for (Member member : getExpr().getArray(e)) {
