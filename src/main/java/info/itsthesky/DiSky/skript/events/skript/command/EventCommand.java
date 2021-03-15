@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.events.skript;
+package info.itsthesky.DiSky.skript.events.skript.command;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -18,8 +18,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.xml.soap.Text;
 
 @Name("Command")
 @Description("Fired when a command is executed by any user. Have a prefix, a core command and some args")
@@ -141,6 +139,8 @@ public class EventCommand extends Event {
         this.command = command.getCommand();
         this.prefix = command.getPrefix();
         this.arguments = command.getArguments();
+        ExprCommandCore.commandCore = command.getCommand().getValue();
+        ExprCommandPrefix.commandPrefix = command.getPrefix().getValue();
     }
 
     @NotNull

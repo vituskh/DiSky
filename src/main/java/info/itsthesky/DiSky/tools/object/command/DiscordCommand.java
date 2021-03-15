@@ -2,6 +2,7 @@ package info.itsthesky.DiSky.tools.object.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class DiscordCommand {
 
@@ -15,7 +16,7 @@ public class DiscordCommand {
 
         /* Set values */
         this.prefix = new Prefix(values[0].split("")[0]);
-        this.command = new Command(values[0].replaceFirst(prefix.getValue(), ""));
+        this.command = new Command(values[0].replaceFirst(getPrefix().getValue(), ""));
         List<String> tempArgs = new ArrayList<>();
         int i = 0;
         for (String v : values) {
