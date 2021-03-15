@@ -10,11 +10,15 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.bukkit.event.Event;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Guild Boosters")
 @Description("Return all boosters of the guilds")
@@ -40,6 +44,7 @@ public class ExprBoosters extends SimpleExpression<Member> {
 	protected Member[] get(final Event e) {
 		Guild guild = exprGuild.getSingle(e);
 		if (guild == null) return new Member[0];
+		guild.loadMembers();
 		return guild.getBoosters().toArray(new Member[0]);
 	}
 
