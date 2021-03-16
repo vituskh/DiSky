@@ -11,19 +11,20 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.Utils;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 
-@Name("User Custom Status")
-@Description("Get the custom status of a specific user")
-@Examples("reply with \"I love your %custom status of event-user% !\"")
+@Name("Member Custom Status")
+@Description("Return the custom status of a specific member")
+@Examples("reply with \"I love your %custom status of event-member% status!\"")
 @Since("1.3")
-public class ExprUserDiscriminator extends SimpleExpression<String> {
+public class ExprMemberCustomStatus extends SimpleExpression<String> {
 
 	static {
-		Skript.registerExpression(ExprUserDiscriminator.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] tag) of [the] [user] %user/member%");
+		Skript.registerExpression(ExprMemberCustomStatus.class, String.class, ExpressionType.SIMPLE,
+				"["+ Utils.getPrefixName() +"] [the] [discord] custom status of [the] [member] %member%");
 	}
 
 	private Expression<Object> exprMember;
@@ -38,15 +39,14 @@ public class ExprUserDiscriminator extends SimpleExpression<String> {
 	@Override
 	protected String[] get(final Event e) {
 		Object entity = exprMember.getSingle(e);
-		if (entity == null) return new String[0];
-		User user = null;
-		if (entity instanceof Member) {
-			user = ((Member) entity).getUser();
-		} else if (entity instanceof User) {
-			user = (User) entity;
+		if (!(entity instanceof Member)) return new String[0];
+		Member member = (Member) entity;
+		for (Activity activity : member.getActivities()) {
+			if (activity.getType().equals(Activity.ActivityType.CUSTOM_STATUS)) {
+				return new String[] {activity.getName()};
+			}
 		}
-		if (user == null) return new String[0];
-		return new String[] {user.getDiscriminator()};
+		return new String[0];
 	}
 
 	@Override
