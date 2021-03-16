@@ -26,6 +26,16 @@ public class Utils {
         }
     }
 
+    public static int hexToInt(String hex) {
+        hex = hex.replace("#", "");
+        return Integer.parseInt(hex, 16);
+    }
+
+    public static Integer round(Double number) {
+        String t = number.toString().split("\\.")[0];
+        return Integer.valueOf(t);
+    }
+
     public static void setSkriptVariable(Variable variable, Object value, Event event) {
         String name = variable.getName().toString(event);
         Variables.setVariable(name, value, event, variable.isLocal());
