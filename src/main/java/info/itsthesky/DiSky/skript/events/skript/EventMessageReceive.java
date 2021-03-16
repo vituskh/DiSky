@@ -88,18 +88,19 @@ public class EventMessageReceive extends Event {
     private final MessageReceivedEvent e;
 
     public EventMessageReceive(
-            final Channel channel,
-            final Member member,
-            final Message message,
-            final Guild guild,
             final MessageReceivedEvent e
             ) {
         super(true);
-        this.channel = channel;
-        this.guild = guild;
-        this.user = member.getUser();
-        this.member = member;
-        this.message = message;
+        this.channel = new Channel(e.getTextChannel());
+        this.guild = e.getGuild();
+        if (!e.isWebhookMessage()) {
+            this.user = e.getMember().getUser();
+            this.member = e.getMember();
+        } else {
+            this.user = null;
+            this.member = null;
+        }
+        this.message = e.getMessage();
         this.e = e;
     }
 

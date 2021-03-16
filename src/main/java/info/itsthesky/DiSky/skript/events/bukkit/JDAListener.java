@@ -29,30 +29,24 @@ public class JDAListener extends ListenerAdapter {
 
         if (e.isFromGuild()) {
             /* Message receive */
-            event.add(new EventMessageReceive(
-                    new Channel(e.getTextChannel()),
-                    e.getMember(),
-                    e.getMessage(),
-                    e.getGuild(),
-                    e
-            ));
+            event.add(new EventMessageReceive(e));
             // ***
             /* Command event */
             DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
-            event.add(new EventCommand(
-                    new Channel(e.getTextChannel()),
-                    e.getMember(),
-                    e.getMessage(),
-                    e.getGuild(),
-                    discordCommand
-            ));
+            if (!e.isWebhookMessage()) {
+                event.add(new EventCommand(
+                        new Channel(e.getTextChannel()),
+                        e.getMember(),
+                        e.getMessage(),
+                        e.getGuild(),
+                        discordCommand
+                ));
+            }
         } else {
             if (e.getAuthor().isBot()) return;
             event.add(new EventPrivateMessage(e));
         }
-        event.forEach((event1) -> {
-            DiSky.getInstance().getServer().getPluginManager().callEvent(event1);
-        });
+        event.forEach((event1) -> DiSky.getInstance().getServer().getPluginManager().callEvent(event1));
     }
 
     @Override
