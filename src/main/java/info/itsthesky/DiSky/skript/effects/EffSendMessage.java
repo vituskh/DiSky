@@ -31,7 +31,7 @@ public class EffSendMessage extends Effect {
 
     static {
         Skript.registerEffect(EffSendMessage.class,
-                "["+ Utils.getPrefixName() +"] send message %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% with [the] bot [(named|with name)] %string% [and store it in %-object%]");
+                "["+ Utils.getPrefixName() +"] send [message] %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% [with [the] bot [(named|with name)] %string%] [and store it in %-object%]");
     }
 
     private Expression<Object> exprMessage;
@@ -44,7 +44,9 @@ public class EffSendMessage extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         exprMessage = (Expression<Object>) exprs[0];
         exprChannel = (Expression<Object>) exprs[1];
+        if (exprs.length == 2) return true;
         exprName = (Expression<String>) exprs[2];
+        if (exprs.length == 3) return true;
         exprVar = (Expression<Object>) exprs[3];
         return true;
     }
@@ -54,7 +56,7 @@ public class EffSendMessage extends Effect {
         String name = exprName.getSingle(e);
         Object channel = exprChannel.getSingle(e);
         Object content = exprMessage.getSingle(e);
-        if (name == null || channel == null || content == null) return;
+        if (channel == null || content == null) return;
         Message storedMessage;
 
         TextChannel channel1 = null;
@@ -88,8 +90,15 @@ public class EffSendMessage extends Effect {
             Utils.setSkriptVariable(var, storedMessage, e);
         } else return;
 
-        JDA bot = BotManager.getBot(name);
-        if (bot == null || channel1 == null) return;
+        if (channel1 == null) return;
+        JDA bot = null;
+        if (name != null) {
+            bot = BotManager.getBot(name);
+        } else {
+            bot = channel1.getJDA();
+        }
+        if (bot == null) return;
+
         if (content instanceof EmbedBuilder) {
             storedMessage = bot.getTextChannelById(channel1.getId()).sendMessage(((EmbedBuilder) content).build()).complete();
         } else {
