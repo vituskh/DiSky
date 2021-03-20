@@ -4,15 +4,28 @@ import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.events.skript.*;
 import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
+import info.itsthesky.DiSky.skript.events.skript.guild.EventGuildBan;
+import info.itsthesky.DiSky.skript.events.skript.guild.EventGuildUnban;
+import info.itsthesky.DiSky.skript.events.skript.members.EventMemberBoost;
+import info.itsthesky.DiSky.skript.events.skript.members.EventMemberJoin;
+import info.itsthesky.DiSky.skript.events.skript.members.EventMemberLeave;
+import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageDelete;
+import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageEdit;
+import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageReceive;
+import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.events.skript.nickname.EventNickChange;
+import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
+import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionRemove;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
-import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.events.guild.GuildBanEvent;
+import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -35,11 +48,8 @@ public class JDAListener extends ListenerAdapter {
             DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
             if (!e.isWebhookMessage()) {
                 event.add(new EventCommand(
-                        new Channel(e.getTextChannel()),
-                        e.getMember(),
-                        e.getMessage(),
-                        e.getGuild(),
-                        discordCommand
+                        discordCommand,
+                        e
                 ));
             }
         } else {
@@ -95,6 +105,21 @@ public class JDAListener extends ListenerAdapter {
     @Override
     public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
         DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberBoost(e));
+    }
+
+    @Override
+    public void onGuildMessageUpdate(GuildMessageUpdateEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMessageEdit(e));
+    }
+
+    @Override
+    public void onGuildBan(GuildBanEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventGuildBan(e));
+    }
+
+    @Override
+    public void onGuildUnban(GuildUnbanEvent e) {
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventGuildUnban(e));
     }
 
 }
