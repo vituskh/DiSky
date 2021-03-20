@@ -23,7 +23,7 @@ public class ExprUserDiscriminator extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprUserDiscriminator.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] tag) of [the] [user] %user/member%");
+				"["+ Utils.getPrefixName() +"] [the] [discord] tag of [the] [user] %user/member%");
 	}
 
 	private Expression<Object> exprMember;

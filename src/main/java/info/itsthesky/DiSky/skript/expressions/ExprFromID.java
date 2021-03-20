@@ -10,11 +10,13 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.bukkit.event.Event;
 
 @Name("ID of Discord entity")
@@ -51,19 +53,24 @@ public class ExprFromID extends SimpleExpression<Object> {
 		String id = exprID.getSingle(e);
 		JDA bot = BotManager.getFirstBot();
 		if (bot == null || id == null) return new Object[0];
-		switch (pattern) {
-			case 0:
-				return new TextChannel[] {bot.getTextChannelById(Long.parseLong(id))};
-			case 1:
-				return new User[] {bot.getUserById(Long.parseLong(id))};
-			case 2:
-				return new Guild[] {bot.getGuildById(Long.parseLong(id))};
-			case 3:
-				return new Role[] {bot.getRoleById(Long.parseLong(id))};
-			case 4:
-				TextChannel channel = Utils.checkChannel(exprChannel.getSingle(e));
-				if (channel == null) return new String[0];
-				return new Message[] {channel.retrieveMessageById(Long.parseLong(id)).complete()};
+		try {
+			switch (pattern) {
+				case 0:
+					return new TextChannel[] {bot.getTextChannelById(Long.parseLong(id))};
+				case 1:
+					return new User[] {bot.getUserById(Long.parseLong(id))};
+				case 2:
+					return new Guild[] {bot.getGuildById(Long.parseLong(id))};
+				case 3:
+					return new Role[] {bot.getRoleById(Long.parseLong(id))};
+				case 4:
+					TextChannel channel = Utils.checkChannel(exprChannel.getSingle(e));
+					if (channel == null) return new String[0];
+					return new Message[] {channel.retrieveMessageById(Long.parseLong(id)).complete()};
+			}
+			return new String[0];
+		} catch (ErrorResponseException ex) {
+			DiSky.getInstance().getLogger().severe("DiSky can't retrieve discord entity from id '"+id+"' cause of response error: " + ex.getMeaning());
 		}
 		return new String[0];
 	}
