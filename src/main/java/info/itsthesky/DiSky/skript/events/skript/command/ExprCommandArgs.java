@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.expressions.roles;
+package info.itsthesky.DiSky.skript.events.skript.command;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -9,19 +9,20 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import net.dv8tion.jda.api.entities.Role;
 import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
 
-@Name("Last Role")
-@Description("Return the last role made via a role builder.")
-@Since("1.1")
-public class ExprLastRole extends SimpleExpression<Role> {
+@Name("Command Arguments")
+@Description("Get all arguments used in a discord command event.")
+@Since("1.4")
+public class ExprCommandArgs extends SimpleExpression<String> {
+
+    public static String[] commandArgs;
 
     static {
-        Skript.registerExpression(ExprLastRole.class, Role.class, ExpressionType.SIMPLE,
-                "[the] [last] [(generated|created)] role"
+        Skript.registerExpression(ExprCommandArgs.class, String.class, ExpressionType.SIMPLE,
+                "[the] [command] arg([s]|[uments])"
         );
     }
 
@@ -32,22 +33,13 @@ public class ExprLastRole extends SimpleExpression<Role> {
 
     @Nullable
     @Override
-    protected Role[] get(Event e) {
-        return new Role[]{ScopeRole.lastRole};
-    }
-
+    protected String[] get(Event e) { return commandArgs; }
     @Override
-    public Class<? extends Role> getReturnType() {
-        return Role.class;
-    }
-
+    public Class<? extends String> getReturnType() { return String.class; }
     @Override
-    public boolean isSingle() {
-        return true;
-    }
-
+    public boolean isSingle() { return false; }
     @Override
     public String toString(@Nullable Event e, boolean debug) {
-        return "the last generated role";
+        return "the command arguments";
     }
 }

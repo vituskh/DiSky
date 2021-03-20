@@ -26,6 +26,11 @@ public class Utils {
         }
     }
 
+    public static String replaceFirst(String s, String pattern, String replacement) {
+        int idx = s.indexOf(pattern);
+        return s.substring(0, idx) + replacement + s.substring(idx + pattern.length());
+    }
+
     public static int hexToInt(String hex) {
         hex = hex.replace("#", "");
         return Integer.parseInt(hex, 16);

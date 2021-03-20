@@ -14,34 +14,38 @@ import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Command")
+@Name("Discord Command")
 @Description("Fired when a command is executed by any user. Have a prefix, a core command and some args")
-@Examples({"on discord command:",
-        "\tevent-prefix is \".\"",
-        "\tevent-command is \"say\"",
-        "\tset {_args::*} to event-arguments",
-        "\tif {_args::1} is set:",
-        "\t\treply with {_args::1}",
-        "\telse:",
-        "\t\nreply with \":x: You have to specify a message!\""
+@Examples({"on discord command:\n" +
+        "\tprefix is \"!\"\n" +
+        "\tcore is \"slowmode\"\n" +
+        "\tset {_time} to first element of arguments\n" +
+        "\treply with \"%{_time}%\"\n" +
+        "\tif {_time} is not set:\n" +
+        "\t\treply with \":x: You have t define a new time!\"\n" +
+        "\t\tstop\n" +
+        "\tset slowmode of event-channel to (\"%{_time}%\" parsed as number)\n" +
+        "\treply with \":v: Slow mode changed!\""
 })
 @Since("1.0")
 public class EventCommand extends Event {
 
     static {
         // [seen by [bot] [(named|with name)]%string%]
-        Skript.registerEvent("Member Leave", SimpleEvent.class, EventCommand.class, "[discord] command");
+        Skript.registerEvent("Discord Command", SimpleEvent.class, EventCommand.class, "[discord] command");
 
         EventValues.registerEventValue(EventCommand.class, TextChannel.class, new Getter<TextChannel, EventCommand>() {
             @Nullable
             @Override
             public TextChannel get(final @NotNull EventCommand event) {
-                return event.getTextChannel();
+                return event.getEvent().getMessage().getTextChannel();
             }
         }, 0);
 
@@ -49,7 +53,7 @@ public class EventCommand extends Event {
             @Nullable
             @Override
             public Channel get(final @NotNull EventCommand event) {
-                return event.getChannel();
+                return new Channel(event.getEvent().getMessage().getChannel());
             }
         }, 0);
 
@@ -57,7 +61,7 @@ public class EventCommand extends Event {
             @Nullable
             @Override
             public Message get(final @NotNull EventCommand event) {
-                return event.getMessage();
+                return event.getEvent().getMessage();
             }
         }, 0);
 
@@ -65,7 +69,7 @@ public class EventCommand extends Event {
             @Nullable
             @Override
             public User get(final @NotNull EventCommand event) {
-                return event.getUser();
+                return event.getEvent().getMember().getUser();
             }
         }, 0);
 
@@ -73,31 +77,7 @@ public class EventCommand extends Event {
             @Nullable
             @Override
             public Guild get(final @NotNull EventCommand event) {
-                return event.getGuild();
-            }
-        }, 0);
-
-        EventValues.registerEventValue(EventCommand.class, Command.class, new Getter<Command, EventCommand>() {
-            @Nullable
-            @Override
-            public Command get(final @NotNull EventCommand event) {
-                return event.getCommand();
-            }
-        }, 0);
-
-        EventValues.registerEventValue(EventCommand.class, Prefix.class, new Getter<Prefix, EventCommand>() {
-            @Nullable
-            @Override
-            public Prefix get(final @NotNull EventCommand event) {
-                return event.getPrefix();
-            }
-        }, 0);
-
-        EventValues.registerEventValue(EventCommand.class, Arguments.class, new Getter<Arguments, EventCommand>() {
-            @Nullable
-            @Override
-            public Arguments get(final @NotNull EventCommand event) {
-                return event.getArguments();
+                return event.getEvent().getGuild();
             }
         }, 0);
 
@@ -105,7 +85,7 @@ public class EventCommand extends Event {
             @Nullable
             @Override
             public Member get(final @NotNull EventCommand event) {
-                return event.getMember();
+                return event.getEvent().getMember();
             }
         }, 0);
 
@@ -113,34 +93,17 @@ public class EventCommand extends Event {
     }
 
     private static final HandlerList HANDLERS = new HandlerList();
-
-    private final Channel channel;
-    private final Guild guild;
-    private final User user;
-    private final Message message;
-    private final Command command;
-    private final Arguments arguments;
-    private final Prefix prefix;
-    private final Member member;
+    private final MessageReceivedEvent e;
 
     public EventCommand(
-            final Channel channel,
-            final Member member,
-            final Message message,
-            final Guild guild,
-            final DiscordCommand command
+            final DiscordCommand command,
+            final MessageReceivedEvent e
             ) {
         super(true);
-        this.channel = channel;
-        this.guild = guild;
-        this.user = member.getUser();
-        this.member = member;
-        this.message = message;
-        this.command = command.getCommand();
-        this.prefix = command.getPrefix();
-        this.arguments = command.getArguments();
+        this.e = e;
         ExprCommandCore.commandCore = command.getCommand().getValue();
         ExprCommandPrefix.commandPrefix = command.getPrefix().getValue();
+        ExprCommandArgs.commandArgs = command.getArguments().getArgs().toArray(new String[0]);
     }
 
     @NotNull
@@ -148,36 +111,8 @@ public class EventCommand extends Event {
     public HandlerList getHandlers() {
         return HANDLERS;
     }
-
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
-
-    public Arguments getArguments() {
-        return arguments;
-    }
-    public Prefix getPrefix() {
-        return prefix;
-    }
-    public Channel getChannel() {
-        return channel;
-    }
-    public TextChannel getTextChannel() {
-        return channel.getTextChannel();
-    }
-    public Message getMessage() {
-        return message;
-    }
-    public Command getCommand() {
-        return command;
-    }
-    public Guild getGuild() {
-        return guild;
-    }
-    public User getUser() {
-        return user;
-    }
-    public Member getMember() {
-        return member;
-    }
+    public MessageReceivedEvent getEvent() { return this.e; }
 }
