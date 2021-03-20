@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 
 @Name("Set Playing Presence")
 @Description("Make specific bot play something")
-@Examples("mark \"MyBot\" as playing \"to my favourite game, Evoland2 :D\"")
+@Examples("mark \"MyBot\" playing \"to my favourite game, Evoland2 :D\"")
 @Since("1.0")
 public class EffSetPlaying extends Effect {
 

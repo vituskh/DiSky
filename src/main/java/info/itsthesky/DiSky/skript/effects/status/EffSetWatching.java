@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 
 @Name("Set Watching Presence")
 @Description("Make specific bot watching something")
-@Examples("mark \"MyBot\" as watching \"My developer :D\"")
+@Examples("mark \"MyBot\" watching \"My developer :D\"")
 @Since("1.0")
 public class EffSetWatching extends Effect {
 

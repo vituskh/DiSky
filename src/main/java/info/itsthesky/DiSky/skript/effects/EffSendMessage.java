@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
 import info.itsthesky.DiSky.tools.Utils;
@@ -22,6 +23,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 
+import java.util.Objects;
+
 @Name("Register new Discord Bot")
 @Description("Register and load a new discord bot from a token and with a specific Name." +
         "\nYou need to follow Discord's developer instruction in order to generate a new bot with a token")
@@ -31,7 +34,7 @@ public class EffSendMessage extends Effect {
 
     static {
         Skript.registerEffect(EffSendMessage.class,
-                "["+ Utils.getPrefixName() +"] send [message] %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% [with [the] bot [(named|with name)] %string%] [and store it in %-object%]");
+                "["+ Utils.getPrefixName() +"] send [message] %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% [with [the] bot [(named|with name)] %-string%] [and store it in %-object%]");
     }
 
     private Expression<Object> exprMessage;
@@ -53,7 +56,6 @@ public class EffSendMessage extends Effect {
 
     @Override
     protected void execute(Event e) {
-        String name = exprName.getSingle(e);
         Object channel = exprChannel.getSingle(e);
         Object content = exprMessage.getSingle(e);
         if (channel == null || content == null) return;
@@ -92,17 +94,22 @@ public class EffSendMessage extends Effect {
 
         if (channel1 == null) return;
         JDA bot = null;
-        if (name != null) {
-            bot = BotManager.getBot(name);
+        if (exprName != null) {
+            bot = BotManager.getBot(exprName.getSingle(e));
         } else {
             bot = channel1.getJDA();
         }
         if (bot == null) return;
 
+        TextChannel channel2 = bot.getTextChannelById(channel1.getId());
+        if (channel2 == null) {
+            DiSky.getInstance().getLogger().severe("Cannot get the right text channel with id '"+channel1.getId()+"'!");
+            return;
+        }
         if (content instanceof EmbedBuilder) {
-            storedMessage = bot.getTextChannelById(channel1.getId()).sendMessage(((EmbedBuilder) content).build()).complete();
+            storedMessage = channel2.sendMessage(((EmbedBuilder) content).build()).complete();
         } else {
-            storedMessage = bot.getTextChannelById(channel1.getId()).sendMessage(content.toString()).complete();
+            storedMessage = channel2.sendMessage(content.toString()).complete();
         }
         ExprLastMessage.lastMessage = storedMessage;
         if (exprVar == null) return;
@@ -113,7 +120,7 @@ public class EffSendMessage extends Effect {
 
     @Override
     public String toString(Event e, boolean debug) {
-        return "send discord message " + exprMessage.toString(e, debug) + " to channel or user " + exprChannel.toString(e, debug) + " with bot named " + exprName.toString(e, debug);
+        return "send discord message " + exprMessage.toString(e, debug) + " to channel or user " + exprChannel.toString(e, debug);
     }
 
 }

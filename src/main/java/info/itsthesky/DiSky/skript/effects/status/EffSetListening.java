@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 
 @Name("Set Listening Presence")
 @Description("Make specific bot listen to something")
-@Examples("mark \"MyBot\" as listening \"my favourite music, Might+U\"")
+@Examples("mark \"MyBot\" listening \"my favourite music, Might+U\"")
 @Since("1.0")
 public class EffSetListening extends Effect {
 
