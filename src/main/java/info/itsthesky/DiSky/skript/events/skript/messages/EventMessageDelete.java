@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.events.skript;
+package info.itsthesky.DiSky.skript.events.skript.messages;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -8,6 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import info.itsthesky.DiSky.managers.cache.CachedMessage;
+import info.itsthesky.DiSky.managers.cache.Messages;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -18,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 
 @Name("Message Delete")
-@Description("Run when any message is deleted")
+@Description("Run when any message is deleted. Use event-string to get the message's content.")
 @Examples("on message delete:")
 @Since("1.3")
 public class EventMessageDelete extends Event {
@@ -26,21 +28,12 @@ public class EventMessageDelete extends Event {
     static {
         Skript.registerEvent("Message Delete", SimpleEvent.class, EventMessageDelete.class, "[discord] [guild] message delete");
 
-        EventValues.registerEventValue(EventMessageDelete.class, Message.class, new Getter<Message, EventMessageDelete>() {
+        EventValues.registerEventValue(EventMessageDelete.class, String.class, new Getter<String, EventMessageDelete>() {
             @Nullable
             @Override
-            public Message get(final @NotNull EventMessageDelete event) {
-                return event.getEvent().getChannel()
-                        .getHistory().getMessageById(event.getEvent().getMessageIdLong());
-            }
-        }, 0);
-
-        EventValues.registerEventValue(EventMessageDelete.class, User.class, new Getter<User, EventMessageDelete>() {
-            @Nullable
-            @Override
-            public User get(final @NotNull EventMessageDelete event) {
-                return event.getEvent().getChannel()
-                        .getHistory().getMessageById(event.getEvent().getMessageIdLong()).getAuthor();
+            public String get(final @NotNull EventMessageDelete event) {
+                CachedMessage cachedMessage = Messages.retrieveMessage(event.getEvent().getMessageId());
+                return cachedMessage.getContent();
             }
         }, 0);
 
@@ -48,9 +41,17 @@ public class EventMessageDelete extends Event {
             @Nullable
             @Override
             public Member get(final @NotNull EventMessageDelete event) {
-                return event.getEvent().getGuild().getMember(
-                        event.getEvent().getChannel()
-                                .getHistory().getMessageById(event.getEvent().getMessageIdLong()).getAuthor());
+                CachedMessage cachedMessage = Messages.retrieveMessage(event.getEvent().getMessageId());
+                return event.getEvent().getGuild().getMemberById(cachedMessage.getAuthorID());
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMessageDelete.class, User.class, new Getter<User, EventMessageDelete>() {
+            @Nullable
+            @Override
+            public User get(final @NotNull EventMessageDelete event) {
+                CachedMessage cachedMessage = Messages.retrieveMessage(event.getEvent().getMessageId());
+                return event.getEvent().getJDA().getUserById(cachedMessage.getAuthorID());
             }
         }, 0);
 
