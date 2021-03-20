@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.events.skript;
+package info.itsthesky.DiSky.skript.events.skript.members;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -8,11 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
-import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
-import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;

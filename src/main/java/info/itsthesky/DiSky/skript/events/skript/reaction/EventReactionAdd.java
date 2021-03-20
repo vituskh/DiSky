@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.events.skript;
+package info.itsthesky.DiSky.skript.events.skript.reaction;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -10,15 +10,11 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.xml.bind.annotation.XmlSeeAlso;
 
 
 @Name("Reaction Add")
