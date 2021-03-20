@@ -12,11 +12,12 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
-import info.itsthesky.DiSky.skript.events.skript.EventMessageReceive;
-import info.itsthesky.DiSky.skript.events.skript.EventPrivateMessage;
+import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageReceive;
+import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
@@ -39,7 +40,7 @@ public class EffReplyWith extends Effect {
 
     static {
         Skript.registerEffect(EffReplyWith.class,
-                "["+ Utils.getPrefixName() +"] reply with [the] [message] %string/message/embed% [and store it in %-object%]");
+                "["+ Utils.getPrefixName() +"] reply with [the] [message] %string/message/messagebuilder/embed% [and store it in %-object%]");
     }
 
     private Expression<Object> exprMessage;
@@ -74,7 +75,7 @@ public class EffReplyWith extends Effect {
         } else if (e instanceof EventMessageReceive) {
             channel = ((EventMessageReceive) e).getTextChannel();
         } else if (e instanceof EventCommand) {
-            channel = ((EventCommand) e).getTextChannel();
+            channel = (TextChannel) ((EventCommand) e).getEvent().getChannel();
         }
 
         boolean isFromPrivate = false;
@@ -104,6 +105,18 @@ public class EffReplyWith extends Effect {
                         .getTextChannelById(
                                 channel.getId()
                         ).sendMessage(((EmbedBuilder) message).build()).queue();
+            }
+        }  else if (message instanceof MessageBuilder) {
+            if (isFromPrivate) {
+                eventPrivate
+                        .getEvent()
+                        .getPrivateChannel()
+                        .sendMessage(((MessageBuilder) message).build()).queue();
+            } else {
+                channel.getJDA()
+                        .getTextChannelById(
+                                channel.getId()
+                        ).sendMessage(((MessageBuilder) message).build()).queue();
             }
         } else {
             if (isFromPrivate) {
