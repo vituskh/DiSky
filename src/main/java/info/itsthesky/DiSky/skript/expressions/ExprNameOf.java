@@ -10,9 +10,11 @@ import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.effects.webhook.ScopeWebhook;
-import info.itsthesky.DiSky.skript.expressions.roles.ScopeRole;
+import info.itsthesky.DiSky.skript.scope.role.ScopeRole;
+import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
+import info.itsthesky.DiSky.tools.object.RoleBuilder;
+import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
@@ -28,7 +30,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprNameOf.class, String.class,
                 "discord name",
-                "member/role/webhookbuilder/channel/textchannel/guild/user/emote"
+                "member/role/rolebuilder/webhookbuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
         );
     }
 
@@ -49,6 +51,8 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof Member) finalName = ((Member) entity).getEffectiveName();
             if (entity instanceof TextChannel) finalName = ((TextChannel) entity).getName();
             if (entity instanceof Webhook) finalName = ((Webhook) entity).getName();
+            if (entity instanceof TextChannelBuilder) finalName = ((TextChannelBuilder) entity).getName();
+            if (entity instanceof RoleBuilder) finalName = ((RoleBuilder) entity).getName();
         }
         return finalName;
     }
@@ -97,12 +101,23 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                 } else if (entity instanceof Role) {
                     Role role = (Role) entity;
                     role.getManager().setName(delta[0].toString()).queue();
-                    ScopeRole.lastRole = role;
+                    return;
+                } else if (entity instanceof RoleBuilder) {
+                    RoleBuilder role = (RoleBuilder) entity;
+                    role.setName(delta[0].toString());
+                    ScopeRole.lastBuilder.setName(delta[0].toString());
                     return;
                 } else if (entity instanceof MessageReaction.ReactionEmote) {
                     MessageReaction.ReactionEmote emote = (MessageReaction.ReactionEmote) entity;
                     if (!emote.isEmote()) return;
                     emote.getEmote().getManager().setName(delta[0].toString()).queue();
+                    return;
+                } else if (entity instanceof TextChannelBuilder) {
+                    TextChannelBuilder channel = (TextChannelBuilder) entity;
+                    channel.setName(delta[0].toString());
+                    ScopeTextChannel
+                            .lastBuilder
+                            .setName(delta[0].toString());
                     return;
                 }
                 DiSky.getInstance().getLogger().severe("Cannot change the discord name of entity '"+entity.getClass().getName()+"', since that's not a Discord entity!");

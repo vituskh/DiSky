@@ -4,13 +4,19 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import info.itsthesky.DiSky.tools.object.RoleBuilder;
+import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+
+import java.util.Locale;
 
 public class Types {
 	static  {
@@ -38,6 +44,58 @@ public class Types {
 
 					@Override
 					public JDA parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(TextChannelBuilder.class, "textchannelbuilder")
+				.user("textchannelbuilders?")
+				.name("TextChannel Builder")
+				.description("Represent a textchannel builder")
+				.since("1.4")
+				.parser(new Parser<TextChannelBuilder>() {
+
+					@Override
+					public String toString(TextChannelBuilder o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(TextChannelBuilder o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public TextChannelBuilder parse(final String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Category.class, "category")
+				.user("category")
+				.name("Category")
+				.description("Represent a discord category")
+				.since("1.4")
+				.parser(new Parser<Category>() {
+					@Override
+					public String toString(Category o, int flags) {
+						return o.getName();
+					}
+					@Override
+					public String toVariableNameString(Category o) {
+						return "";
+					}
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+					@Override
+					public Category parse(final String s, final ParseContext context) {
 						return null;
 					}
 				})
@@ -223,7 +281,7 @@ public class Types {
 						if (o.isEmote()){
 							return o.getEmote().getAsMention();
 						} else {
-							return o.getId();
+							return o.getAsReactionCode();
 						}
 					}
 
@@ -456,5 +514,95 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(MessageBuilder.class, "messagebuilder")
+				.user("messagebuilders?")
+				.name("Message Builder")
+				.description(new String[] {
+						"Represent a discord message builder, which you can append embed and string."
+				})
+				.since("1.4")
+				.parser(new Parser<MessageBuilder>() {
+
+					@Override
+					public String toString(MessageBuilder o, int flags) {
+						return o.toString();
+					}
+
+					@Override
+					public String toVariableNameString(MessageBuilder o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public MessageBuilder parse(String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(RoleBuilder.class, "rolebuilder")
+				.user("rolebuilders?")
+				.name("Role Builder")
+				.description(new String[] {
+						"Represent a discord role builder, which is not created yet in a guild."
+				})
+				.since("1.4")
+				.parser(new Parser<RoleBuilder>() {
+
+					@Override
+					public String toString(RoleBuilder o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(RoleBuilder o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public RoleBuilder parse(String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Permission.class, "permission")
+				.user("permissions?")
+				.name("Discord Permission")
+				.description("Permission used for a role, channel, member, etc...")
+				.usage("create instant invite, kick members, ban members, administrator, manage channel, manage server, message add reaction, view audit logs, view channel, message read, message write, message tts, message manage, message embed links, message attach files, message history, message mention everyone, message ext emoji, voice connect, voice speak, voice mute others, voice deaf others, voice move others, voice use vad, nickname change, nickname manage, manage roles, manage permissions, manage webhooks, manage emotes, unknown")
+				.since("1.4")
+				.parser(new Parser<Permission>() {
+					@Override
+					public Permission parse(String input, ParseContext context) {
+						for (Permission perm : Permission.values()) {
+							if (perm.getName().equalsIgnoreCase(input.replaceAll("_", " ").toLowerCase())) return perm;
+						}
+						return null;
+					}
+
+					@Override
+					public String toString(Permission c, int flags) {
+						return c.getName();
+					}
+
+					@Override
+					public String toVariableNameString(Permission perm) {
+						return "" + perm.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "[a-z ]+";
+					}
+				}));
 	}
 }
