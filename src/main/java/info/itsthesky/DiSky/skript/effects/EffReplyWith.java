@@ -131,11 +131,11 @@ public class EffReplyWith extends Effect {
                         ).sendMessage(message.toString()).complete();
             }
         }
+        ExprLastMessage.lastMessage = storedMessage;
         if (exprVar == null) return;
         if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
         Variable var = (Variable) exprVar;
         Utils.setSkriptVariable(var, storedMessage, e);
-        ExprLastMessage.lastMessage = storedMessage;
     }
 
     @Override
