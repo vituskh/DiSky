@@ -63,6 +63,8 @@ public class ExprIdOf extends SimpleExpression<String> {
 			return new String[] {((Member) entity).getId()};
 		} else if (entity instanceof MessageReaction.ReactionEmote) {
 			return new String[] {((MessageReaction.ReactionEmote) entity).getId()};
+		} else if (entity instanceof Category) {
+			return new String[] {((Category) entity).getId()};
 		}
 
 		return new String[0];

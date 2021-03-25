@@ -31,7 +31,8 @@ public class ExprFromID extends SimpleExpression<Object> {
 				"["+ Utils.getPrefixName() +"] (user|member) with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] (guild|server) with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] [guild] role with [the] id %string%",
-				"["+ Utils.getPrefixName() +"] message with [the] id %string% in [channel] %channel/textchannel%"
+				"["+ Utils.getPrefixName() +"] message with [the] id %string% in [channel] %channel/textchannel%",
+				"["+ Utils.getPrefixName() +"] category with [the] id %string%"
 		);
 	}
 
@@ -67,6 +68,8 @@ public class ExprFromID extends SimpleExpression<Object> {
 					TextChannel channel = Utils.checkChannel(exprChannel.getSingle(e));
 					if (channel == null) return new String[0];
 					return new Message[] {channel.retrieveMessageById(Long.parseLong(id)).complete()};
+				case 5:
+					return new Category[] {bot.getCategoryById(Long.parseLong(id))};
 			}
 			return new String[0];
 		} catch (ErrorResponseException ex) {

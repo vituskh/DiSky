@@ -10,8 +10,10 @@ import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.effects.webhook.ScopeWebhook;
+import info.itsthesky.DiSky.skript.scope.category.ScopeCategory;
 import info.itsthesky.DiSky.skript.scope.role.ScopeRole;
 import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
+import info.itsthesky.DiSky.tools.object.CategoryBuilder;
 import info.itsthesky.DiSky.tools.object.RoleBuilder;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
@@ -30,7 +32,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprNameOf.class, String.class,
                 "discord name",
-                "member/role/rolebuilder/webhookbuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
+                "member/role/rolebuilder/webhookbuilder/category/categorybuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
         );
     }
 
@@ -53,6 +55,8 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof Webhook) finalName = ((Webhook) entity).getName();
             if (entity instanceof TextChannelBuilder) finalName = ((TextChannelBuilder) entity).getName();
             if (entity instanceof RoleBuilder) finalName = ((RoleBuilder) entity).getName();
+            if (entity instanceof Category) finalName = ((Category) entity).getName();
+            if (entity instanceof CategoryBuilder) finalName = ((CategoryBuilder) entity).getName();
         }
         return finalName;
     }
@@ -118,6 +122,17 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                     ScopeTextChannel
                             .lastBuilder
                             .setName(delta[0].toString());
+                    return;
+                } else if (entity instanceof CategoryBuilder) {
+                    CategoryBuilder category = (CategoryBuilder) entity;
+                    category.setName(delta[0].toString());
+                    ScopeCategory
+                            .lastBuilder
+                            .setName(delta[0].toString());
+                    return;
+                } else if (entity instanceof Category) {
+                    Category category = (Category) entity;
+                    category.getManager().setName(delta[0].toString()).queue();
                     return;
                 }
                 DiSky.getInstance().getLogger().severe("Cannot change the discord name of entity '"+entity.getClass().getName()+"', since that's not a Discord entity!");
