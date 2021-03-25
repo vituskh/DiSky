@@ -1,8 +1,10 @@
 package info.itsthesky.DiSky.tools.object;
 
 import info.itsthesky.DiSky.DiSky;
+import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 
 public class TextChannelBuilder {
 
@@ -11,6 +13,7 @@ public class TextChannelBuilder {
     private boolean nsfw;
     private boolean news;
     private int slowmode;
+    private Category category;
 
 
     public TextChannelBuilder() {
@@ -19,20 +22,25 @@ public class TextChannelBuilder {
         this.slowmode = 0;
         this.topic = "";
         this.news = false;
+        this.category = null;
     }
 
     public TextChannel createChannel(Guild guild) {
-        return guild
+        ChannelAction<TextChannel> channel = guild
                 .createTextChannel(this.name)
                 .setSlowmode(this.slowmode)
                 .setTopic(this.topic)
                 .setNews(this.news)
-                .setNSFW(this.nsfw)
-                .complete();
+                .setNSFW(this.nsfw);
+        if (category != null) channel.setParent(this.category).queue();
+        return channel.complete();
     }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
     public String getTopic() {
         return topic;
