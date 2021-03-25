@@ -4,6 +4,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import info.itsthesky.DiSky.tools.object.CategoryBuilder;
 import info.itsthesky.DiSky.tools.object.RoleBuilder;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
@@ -20,6 +21,58 @@ import java.util.Locale;
 
 public class Types {
 	static  {
+		Classes.registerClass(new ClassInfo<>(Category.class, "category")
+				.user("categor(y|ies)")
+				.name("Category")
+				.description("Represent a category in a guild, which is already created.")
+				.since("1.4.1")
+				.parser(new Parser<Category>() {
+					@Override
+					public Category parse(String input, ParseContext context) {
+						return null;
+					}
+
+					@Override
+					public String toString(Category c, int flags) {
+						return c.getName();
+					}
+
+					@Override
+					public String toVariableNameString(Category cat) {
+						return cat.getName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "[a-z ]+";
+					}
+				}));
+		Classes.registerClass(new ClassInfo<>(CategoryBuilder.class, "categorybuilder")
+				.user("categorybuilders?")
+				.name("Category Builder")
+				.description("Represent a category builder, which is not created yet in a guild.")
+				.since("1.4.1")
+				.parser(new Parser<CategoryBuilder>() {
+					@Override
+					public CategoryBuilder parse(String input, ParseContext context) {
+						return null;
+					}
+
+					@Override
+					public String toString(CategoryBuilder c, int flags) {
+						return c.getName();
+					}
+
+					@Override
+					public String toVariableNameString(CategoryBuilder cat) {
+						return cat.getName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return "[a-z ]+";
+					}
+				}));
 		Classes.registerClass(new ClassInfo<>(JDA.class, "bot")
 				.user("bots?")
 				.name("Discord Bot")
@@ -72,30 +125,6 @@ public class Types {
 
 					@Override
 					public TextChannelBuilder parse(final String s, final ParseContext context) {
-						return null;
-					}
-				})
-		);
-		Classes.registerClass(new ClassInfo<>(Category.class, "category")
-				.user("category")
-				.name("Category")
-				.description("Represent a discord category")
-				.since("1.4")
-				.parser(new Parser<Category>() {
-					@Override
-					public String toString(Category o, int flags) {
-						return o.getName();
-					}
-					@Override
-					public String toVariableNameString(Category o) {
-						return "";
-					}
-					@Override
-					public String getVariableNamePattern() {
-						return ".+";
-					}
-					@Override
-					public Category parse(final String s, final ParseContext context) {
 						return null;
 					}
 				})
