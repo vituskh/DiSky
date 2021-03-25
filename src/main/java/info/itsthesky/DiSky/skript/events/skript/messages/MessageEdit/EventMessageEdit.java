@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.events.skript.messages;
+package info.itsthesky.DiSky.skript.events.skript.messages.MessageEdit;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -8,12 +8,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import info.itsthesky.DiSky.managers.cache.EditedMessages;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.guild.GuildBanEvent;
-import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -22,7 +22,11 @@ import org.jetbrains.annotations.Nullable;
 
 
 @Name("Message Edit")
-@Description("Run when any message is edited. Cause of discord limitation, you can't get the old content.")
+@Description({
+        "Run when any message is edited.",
+        "To get the new and old content, see for:",
+        "%new content% and %old content%",
+        "Both will return a string with the new and the old content!"})
 @Examples("on message edit:")
 @Since("1.4")
 public class EventMessageEdit extends Event {
@@ -35,6 +39,14 @@ public class EventMessageEdit extends Event {
             @Override
             public User get(final @NotNull EventMessageEdit event) {
                 return event.getEvent().getMessage().getAuthor();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMessageEdit.class, Member.class, new Getter<Member, EventMessageEdit>() {
+            @Nullable
+            @Override
+            public Member get(final @NotNull EventMessageEdit event) {
+                return event.getEvent().getMessage().getMember();
             }
         }, 0);
 

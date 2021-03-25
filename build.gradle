@@ -5,7 +5,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
-def version = '1.4'
+def version = '1.4.1'
 group 'info.itsthesky'
 
 repositories {
@@ -26,6 +26,12 @@ dependencies {
     implementation 'com.github.MilkBowl:VaultAPI:1.7'
     compile 'net.dv8tion:JDA:4.2.0_241'
     compile 'club.minnced:discord-webhooks:0.5.5-rc'
+}
+
+processResources {
+    filter{
+        String line -> line.replaceAll('\\$\\{version}', version)
+    }
 }
 
 shadowJar {

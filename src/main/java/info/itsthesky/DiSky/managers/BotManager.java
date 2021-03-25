@@ -1,6 +1,7 @@
 package info.itsthesky.DiSky.managers;
 
 import info.itsthesky.DiSky.DiSky;
+import info.itsthesky.DiSky.managers.cache.EditedMessages;
 import info.itsthesky.DiSky.managers.cache.Messages;
 import info.itsthesky.DiSky.skript.events.bukkit.JDAListener;
 import info.itsthesky.DiSky.skript.events.skript.EventBotJoin;
@@ -41,6 +42,7 @@ public class BotManager {
             jda = JDABuilder.createDefault(token)
                     .addEventListeners(new JDAListener())
                     .addEventListeners(new Messages())
+                    .addEventListeners(new EditedMessages())
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .enableIntents(GatewayIntent.DIRECT_MESSAGES)

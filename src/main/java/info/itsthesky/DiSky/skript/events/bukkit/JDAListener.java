@@ -10,7 +10,7 @@ import info.itsthesky.DiSky.skript.events.skript.members.EventMemberBoost;
 import info.itsthesky.DiSky.skript.events.skript.members.EventMemberJoin;
 import info.itsthesky.DiSky.skript.events.skript.members.EventMemberLeave;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageDelete;
-import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageEdit;
+import info.itsthesky.DiSky.skript.events.skript.messages.MessageEdit.EventMessageEdit;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageReceive;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.events.skript.nickname.EventNickChange;
@@ -107,10 +107,6 @@ public class JDAListener extends ListenerAdapter {
         DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberBoost(e));
     }
 
-    @Override
-    public void onGuildMessageUpdate(GuildMessageUpdateEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMessageEdit(e));
-    }
 
     @Override
     public void onGuildBan(GuildBanEvent e) {
