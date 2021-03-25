@@ -1,5 +1,5 @@
 name: DiSky
-version: 1.4
+version: ${version}
 main: info.itsthesky.DiSky.DiSky
 author: ItsTheSky
 description: Skript addon which allow you to interact with Discord through Skript.
