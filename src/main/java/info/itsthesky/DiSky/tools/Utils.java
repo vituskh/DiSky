@@ -1,13 +1,21 @@
 package info.itsthesky.DiSky.tools;
 
 import ch.njol.skript.lang.Variable;
+import ch.njol.skript.util.Date;
+import ch.njol.skript.util.Time;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 
-public class Utils {
+import java.util.HashMap;
+
+public class Utils extends ListenerAdapter {
 
     public static String getPrefixName() {
         return "disky";
@@ -47,4 +55,13 @@ public class Utils {
         return ChatColor.translateAlternateColorCodes('&', s);
     }
 
+    @Override
+    public void onReady(ReadyEvent e) {
+        timeHashMap.remove(e.getJDA());
+        timeHashMap.put(e.getJDA(), Date.now());
+    }
+    public static HashMap<JDA, Date> timeHashMap = new HashMap<>();
+    public static Timespan getUpTime(JDA jda) {
+        return timeHashMap.get(jda).difference(Date.now());
+    }
 }
