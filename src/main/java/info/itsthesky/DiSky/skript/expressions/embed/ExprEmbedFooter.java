@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import info.itsthesky.DiSky.DiSky;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.event.Event;
 
@@ -53,6 +54,7 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
 
     @Override
     public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+        if (delta == null || delta[0] == null) return;
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
@@ -60,12 +62,16 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
                 }
                 break;
             case SET:
+                String value = delta[0].toString();
+                if (value.length() > 2048) {
+                    DiSky.getInstance().getLogger()
+                            .warning("The embed's footer cannot be bigger than 2048 characters. The one you're trying to set is '"+value.length()+"' length!");
+                    return;
+                }
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    embed.setFooter((String) delta[0]);
+                    embed.setFooter(value);
                 }
                 break;
-            default:
-                return;
         }
     }
 }

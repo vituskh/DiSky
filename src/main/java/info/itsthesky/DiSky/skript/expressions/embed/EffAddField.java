@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.event.Event;
@@ -46,6 +47,18 @@ public class EffAddField extends Effect {
         String desc = exprDesc.getSingle(e);
         EmbedBuilder embed = exprEmbed.getSingle(e);
         if (name == null || desc == null || embed == null) return;
+
+        if (name.length() > 256) {
+            DiSky.getInstance().getLogger()
+                    .warning("The title of a field cannot be bigger than 256 characters. The one you're trying to set is '"+name.length()+"' length!");
+            return;
+        }
+        if (desc.length() > 1024) {
+            DiSky.getInstance().getLogger()
+                    .warning("The value of a field cannot be bigger than 1024 characters. The one you're trying to set is '"+desc.length()+"' length!");
+            return;
+        }
+
         embed.addField(name, desc, isInline);
     }
 

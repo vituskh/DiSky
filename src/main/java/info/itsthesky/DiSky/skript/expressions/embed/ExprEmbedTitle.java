@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import info.itsthesky.DiSky.DiSky;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.event.Event;
 
@@ -53,6 +54,7 @@ public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, Strin
 
     @Override
     public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+        if (delta == null || delta[0] == null) return;
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
@@ -60,12 +62,16 @@ public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, Strin
                 }
                 break;
             case SET:
+                String value = delta[0].toString();
+                if (value.length() > 256) {
+                    DiSky.getInstance().getLogger()
+                            .warning("The embed's title cannot be bigger than 256 characters. The one you're trying to set is '"+value.length()+"' length!");
+                    return;
+                }
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    embed.setTitle((String) delta[0]);
+                    embed.setTitle(value);
                 }
                 break;
-            default:
-                return;
         }
     }
 }
