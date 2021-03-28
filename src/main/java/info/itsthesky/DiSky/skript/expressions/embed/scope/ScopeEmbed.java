@@ -44,7 +44,7 @@ public class ScopeEmbed extends EffectSection {
 
     @Override
     protected void execute(Event e) {
-        lastEmbed = new EmbedBuilder();
+        lastEmbed = new EmbedBuilder().setTitle("Default Title");
         runSection(e);
 
     }
