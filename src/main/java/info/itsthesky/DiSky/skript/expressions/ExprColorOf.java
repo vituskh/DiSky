@@ -71,14 +71,19 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Object> {
 
         Color finalColor = null;
 
-        if (delta[0] instanceof org.bukkit.Color) {
-            org.bukkit.Color tempBukkit = (org.bukkit.Color) delta[0];
-            finalColor = new Color(tempBukkit.getRed(), tempBukkit.getGreen(), tempBukkit.getBlue());
-        } else if (delta[0] instanceof ch.njol.skript.util.Color) {
-            ch.njol.skript.util.Color tempSkript = (ch.njol.skript.util.Color) delta[0];
-            finalColor = new Color(tempSkript.asBukkitColor().getRed(), tempSkript.asBukkitColor().getGreen(), tempSkript.asBukkitColor().getBlue());
-        } else if (delta[0] instanceof Color) {
-            finalColor = (Color) delta[0];
+        try {
+            if (delta[0] instanceof org.bukkit.Color) {
+                org.bukkit.Color tempBukkit = (org.bukkit.Color) delta[0];
+                finalColor = new Color(tempBukkit.getRed(), tempBukkit.getGreen(), tempBukkit.getBlue());
+            } else if (delta[0] instanceof ch.njol.skript.util.Color) {
+                ch.njol.skript.util.Color tempSkript = (ch.njol.skript.util.Color) delta[0];
+                finalColor = new Color(tempSkript.asBukkitColor().getRed(), tempSkript.asBukkitColor().getGreen(), tempSkript.asBukkitColor().getBlue());
+            } else if (delta[0] instanceof Color) {
+                finalColor = (Color) delta[0];
+            }
+        } catch (IncompatibleClassChangeError ex) {
+            DiSky.getInstance().getLogger().severe("DiSky tried to convert a color from Skript, but it seems you're using an old version of it. Please update to 2.2+!");
+            finalColor = Color.RED;
         }
 
         if (finalColor == null) {
