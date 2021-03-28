@@ -16,6 +16,7 @@ import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.events.skript.nickname.EventNickChange;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionRemove;
+import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
@@ -56,7 +57,9 @@ public class JDAListener extends ListenerAdapter {
             if (e.getAuthor().isBot()) return;
             event.add(new EventPrivateMessage(e));
         }
-        event.forEach((event1) -> DiSky.getInstance().getServer().getPluginManager().callEvent(event1));
+        event.forEach((event1) -> {
+            Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(event1));
+        });
     }
 
     @Override
@@ -73,7 +76,7 @@ public class JDAListener extends ListenerAdapter {
                     e.getGuild()
             );
         }
-        DiSky.getInstance().getServer().getPluginManager().callEvent(event);
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(event));
     }
 
     @Override
@@ -82,40 +85,40 @@ public class JDAListener extends ListenerAdapter {
                 e.getMember(),
                 e.getGuild()
         );
-        DiSky.getInstance().getServer().getPluginManager().callEvent(event);
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(event));
     }
 
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionAdd(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionAdd(e)));
     }
     @Override
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionRemove(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionRemove(e)));
     }
     @Override
     public void onGuildMemberUpdateNickname(GuildMemberUpdateNicknameEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventNickChange(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventNickChange(e)));
     }
     @Override
     public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMessageDelete(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMessageDelete(e)));
     }
 
     @Override
     public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberBoost(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberBoost(e)));
     }
 
 
     @Override
     public void onGuildBan(GuildBanEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventGuildBan(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventGuildBan(e)));
     }
 
     @Override
     public void onGuildUnban(GuildUnbanEvent e) {
-        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventGuildUnban(e));
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventGuildUnban(e)));
     }
 
 }

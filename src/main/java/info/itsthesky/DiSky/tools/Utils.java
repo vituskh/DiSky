@@ -5,11 +5,13 @@ import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
+import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 
@@ -63,5 +65,13 @@ public class Utils extends ListenerAdapter {
     public static HashMap<JDA, Date> timeHashMap = new HashMap<>();
     public static Timespan getUpTime(JDA jda) {
         return timeHashMap.get(jda).difference(Date.now());
+    }
+
+    public static void sync(Runnable runnable) {
+        Bukkit.getScheduler().runTask(DiSky.getInstance(), runnable);
+    }
+
+    public static void async(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(DiSky.getInstance(), runnable);
     }
 }
