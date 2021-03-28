@@ -14,24 +14,24 @@ import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
 
-@Name("Embed Title")
-@Description("Set or clear the title of an embed.")
-@Examples({"set embed title of {_embed} to \"The addon's developer link\"",
-        "clear embed title of {_embed}"})
-@Since("1.0")
-public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, String> {
+@Name("Embed Title URL")
+@Description("Set or clear the title url of an embed.")
+@Examples({"set title url of {_embed} to \"The addon's developer link\"",
+        "clear title url of {_embed}"})
+@Since("1.4.3")
+public class ExprEmbedTitleURL extends SimplePropertyExpression<EmbedBuilder, String> {
 
     static {
-        register(ExprEmbedTitle.class, String.class,
-                "[embed] title",
+        register(ExprEmbedTitleURL.class, String.class,
+                "[embed] title url",
                 "embed"
         );
     }
 
     @Nullable
     @Override
-    public String convert(EmbedBuilder areaStyle) {
-        return areaStyle.getFields().getClass().getName();
+    public String convert(EmbedBuilder embed) {
+        return embed.build().getUrl();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, Strin
 
     @Override
     protected String getPropertyName() {
-        return "embed title";
+        return "embed title url";
     }
 
     @Nullable
@@ -61,24 +61,23 @@ public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, Strin
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
                     MessageEmbed builded = embed.build();
                     embed.setTitle(
-                            null,
-                            (builded.getTitle() == null) ? null : builded.getUrl()
+                            (builded.getTitle() == null) ? null : builded.getTitle(),
+                            null
                     );
                 }
                 break;
             case SET:
                 String value = delta[0].toString();
-                if (value.length() > 256) {
-                    DiSky.getInstance().getLogger()
-                            .warning("The embed's title cannot be bigger than 256 characters. The one you're trying to set is '"+value.length()+"' length!");
-                    return;
-                }
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
                     MessageEmbed builded = embed.build();
-                    embed.setTitle(
-                            value,
-                            (builded.getTitle() == null) ? null : builded.getUrl()
-                    );
+                    try {
+                        embed.setTitle(
+                                (builded.getTitle() == null) ? null : builded.getTitle(),
+                                value
+                        );
+                    } catch (IllegalArgumentException ex) {
+                        DiSky.getInstance().getLogger().warning("DiSky tried to load the URL '"+value+"' but it seems to be malformed!");
+                    }
                 }
                 break;
         }
