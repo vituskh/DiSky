@@ -9,6 +9,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.DiSky;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
@@ -58,7 +59,11 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    embed.setFooter(null);
+                    MessageEmbed builded = embed.build();
+                    embed.setFooter(
+                            null,
+                            (builded.getFooter() == null) ? null : builded.getFooter().getIconUrl()
+                    );
                 }
                 break;
             case SET:
@@ -69,7 +74,11 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
                     return;
                 }
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    embed.setFooter(value);
+                    MessageEmbed builded = embed.build();
+                    embed.setFooter(
+                            value,
+                            (builded.getFooter() == null) ? null : builded.getFooter().getIconUrl()
+                    );
                 }
                 break;
         }
