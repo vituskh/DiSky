@@ -14,12 +14,16 @@ import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageReceive;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
+import info.itsthesky.DiSky.skript.events.skript.slashcommand.EventSlashCommand;
 import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.commands.CommandHook;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.bukkit.event.Event;
 
 import java.util.Arrays;
@@ -35,6 +39,7 @@ public class EffReplyWith extends Effect {
             "EventMessageReceive",
             "EventBotMessageReceive",
             "EventCommand",
+            "EventSlashCommand",
             "EventPrivateMessage"
     );
 
@@ -76,6 +81,33 @@ public class EffReplyWith extends Effect {
             channel = ((EventMessageReceive) e).getTextChannel();
         } else if (e instanceof EventCommand) {
             channel = (TextChannel) ((EventCommand) e).getEvent().getChannel();
+        } else if (e instanceof EventSlashCommand) {
+            /* Slash command have their own reply system
+            They're using webhook instead of user, and we
+            need to use that, however Discord will wait forever for an answer :)
+             */
+            SlashCommandEvent event = ((EventSlashCommand) e).getEvent();
+            CommandHook hook = event.getHook();
+            hook.setEphemeral(true);
+            if (message instanceof Message) {
+                hook.sendMessage((Message) message).queue();
+                return;
+            } else if (message instanceof EmbedBuilder) {
+                // Because of a JDA's bug, we can't send embed currently via ephemeral message :c
+                /* MessageEmbed embed = ((EmbedBuilder) message).build();
+                System.out.println(embed);
+                hook.sendMessage(embed).queue(); */
+                DiSky.getInstance().getLogger()
+                        .warning("Replying with Embed in slash command are currently not supported! See our discord for more information :)");
+                hook.sendMessage(":warning: Error, see console for more information!").queue();
+                return;
+            } else if (message instanceof MessageBuilder) {
+                hook.sendMessage(((MessageBuilder) message).build()).queue();
+                return;
+            } else {
+                hook.sendMessage(message.toString()).queue();
+                return;
+            }
         }
 
         boolean isFromPrivate = false;

@@ -16,7 +16,9 @@ import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.events.skript.nickname.EventNickChange;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionRemove;
+import info.itsthesky.DiSky.skript.events.skript.slashcommand.EventSlashCommand;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.SlashCommand;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
@@ -24,6 +26,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
@@ -31,6 +34,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +81,11 @@ public class JDAListener extends ListenerAdapter {
             );
         }
         Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(event));
+    }
+
+    @Override
+    public void onSlashCommand(@NotNull SlashCommandEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventSlashCommand(e)));
     }
 
     @Override
