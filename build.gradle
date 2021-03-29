@@ -5,7 +5,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '5.1.0'
 }
 
-def version = '1.4.3'
+def version = '1.5'
 group 'info.itsthesky'
 
 repositories {
@@ -24,8 +24,9 @@ dependencies {
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'com.sk89q.worldguard:worldguard-bukkit:7.0.4'
     implementation 'com.github.MilkBowl:VaultAPI:1.7'
-    compile 'net.dv8tion:JDA:4.2.0_241'
+    //compile('net.dv8tion:JDA:4.2.0_241') { exclude module: "opus-java" }
     compile 'club.minnced:discord-webhooks:0.5.5-rc'
+    compile 'com.github.dv8fromtheworld:jda:feature~slash-commands-SNAPSHOT'
     implementation 'com.sedmelluq:lavaplayer:1.3.73'
 }
 
@@ -36,6 +37,7 @@ processResources {
 }
 
 shadowJar {
+    minimize()
     configurations = [project.configurations.compile]
     archiveName 'DiSky ' + version + ".jar"
 }

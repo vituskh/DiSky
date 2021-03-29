@@ -42,6 +42,7 @@ public class DiSky extends JavaPlugin {
             Skript.error("Skript isn't installed or doesn't accept registrations.");
             pluginManager.disablePlugin(this);
         }
+        Utils.saveResourceAs("config.yml");
         getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9seems to be loaded correctly!"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&9Join our &bDiscord &9for new update and support:"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&bhttps://discord.gg/whWuXwaVwM"));

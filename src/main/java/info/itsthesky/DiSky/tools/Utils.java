@@ -13,8 +13,11 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Event;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 
 public class Utils extends ListenerAdapter {
@@ -73,5 +76,42 @@ public class Utils extends ListenerAdapter {
 
     public static void async(Runnable runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(DiSky.getInstance(), runnable);
+    }
+
+    public static boolean areSlashCommandsEnabled() {
+        File file = new File(DiSky.getInstance().getDataFolder(), "config.yml");
+        if (!file.exists()) return false;
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        if (config.contains("SlashCommand.Enabled")) return false;
+        if (!config.getBoolean("SlashCommand.Enabled")) {
+            DiSky.getInstance().getLogger().warning("Slash Commands are disabled by default, but you're trying to use them somewhere.");
+            DiSky.getInstance().getLogger().warning("See the Wiki (https://github.com/SkyCraft78/DiSky/wiki/Slash-Commands) to know how enabled and use them!");
+        }
+        return config.getBoolean("SlashCommand.Enabled");
+    }
+
+    public static void saveResourceAs(String inPath) {
+        if (inPath == null || inPath.isEmpty()) {
+            throw new IllegalArgumentException("The input path cannot be null or empty");
+        }
+        InputStream in = DiSky.getInstance().getResource(inPath);
+        if (in == null) {
+            throw new IllegalArgumentException("The file "+inPath+" cannot be found in plugin's resources");
+        }
+        if (!DiSky.getInstance().getDataFolder().exists() && !DiSky.getInstance().getDataFolder().mkdir()) {
+            DiSky.getInstance().getLogger().severe("Failed to make the main directory !");
+        }
+        File inFile = new File(DiSky.getInstance().getDataFolder(), inPath);
+        if (!inFile.exists()) {
+            Bukkit.getConsoleSender().sendMessage("§cThe file "+inFile.getName()+" cannot be found, create one for you ...");
+
+            DiSky.getInstance().saveResource(inPath, false);
+
+            if (!inFile.exists()) {
+                DiSky.getInstance().getLogger().severe("Unable to copy file !");
+            } else {
+                Bukkit.getConsoleSender().sendMessage("§aThe file "+inFile.getName()+" has been created!");
+            }
+        }
     }
 }
