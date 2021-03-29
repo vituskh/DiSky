@@ -8,29 +8,36 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.DiSky;
+import info.itsthesky.DiSky.tools.object.SlashCommand;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
 
-@Name("Embed Description")
-@Description("Set or clear the description of an embed. Use %nl% to make new line in the description.")
+@Name("Embed or Slash Command Description")
+@Description("Set or clear the description of an embed or a slash command. Use %nl% to make new line in the description.")
 @Examples({"set desc of {_embed} to \"This is the better description I ever saw :joy:\"",
-        "clear desc of {_embed}"})
+        "clear desc of {_embed}",
+        "set description of command to \"This is an awesome command!\""})
 @Since("1.0")
-public class ExprEmbedDescription extends SimplePropertyExpression<EmbedBuilder, String> {
+public class ExprEmbedDescription extends SimplePropertyExpression<Object, String> {
 
     static {
         register(ExprEmbedDescription.class, String.class,
-                "[embed] (desc|description)",
-                "embed"
+                "[(embed|command)] (desc|description)",
+                "embed/commandbuilder"
         );
     }
 
     @Nullable
     @Override
-    public String convert(EmbedBuilder embed) {
-        return embed.build().getDescription();
+    public String convert(Object entity) {
+        if (entity instanceof EmbedBuilder) {
+            return ((EmbedBuilder) entity).build().getDescription();
+        } else if (entity instanceof SlashCommand) {
+            return ((SlashCommand) entity).getName();
+        }
+        return null;
     }
 
     @Override
@@ -40,7 +47,7 @@ public class ExprEmbedDescription extends SimplePropertyExpression<EmbedBuilder,
 
     @Override
     protected String getPropertyName() {
-        return "embed description";
+        return "embed / slash command description";
     }
 
     @Nullable
@@ -57,8 +64,10 @@ public class ExprEmbedDescription extends SimplePropertyExpression<EmbedBuilder,
         if (delta == null || delta[0] == null) return;
         switch (mode) {
             case RESET:
-                for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    embed.setDescription(null);
+                for (Object entity : getExpr().getArray(e)) {
+                    if (entity instanceof EmbedBuilder) {
+                        ((EmbedBuilder) entity).setDescription(null);
+                    }
                 }
                 break;
             case SET:
@@ -68,8 +77,12 @@ public class ExprEmbedDescription extends SimplePropertyExpression<EmbedBuilder,
                             .warning("The embed's description cannot be bigger than 2048 characters. The one you're trying to set is '"+value.length()+"' length!");
                     return;
                 }
-                for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    embed.setDescription(value);
+                for (Object entity : getExpr().getArray(e)) {
+                    if (entity instanceof EmbedBuilder) {
+                        ((EmbedBuilder) entity).setDescription(value);
+                    } else if (entity instanceof SlashCommand) {
+                        ((SlashCommand) entity).setDescription(value);
+                    }
                 }
                 break;
         }

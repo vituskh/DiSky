@@ -6,11 +6,13 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import info.itsthesky.DiSky.tools.object.CategoryBuilder;
 import info.itsthesky.DiSky.tools.object.RoleBuilder;
+import info.itsthesky.DiSky.tools.object.SlashCommand;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.entities.Command.OptionType;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -630,8 +632,80 @@ public class Types {
 
 					@Override
 					public String getVariableNamePattern() {
-						return "[a-z ]+";
+						return ".+";
 					}
-				}));
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(SlashCommand.class, "commandbuilder")
+				.user("commandbuilders?")
+				.name("Command Builder")
+				.description(new String[] {
+						"Represent a non-registered discord slash command."
+				})
+				.since("1.5")
+				.parser(new Parser<SlashCommand>() {
+
+					@Override
+					public String toString(SlashCommand o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(SlashCommand o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public SlashCommand parse(String s, final ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(OptionType.class, "optiontype")
+				.user("optiontypes?")
+				.name("Option Type")
+				.description(new String[] {
+						"Represent a slash command option type."
+				})
+				.usage("STRING (a text, string, almost anythings)\n" +
+						"INTEGER (rounded number, so no decimal here)\n" +
+						"USER (a guild user)\n" +
+						"ROLE (a guild role)\n" +
+						"BOOLEAN (only two state, true or false)\n" +
+						"CHANNEL (a guild text channel)")
+				.since("1.5")
+				.parser(new Parser<OptionType>() {
+
+					@Override
+					public String toString(OptionType o, int flags) {
+						return o.name();
+					}
+
+					@Override
+					public String toVariableNameString(OptionType o) {
+						return "";
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public OptionType parse(String s, final ParseContext context) {
+						for (OptionType op : OptionType.values()) {
+							if (op.name().equalsIgnoreCase(s.toUpperCase())) {
+								return op;
+							}
+						}
+						return null;
+					}
+				})
+		);
 	}
 }
