@@ -1,0 +1,15 @@
+# Default configuration file for DiSky
+# If you need more config options, ask us on Discord!
+# > LINKS <
+# Discord: https://disky.itsthesky.info/?page=discord
+# Docs: https://disky.itsthesky.info/?page=docs
+
+# THIS IS A BETA FEATURES !!!
+# READ THE WIKI OF THAT FEATURE BEFORE ENABLING !!!
+# SLASH COMMAND WIKI: https://github.com/SkyCraft78/DiSky/wiki/Slash-Commands
+SlashCommand:
+  Enabled: false
+  # SlashCommand take like an hour to be updated in Discord.
+  # However, we can send multiple command at once, and all of them will be updated.
+  # If false, single command builder can't be register, needed a list of commands.
+  AllowSingle: false
