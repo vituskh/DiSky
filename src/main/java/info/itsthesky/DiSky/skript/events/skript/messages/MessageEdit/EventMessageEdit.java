@@ -9,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.managers.cache.EditedMessages;
+import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -83,7 +84,7 @@ public class EventMessageEdit extends Event {
     public EventMessageEdit(
             final GuildMessageUpdateEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.e = e;
     }
 

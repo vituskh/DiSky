@@ -26,14 +26,14 @@ public class TextChannelBuilder {
     }
 
     public TextChannel createChannel(Guild guild) {
-        ChannelAction<TextChannel> channel = guild
+        return guild
                 .createTextChannel(this.name)
                 .setSlowmode(this.slowmode)
                 .setTopic(this.topic)
                 .setNews(this.news)
-                .setNSFW(this.nsfw);
-        if (category != null) channel.setParent(this.category).queue();
-        return channel.complete();
+                .setParent(this.category)
+                .setNSFW(this.nsfw)
+                .complete();
     }
 
     public String getName() { return name; }

@@ -10,6 +10,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.managers.cache.CachedMessage;
 import info.itsthesky.DiSky.managers.cache.Messages;
+import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -88,7 +89,7 @@ public class EventMessageDelete extends Event {
     public EventMessageDelete(
             final GuildMessageDeleteEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.e = e;
     }
 
