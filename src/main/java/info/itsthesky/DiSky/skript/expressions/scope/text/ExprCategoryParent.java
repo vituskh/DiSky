@@ -24,7 +24,7 @@ public class ExprCategoryParent extends SimplePropertyExpression<Object, Categor
 
     static {
         register(ExprCategoryParent.class, Category.class,
-                "[category] parent",
+                "[text] [channel] parent",
                 "channel/textchannel/textchannelbuilder"
         );
     }
@@ -51,7 +51,7 @@ public class ExprCategoryParent extends SimplePropertyExpression<Object, Categor
 
     @Override
     protected String getPropertyName() {
-        return "parent";
+        return "text channel parent";
     }
 
     @Nullable
