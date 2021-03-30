@@ -17,10 +17,12 @@ import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.bukkit.event.Event;
 
 import java.util.Objects;
@@ -34,7 +36,7 @@ public class EffSendMessage extends Effect {
 
     static {
         Skript.registerEffect(EffSendMessage.class,
-                "["+ Utils.getPrefixName() +"] send [message] %string/message/embed% to [the] [(user|channel)] %user/member/textchannel/channel% [with [the] bot [(named|with name)] %-string%] [and store it in %-object%]");
+                "["+ Utils.getPrefixName() +"] send [message] %string/message/embed/messagebuilder% to [the] [(user|channel)] %user/member/textchannel/channel% [with [the] bot [(named|with name)] %-string%] [and store it in %-object%]");
     }
 
     private Expression<Object> exprMessage;
@@ -61,61 +63,75 @@ public class EffSendMessage extends Effect {
         if (channel == null || content == null) return;
         Message storedMessage;
 
-        TextChannel channel1 = null;
-        if (channel instanceof TextChannel) {
-            channel1 = (TextChannel) channel;
-        } else if (channel instanceof Channel) {
-            channel1 = ((Channel) channel).getTextChannel();
-        } else if (
-                channel instanceof User ||
-                        channel instanceof Member
-        ) {
-            User user;
-            if (channel instanceof Member) {
-                user = ((Member) channel).getUser();
+        try {
+            TextChannel channel1 = null;
+            if (channel instanceof TextChannel) {
+                channel1 = (TextChannel) channel;
+            } else if (channel instanceof Channel) {
+                channel1 = ((Channel) channel).getTextChannel();
+            } else if (
+                    channel instanceof User ||
+                            channel instanceof Member
+            ) {
+                User user;
+                if (channel instanceof Member) {
+                    user = ((Member) channel).getUser();
+                } else {
+                    user = (User) channel;
+                }
+                if (content instanceof EmbedBuilder) {
+                    storedMessage = user.openPrivateChannel()
+                            .flatMap(channel2 -> channel2.sendMessage(((EmbedBuilder) content).build()))
+                            .complete();
+                } else if (content instanceof MessageBuilder) {
+                    storedMessage = user.openPrivateChannel()
+                            .flatMap(channel2 -> channel2.sendMessage(((MessageBuilder) content).build()))
+                            .complete();
+                } else {
+                    storedMessage = user.openPrivateChannel()
+                            .flatMap(channel2 -> channel2.sendMessage(content.toString()))
+                            .complete();
+                }
+                ExprLastMessage.lastMessage = storedMessage;
+                if (exprVar == null) return;
+                if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
+                Variable var = (Variable) exprVar;
+                Utils.setSkriptVariable(var, storedMessage, e);
+            } else return;
+
+            if (channel1 == null) return;
+            JDA bot = null;
+            if (exprName != null) {
+                bot = BotManager.getBot(exprName.getSingle(e));
             } else {
-                user = (User) channel;
+                bot = channel1.getJDA();
+            }
+            if (bot == null) return;
+
+            TextChannel channel2 = bot.getTextChannelById(channel1.getId());
+            if (channel2 == null) {
+                DiSky.getInstance().getLogger().severe("Cannot get the right text channel with id '"+channel1.getId()+"'!");
+                return;
             }
             if (content instanceof EmbedBuilder) {
-                storedMessage = user.openPrivateChannel()
-                        .flatMap(channel2 -> channel2.sendMessage(((EmbedBuilder) content).build()))
-                        .complete();
+                storedMessage = channel2.sendMessage(((EmbedBuilder) content).build()).complete();
+            } else if (content instanceof MessageBuilder) {
+                storedMessage = channel2.sendMessage(((MessageBuilder) content).build()).complete();
             } else {
-                storedMessage = user.openPrivateChannel()
-                        .flatMap(channel2 -> channel2.sendMessage(content.toString()))
-                        .complete();
+                storedMessage = channel2.sendMessage(content.toString()).complete();
             }
             ExprLastMessage.lastMessage = storedMessage;
             if (exprVar == null) return;
             if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
             Variable var = (Variable) exprVar;
             Utils.setSkriptVariable(var, storedMessage, e);
-        } else return;
-
-        if (channel1 == null) return;
-        JDA bot = null;
-        if (exprName != null) {
-            bot = BotManager.getBot(exprName.getSingle(e));
-        } else {
-            bot = channel1.getJDA();
+        } catch (Exception ex) {
+            if (ex instanceof InsufficientPermissionException) {
+                DiSky.getInstance().getLogger().warning("DiSky tried to send a message in a channel / member, but don't have the " + ((InsufficientPermissionException) ex).getPermission().getName() +" permission!");
+            } else {
+                ex.printStackTrace();
+            }
         }
-        if (bot == null) return;
-
-        TextChannel channel2 = bot.getTextChannelById(channel1.getId());
-        if (channel2 == null) {
-            DiSky.getInstance().getLogger().severe("Cannot get the right text channel with id '"+channel1.getId()+"'!");
-            return;
-        }
-        if (content instanceof EmbedBuilder) {
-            storedMessage = channel2.sendMessage(((EmbedBuilder) content).build()).complete();
-        } else {
-            storedMessage = channel2.sendMessage(content.toString()).complete();
-        }
-        ExprLastMessage.lastMessage = storedMessage;
-        if (exprVar == null) return;
-        if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
-        Variable var = (Variable) exprVar;
-        Utils.setSkriptVariable(var, storedMessage, e);
     }
 
     @Override
