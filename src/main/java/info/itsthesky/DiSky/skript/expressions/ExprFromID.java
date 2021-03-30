@@ -19,8 +19,8 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.bukkit.event.Event;
 
-@Name("ID of Discord entity")
-@Description("Return the discord ID of a channel, user, member, role, guild, etc...")
+@Name("Discord Entity from ID")
+@Description("Return a discord entity such as channel, role, category, etc... from its id.")
 @Examples("set {_channel} to channel with id \"731885527762075648\"")
 @Since("1.0")
 public class ExprFromID extends SimpleExpression<Object> {
