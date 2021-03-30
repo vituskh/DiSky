@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.DiscordCommand;
@@ -96,11 +97,11 @@ public class EventCommand extends Event {
     private final MessageReceivedEvent e;
 
     public EventCommand(
-            final DiscordCommand command,
             final MessageReceivedEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.e = e;
+        DiscordCommand command = new DiscordCommand(e.getMessage().getContentRaw());
         ExprCommandCore.commandCore = command.getCommand().getValue();
         ExprCommandPrefix.commandPrefix = command.getPrefix().getValue();
         ExprCommandArgs.commandArgs = command.getArguments().getArgs().toArray(new String[0]);

@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -90,7 +91,7 @@ public class EventMessageReceive extends Event {
     public EventMessageReceive(
             final MessageReceivedEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.channel = new Channel(e.getTextChannel());
         this.guild = e.getGuild();
         if (!e.isWebhookMessage()) {

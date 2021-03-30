@@ -48,14 +48,10 @@ public class JDAListener extends ListenerAdapter {
         if (e.isFromGuild()) {
             /* Message receive */
             event.add(new EventMessageReceive(e));
-            // ***
+            // -------------
             /* Command event */
-            DiscordCommand discordCommand = new DiscordCommand(e.getMessage().getContentRaw());
             if (!e.isWebhookMessage()) {
-                event.add(new EventCommand(
-                        discordCommand,
-                        e
-                ));
+                event.add(new EventCommand(e));
             }
         } else {
             if (e.getAuthor().isBot()) return;
@@ -118,7 +114,6 @@ public class JDAListener extends ListenerAdapter {
     public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
         Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberBoost(e)));
     }
-
 
     @Override
     public void onGuildBan(GuildBanEvent e) {

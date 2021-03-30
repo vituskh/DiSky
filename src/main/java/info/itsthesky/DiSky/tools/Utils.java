@@ -22,6 +22,10 @@ import java.util.HashMap;
 
 public class Utils extends ListenerAdapter {
 
+    public static boolean areEventAsync() {
+        return false;
+    }
+
     public static String getPrefixName() {
         return "disky";
     }
