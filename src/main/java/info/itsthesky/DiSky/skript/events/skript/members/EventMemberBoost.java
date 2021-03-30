@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import org.bukkit.event.Event;
@@ -58,7 +59,7 @@ public class EventMemberBoost extends Event {
     public EventMemberBoost(
             final GuildMemberUpdateBoostTimeEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.e = e;
     }
 

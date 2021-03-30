@@ -60,7 +60,7 @@ public class EventBotJoin extends Event {
             final String bot,
             final Guild guild
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.guild = guild;
         this.bot = bot;
     }

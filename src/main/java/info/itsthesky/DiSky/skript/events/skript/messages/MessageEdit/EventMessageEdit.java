@@ -83,7 +83,7 @@ public class EventMessageEdit extends Event {
     public EventMessageEdit(
             final GuildMessageUpdateEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         this.e = e;
     }
 
