@@ -9,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.StaticData;
+import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -79,7 +80,7 @@ public class EventSlashCommand extends Event {
     public EventSlashCommand(
             final SlashCommandEvent e
             ) {
-        super(true);
+        super(Utils.areEventAsync());
         StaticData.lastSlashCommandEvent = e;
         this.e = e;
         e.acknowledge(true).queue();

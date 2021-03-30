@@ -57,7 +57,7 @@ public class EffCreateCommand extends Effect {
         DiSky
                 .getInstance()
                 .getLogger()
-                .warning("A Slash Command just has been requested to Discord. Don't forget it can take an hour to me updated!");
+                .warning("A Slash Command just has been requested to Discord. Don't forget it can take an hour to be updated!");
         bot.updateCommands()
                 .addCommands(cmd)
                 .queue();
