@@ -10,6 +10,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -64,6 +65,8 @@ public class EventBotJoin extends Event {
         super(Utils.areEventAsync());
         this.guild = guild;
         this.bot = bot;
+        TextChannel channel;
+
     }
 
     @NotNull
