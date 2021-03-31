@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.dv8tion.jda.api.JDA;
@@ -46,28 +47,30 @@ public class EffAddReaction extends Effect {
 
     @Override
     protected void execute(Event e) {
-        String emote = exprEmote.getSingle(e);
-        String name = exprName.getSingle(e);
-        Message message = exprMessage.getSingle(e);
-        if (emote == null || name == null || message == null) return;
-        JDA bot = BotManager.getBot(name);
-        if (bot == null) return;
-        if (!message.getJDA().equals(bot)) return;
-        if (
-                !emote.replaceAll("[0-9]", "").equalsIgnoreCase("")
-        ) {
-            message.addReaction(emote).queue();
-        } else {
-            Emote emote1 = bot.getGuildById(message.getGuild().getId()).getEmoteById(emote);
-            if (emote1 == null) {
-                DiSky
-                        .getInstance()
-                        .getLogger()
-                        .severe("The bot '"+name+"' cannot found the right emote with the id " + emote + "!");
-                return;
+        DiSkyErrorHandler.executeHandleCode(e, Event -> {
+            String emote = exprEmote.getSingle(e);
+            String name = exprName.getSingle(e);
+            Message message = exprMessage.getSingle(e);
+            if (emote == null || name == null || message == null) return;
+            JDA bot = BotManager.getBot(name);
+            if (bot == null) return;
+            if (!message.getJDA().equals(bot)) return;
+            if (
+                    !emote.replaceAll("[0-9]", "").equalsIgnoreCase("")
+            ) {
+                message.addReaction(emote).queue();
+            } else {
+                Emote emote1 = bot.getGuildById(message.getGuild().getId()).getEmoteById(emote);
+                if (emote1 == null) {
+                    DiSky
+                            .getInstance()
+                            .getLogger()
+                            .severe("The bot '"+name+"' cannot found the right emote with the id " + emote + "!");
+                    return;
+                }
+                message.addReaction(emote1).queue();
             }
-            message.addReaction(emote1).queue();
-        }
+        });
     }
 
     @Override

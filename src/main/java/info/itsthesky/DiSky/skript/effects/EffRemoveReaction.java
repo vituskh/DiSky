@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
@@ -45,15 +46,17 @@ public class EffRemoveReaction extends Effect {
 
     @Override
     protected void execute(Event e) {
-        MessageReaction.ReactionEmote emote = exprEmote.getSingle(e);
-        User user = exprUser.getSingle(e);
-        Message message = exprMessage.getSingle(e);
-        if (emote == null || user == null || message == null) return;
-        if (emote.isEmoji()) {
-            message.removeReaction(emote.getEmoji(), user).queue();
-        } else {
-            message.removeReaction(emote.getEmote(), user).queue();
-        }
+        DiSkyErrorHandler.executeHandleCode(e, Event -> {
+            MessageReaction.ReactionEmote emote = exprEmote.getSingle(e);
+            User user = exprUser.getSingle(e);
+            Message message = exprMessage.getSingle(e);
+            if (emote == null || user == null || message == null) return;
+            if (emote.isEmoji()) {
+                message.removeReaction(emote.getEmoji(), user).queue();
+            } else {
+                message.removeReaction(emote.getEmote(), user).queue();
+            }
+        });
     }
 
     @Override

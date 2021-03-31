@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
+import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
@@ -55,85 +56,87 @@ public class EffUploadFile extends Effect {
 
     @Override
     protected void execute(Event e) {
-        Object channel = exprChannel.getSingle(e);
-        String url = exprURL.getSingle(e);
-        if (channel == null || url == null) return;
+        DiSkyErrorHandler.executeHandleCode(e, Event -> {
+            Object channel = exprChannel.getSingle(e);
+            String url = exprURL.getSingle(e);
+            if (channel == null || url == null) return;
 
-        Message storedMessage = null;
-        String ext = url.substring(url.lastIndexOf("."));
+            Message storedMessage = null;
+            String ext = url.substring(url.lastIndexOf("."));
 
-        TextChannel channel1 = null;
-        if (channel instanceof TextChannel) {
-            channel1 = (TextChannel) channel;
-        } else if (channel instanceof Channel) {
-            channel1 = ((Channel) channel).getTextChannel();
-        } else if (
-                channel instanceof User ||
-                        channel instanceof Member
-        ) {
-            User user;
-            if (channel instanceof Member) {
-                user = ((Member) channel).getUser();
+            TextChannel channel1 = null;
+            if (channel instanceof TextChannel) {
+                channel1 = (TextChannel) channel;
+            } else if (channel instanceof Channel) {
+                channel1 = ((Channel) channel).getTextChannel();
+            } else if (
+                    channel instanceof User ||
+                            channel instanceof Member
+            ) {
+                User user;
+                if (channel instanceof Member) {
+                    user = ((Member) channel).getUser();
+                } else {
+                    user = (User) channel;
+                }
+                URL co = null;
+                try {
+                    co = new URL(url);
+                    URL finalCo = co;
+                    storedMessage = user.openPrivateChannel()
+                            .flatMap(channel2 -> {
+                                try {
+                                    return channel2.sendFile(finalCo.openStream(), "file."+ ext);
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                                return null;
+                            })
+                            .complete();
+                } catch (IOException malformedURLException) {
+                    malformedURLException.printStackTrace();
+                }
+                ExprLastMessage.lastMessage = storedMessage;
+                if (exprVar == null) return;
+                if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
+                Variable var = (Variable) exprVar;
+                Utils.setSkriptVariable(var, storedMessage, e);
+            } else return;
+
+            if (channel1 == null) return;
+            JDA bot = null;
+            if (exprName != null) {
+                bot = BotManager.getBot(exprName.getSingle(e));
             } else {
-                user = (User) channel;
+                bot = channel1.getJDA();
             }
+            if (bot == null) return;
+
+            TextChannel channel2 = bot.getTextChannelById(channel1.getId());
+            if (channel2 == null) {
+                DiSky.getInstance().getLogger().severe("Cannot get the right text channel with id '"+channel1.getId()+"'!");
+                return;
+            }
+
             URL co = null;
             try {
                 co = new URL(url);
                 URL finalCo = co;
-                storedMessage = user.openPrivateChannel()
-                        .flatMap(channel2 -> {
-                            try {
-                                return channel2.sendFile(finalCo.openStream(), "file."+ ext);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
-                            return null;
-                        })
-                        .complete();
+                try {
+                    channel2.sendFile(finalCo.openStream(), "file.png").queue();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             } catch (IOException malformedURLException) {
                 malformedURLException.printStackTrace();
             }
+
             ExprLastMessage.lastMessage = storedMessage;
             if (exprVar == null) return;
             if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
             Variable var = (Variable) exprVar;
             Utils.setSkriptVariable(var, storedMessage, e);
-        } else return;
-
-        if (channel1 == null) return;
-        JDA bot = null;
-        if (exprName != null) {
-            bot = BotManager.getBot(exprName.getSingle(e));
-        } else {
-            bot = channel1.getJDA();
-        }
-        if (bot == null) return;
-
-        TextChannel channel2 = bot.getTextChannelById(channel1.getId());
-        if (channel2 == null) {
-            DiSky.getInstance().getLogger().severe("Cannot get the right text channel with id '"+channel1.getId()+"'!");
-            return;
-        }
-
-        URL co = null;
-        try {
-            co = new URL(url);
-            URL finalCo = co;
-            try {
-                channel2.sendFile(finalCo.openStream(), "file.png").queue();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        } catch (IOException malformedURLException) {
-            malformedURLException.printStackTrace();
-        }
-
-        ExprLastMessage.lastMessage = storedMessage;
-        if (exprVar == null) return;
-        if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
-        Variable var = (Variable) exprVar;
-        Utils.setSkriptVariable(var, storedMessage, e);
+        });
     }
 
     @Override

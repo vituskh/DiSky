@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.expressions.messages.ExprLastMessage;
+import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -58,12 +59,11 @@ public class EffSendMessage extends Effect {
 
     @Override
     protected void execute(Event e) {
-        Object channel = exprChannel.getSingle(e);
-        Object content = exprMessage.getSingle(e);
-        if (channel == null || content == null) return;
-        Message storedMessage;
-
-        try {
+        DiSkyErrorHandler.executeHandleCode(e, Event -> {
+            Object channel = exprChannel.getSingle(e);
+            Object content = exprMessage.getSingle(e);
+            if (channel == null || content == null) return;
+            Message storedMessage;
             TextChannel channel1 = null;
             if (channel instanceof TextChannel) {
                 channel1 = (TextChannel) channel;
@@ -125,13 +125,7 @@ public class EffSendMessage extends Effect {
             if (!exprVar.getClass().getName().equalsIgnoreCase("ch.njol.skript.lang.Variable")) return;
             Variable var = (Variable) exprVar;
             Utils.setSkriptVariable(var, storedMessage, e);
-        } catch (Exception ex) {
-            if (ex instanceof InsufficientPermissionException) {
-                DiSky.getInstance().getLogger().warning("DiSky tried to send a message in a channel / member, but don't have the " + ((InsufficientPermissionException) ex).getPermission().getName() +" permission!");
-            } else {
-                ex.printStackTrace();
-            }
-        }
+        });
     }
 
     @Override

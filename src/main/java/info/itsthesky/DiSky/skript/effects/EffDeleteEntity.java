@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.Message;
@@ -41,27 +42,29 @@ public class EffDeleteEntity extends Effect {
 
     @Override
     protected void execute(Event e) {
-        Object[] entity = exprEntity.getArray(e);
-        if (entity.length == 0) return;
-        for (Object en : entity) {
-            if (en instanceof Role) {
-                Role role = (Role) en;
-                role.delete().queue();
-            } else if (en instanceof Webhook) {
-                Webhook webhook = (Webhook) en;
-                webhook.delete().queue();
-            } else if (
-                    (en instanceof Channel) ||
-                            (en instanceof TextChannel)
-            ) {
-                TextChannel channel = Utils.checkChannel(en);
-                if (channel == null) return;
-                channel.delete().queue();
-            } else if (en instanceof Message) {
-                Message message = (Message) en;
-                message.delete().queue();
+        DiSkyErrorHandler.executeHandleCode(e, Event -> {
+            Object[] entity = exprEntity.getArray(e);
+            if (entity.length == 0) return;
+            for (Object en : entity) {
+                if (en instanceof Role) {
+                    Role role = (Role) en;
+                    role.delete().queue();
+                } else if (en instanceof Webhook) {
+                    Webhook webhook = (Webhook) en;
+                    webhook.delete().queue();
+                } else if (
+                        (en instanceof Channel) ||
+                                (en instanceof TextChannel)
+                ) {
+                    TextChannel channel = Utils.checkChannel(en);
+                    if (channel == null) return;
+                    channel.delete().queue();
+                } else if (en instanceof Message) {
+                    Message message = (Message) en;
+                    message.delete().queue();
+                }
             }
-        }
+        });
     }
 
     @Override
