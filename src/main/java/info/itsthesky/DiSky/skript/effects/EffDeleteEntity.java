@@ -27,7 +27,7 @@ public class EffDeleteEntity extends Effect {
 
     static {
         Skript.registerEffect(EffDeleteEntity.class,
-                "["+ Utils.getPrefixName() +"] delete discord entity %message/channel/textchannel/role%");
+                "["+ Utils.getPrefixName() +"] delete discord entity %messages/channels/textchannels/roles%");
     }
 
     private Expression<Object> exprEntity;
@@ -41,24 +41,26 @@ public class EffDeleteEntity extends Effect {
 
     @Override
     protected void execute(Event e) {
-        Object entity = exprEntity.getSingle(e);
-        if (entity == null) return;
-        if (entity instanceof Role) {
-            Role role = (Role) entity;
-            role.delete().queue();
-        } else if (entity instanceof Webhook) {
-            Webhook webhook = (Webhook) entity;
-            webhook.delete().queue();
-        } else if (
-                (entity instanceof Channel) ||
-                        (entity instanceof TextChannel)
-        ) {
-            TextChannel channel = Utils.checkChannel(entity);
-            if (channel == null) return;
-            channel.delete().queue();
-        } else if (entity instanceof Message) {
-            Message message = (Message) entity;
-            message.delete().queue();
+        Object[] entity = exprEntity.getArray(e);
+        if (entity.length == 0) return;
+        for (Object en : entity) {
+            if (en instanceof Role) {
+                Role role = (Role) en;
+                role.delete().queue();
+            } else if (en instanceof Webhook) {
+                Webhook webhook = (Webhook) en;
+                webhook.delete().queue();
+            } else if (
+                    (en instanceof Channel) ||
+                            (en instanceof TextChannel)
+            ) {
+                TextChannel channel = Utils.checkChannel(en);
+                if (channel == null) return;
+                channel.delete().queue();
+            } else if (en instanceof Message) {
+                Message message = (Message) en;
+                message.delete().queue();
+            }
         }
     }
 
