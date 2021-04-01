@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.DiSky;
+import info.itsthesky.DiSky.skript.commands.CommandEvent;
 import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventMessageReceive;
 import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
@@ -22,9 +23,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.commands.CommandHook;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import org.apache.commons.lang.Validate;
 import org.bukkit.event.Event;
 
 import java.util.Arrays;
@@ -41,7 +42,8 @@ public class EffReplyWith extends Effect {
             "EventBotMessageReceive",
             "EventCommand",
             "EventSlashCommand",
-            "EventPrivateMessage"
+            "EventPrivateMessage",
+            "CommandEvent"
     );
 
     static {
@@ -83,6 +85,8 @@ public class EffReplyWith extends Effect {
                 channel = ((EventMessageReceive) e).getTextChannel();
             } else if (e instanceof EventCommand) {
                 channel = (TextChannel) ((EventCommand) e).getEvent().getChannel();
+            } else if (e instanceof CommandEvent) {
+                channel = (TextChannel) ((CommandEvent) e).getMessageChannel();
             } else if (e instanceof EventSlashCommand) {
             /* Slash command have their own reply system
             They're using webhook instead of user, and we
@@ -114,6 +118,8 @@ public class EffReplyWith extends Effect {
 
             boolean isFromPrivate = false;
             if (eventPrivate != null) isFromPrivate = true;
+
+            Validate.notNull(channel, "Le channel est null");
 
 
             if (message instanceof Message) {

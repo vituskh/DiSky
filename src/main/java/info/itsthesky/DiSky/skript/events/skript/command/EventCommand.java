@@ -22,9 +22,9 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Discord Command")
+@Name("DiSky Command")
 @Description("Fired when a command is executed by any user. Have a prefix, a core command and some args")
-@Examples({"on discord command:\n" +
+@Examples({"on disky command:\n" +
         "\tprefix is \"!\"\n" +
         "\tcore is \"slowmode\"\n" +
         "\tset {_time} to first element of arguments\n" +
@@ -40,7 +40,7 @@ public class EventCommand extends Event {
 
     static {
         // [seen by [bot] [(named|with name)]%string%]
-        Skript.registerEvent("Discord Command", SimpleEvent.class, EventCommand.class, "[discord] command");
+        Skript.registerEvent("DiSky Command", SimpleEvent.class, EventCommand.class, "disky command");
 
         EventValues.registerEventValue(EventCommand.class, TextChannel.class, new Getter<TextChannel, EventCommand>() {
             @Nullable

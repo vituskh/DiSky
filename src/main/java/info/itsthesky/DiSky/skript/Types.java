@@ -4,6 +4,9 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.skript.commands.CommandEvent;
+import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.CategoryBuilder;
 import info.itsthesky.DiSky.tools.object.RoleBuilder;
 import info.itsthesky.DiSky.tools.object.SlashCommand;
@@ -29,8 +32,13 @@ public class Types {
 				.description("Represent a category in a guild, which is already created.")
 				.since("1.4.1")
 				.parser(new Parser<Category>() {
+					@SuppressWarnings("unchecked")
 					@Override
-					public Category parse(String input, ParseContext context) {
+					public Category parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							CommandEvent lastEvent = CommandEvent.lastEvent;
+							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getGuild().getCategoryById(Utils.parseLong(s, false, true)));
+						}
 						return null;
 					}
 
@@ -153,8 +161,13 @@ public class Types {
 						return ".+";
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
-					public TextChannel parse(String s, final ParseContext context) {
+					public TextChannel parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							CommandEvent lastEvent = CommandEvent.lastEvent;
+							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getGuild().getTextChannelById(Utils.parseLong(s, false, true)));
+						}
 						return null;
 					}
 				})
@@ -181,8 +194,12 @@ public class Types {
 						return ".+";
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public User parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							return (Utils.parseLong(s, false, true) == null ? null : BotManager.getFirstBot().getUserById(Utils.parseLong(s, false, true)));
+						}
 						return null;
 					}
 				})
@@ -201,7 +218,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Role o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -209,8 +226,12 @@ public class Types {
 						return ".+";
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public Role parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							return (Utils.parseLong(s, false, true) == null ? null : BotManager.getFirstBot().getRoleById(Utils.parseLong(s, false, true)));
+						}
 						return null;
 					}
 				})
@@ -237,8 +258,13 @@ public class Types {
 						return ".+";
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public Member parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							CommandEvent lastEvent = CommandEvent.lastEvent;
+							return (Utils.parseLong(s, true, true) == null ? null : lastEvent.getGuild().getMemberById(Utils.parseLong(s, true, true)));
+						}
 						return null;
 					}
 				})
@@ -294,8 +320,13 @@ public class Types {
 						return ".+";
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
 					public Channel parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							CommandEvent lastEvent = CommandEvent.lastEvent;
+							return (Utils.parseLong(s, false, true) == null ? null : new Channel(lastEvent.getGuild().getTextChannelById(Utils.parseLong(s, false, true))));
+						}
 						return null;
 					}
 				})
@@ -410,8 +441,13 @@ public class Types {
 						return ".+";
 					}
 
+					@SuppressWarnings("unchecked")
 					@Override
-					public Guild parse(String s, final ParseContext context) {
+					public Guild parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							CommandEvent lastEvent = CommandEvent.lastEvent;
+							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getBot().getGuildById(Utils.parseLong(s, false, true)));
+						}
 						return null;
 					}
 				})

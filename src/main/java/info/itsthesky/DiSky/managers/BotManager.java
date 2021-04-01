@@ -3,6 +3,7 @@ package info.itsthesky.DiSky.managers;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.cache.EditedMessages;
 import info.itsthesky.DiSky.managers.cache.Messages;
+import info.itsthesky.DiSky.skript.commands.CommandListener;
 import info.itsthesky.DiSky.skript.events.bukkit.JDAListener;
 import info.itsthesky.DiSky.skript.events.skript.EventBotJoin;
 import info.itsthesky.DiSky.tools.Utils;
@@ -45,6 +46,7 @@ public class BotManager {
                     .addEventListeners(new Messages())
                     .addEventListeners(new EditedMessages())
                     .addEventListeners(new Utils())
+                    .addEventListeners(new CommandListener())
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .enableIntents(GatewayIntent.DIRECT_MESSAGES)
@@ -107,6 +109,18 @@ public class BotManager {
         jda.shutdown();
         logger.warning("The bot '"+name+"' has been disconnected!");
         bots.remove(name);
+    }
+
+    /**
+     * Get a bot name via its JDA.
+     * Mainly used in discord command factory
+     * @param target The bot's JDA instance
+     * @return The name of bot via the JDA
+     */
+    public static String getNameByJDA(final JDA target) {
+        AtomicReference<String> f = new AtomicReference<>();
+        bots.forEach((name, jda) -> f.set(name));
+        return f.get();
     }
 
     /**
