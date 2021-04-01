@@ -15,12 +15,58 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Utils extends ListenerAdapter {
+
+    private static final String defaultString = "";
+    private static final Number defaultNumber = 0;
+    private static final Boolean defaultBoolean = false;
+    private static final Object defaultObject = "";
+
+    private static  <T> Object getDefaultValue(T object) {
+        if (object instanceof String) {
+            return defaultString;
+        } else if (object instanceof Number) {
+            return defaultNumber;
+        } else if (object instanceof Boolean) {
+            return defaultBoolean;
+        } else {
+            return defaultObject;
+        }
+    }
+
+    @Nullable
+    public static Long parseLong(@NotNull String s, boolean shouldPrintError, boolean manageDiscordValue) {
+        Long id = null;
+        if (manageDiscordValue) {
+            s = s
+                    .replaceAll("&", "")
+                    .replaceAll("<", "")
+                    .replaceAll(">", "")
+                    .replaceAll("#", "")
+                    .replaceAll("!", "")
+                    .replaceAll("@", "");
+        }
+        try {
+            id = Long.parseLong(s);
+        } catch (NumberFormatException e) {
+            if (shouldPrintError) e.printStackTrace();
+            return null;
+        }
+        return id;
+    }
+
+    public static boolean equalsAnyIgnoreCase(String toMatch, String... potentialMatches) {
+        return Arrays.asList(potentialMatches).contains(toMatch);
+    }
 
     public static boolean areEventAsync() {
         return false;
@@ -92,6 +138,23 @@ public class Utils extends ListenerAdapter {
             DiSky.getInstance().getLogger().warning("See the Wiki (https://github.com/SkyCraft78/DiSky/wiki/Slash-Commands) to know how enabled and use them!");
         }
         return config.getBoolean("SlashCommand.Enabled");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T getOrSetDefault(String file, String path, T defaultValue) {
+        File f = new File(DiSky.getInstance().getDataFolder(), file);
+        if (!f.exists()) return (T) getDefaultValue(defaultValue);
+        YamlConfiguration configuration = YamlConfiguration.loadConfiguration(f);
+        if (!configuration.contains(path)) {
+            configuration.set(path, defaultValue);
+            try {
+                configuration.save(f);
+            } catch (IOException e) {
+                DiSky.getInstance().getLogger().warning("Unable to save the default DiSky configuration file :c Error: " + e.getMessage());
+            }
+            return defaultValue;
+        }
+        return (T) configuration.get(path, defaultValue);
     }
 
     public static void saveResourceAs(String inPath) {

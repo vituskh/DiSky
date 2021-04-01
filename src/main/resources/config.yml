@@ -13,3 +13,11 @@ SlashCommand:
   # However, we can send multiple command at once, and all of them will be updated.
   # If false, single command builder can't be register, needed a list of commands.
   AllowSingle: false
+
+# This is for handle Discord & DiSky errors.
+# It will enable the print stack (advanced debug)
+# for specified errors. Enable that only if a support
+# member ask you to do so :)
+HandleErrors:
+  NullPointerException: false
+  InsufficientPermissionException: false

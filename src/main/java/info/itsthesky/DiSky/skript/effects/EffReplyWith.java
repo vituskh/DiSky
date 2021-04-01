@@ -119,9 +119,6 @@ public class EffReplyWith extends Effect {
             boolean isFromPrivate = false;
             if (eventPrivate != null) isFromPrivate = true;
 
-            Validate.notNull(channel, "Le channel est null");
-
-
             if (message instanceof Message) {
                 if (isFromPrivate) {
                     eventPrivate

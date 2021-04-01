@@ -77,7 +77,6 @@ public class CommandFactory {
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        System.out.println(res);
         if (res == null) {
             return false;
         }
@@ -188,7 +187,6 @@ public class CommandFactory {
                     i,
                     !p.getSecond(),
                     optionals > 0);
-            System.out.println(arg);
             if (arg == null)
                 return null;
             currentArguments.add(arg);
