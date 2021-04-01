@@ -23,16 +23,16 @@ import org.bukkit.event.Event;
 import javax.annotation.Nullable;
 import java.awt.*;
 
-@Name("Color of embed, role or builder")
-@Description("Get or set the color of a role, embed, builder...\nYou can use any other color expression (from other addon too) as soon as the object's type return is java.awt.Color")
+@Name("Color of member, embed, role or builder")
+@Description("Get or set the color of a role, embed, builder...\nCan only GET the color of a MEMBER!\nYou can use any other color expression (from other addon too) as soon as the object's type return is java.awt.Color")
 @Examples("set color of embed to red")
 @Since("1.4")
 public class ExprColorOf extends SimplePropertyExpression<Object, Object> {
 
     static {
         register(ExprColorOf.class, Object.class,
-                "[discord] [(role|embed|builder)] colo[u]r",
-                "role/rolebuilder/embed"
+                "[discord] [(role|embed|builder|member)] colo[u]r",
+                "role/rolebuilder/embed/member"
         );
     }
 
@@ -43,6 +43,7 @@ public class ExprColorOf extends SimplePropertyExpression<Object, Object> {
         if (entity instanceof EmbedBuilder) finalColor = ((EmbedBuilder) entity).build().getColor();
         if (entity instanceof Role) finalColor = ((Role) entity).getColor();
         if (entity instanceof RoleBuilder) finalColor = ((RoleBuilder) entity).getColor();
+        if (entity instanceof Member) finalColor = ((Member) entity).getColor();
         return finalColor;
     }
 
