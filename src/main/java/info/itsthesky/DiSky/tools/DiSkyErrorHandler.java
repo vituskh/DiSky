@@ -16,9 +16,19 @@ public class DiSkyErrorHandler {
             try {
                 consumer.accept(e);
             } catch (InsufficientPermissionException ex) {
+                if (Utils.getOrSetDefault("config.yml", "HandleErrors.InsufficientPermissionException", false)) {
+                    ex.printStackTrace();
+                    return;
+                }
                 logger.warning("DiSky tried to do an action on Discord, but doesn't have the " + ex.getPermission().getName() + " permission!");
             } catch (NullPointerException ex) {
+                if (Utils.getOrSetDefault("config.yml", "HandleErrors.NullPointerException", false)) {
+                    ex.printStackTrace();
+                    return;
+                }
                 logger.warning("DiSky tried to do an action on Discord, but got a NullPointerException! Check if all your value are set!");
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }).start();
     }
