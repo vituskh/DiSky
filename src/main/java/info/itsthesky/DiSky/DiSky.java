@@ -4,8 +4,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.managers.WebhookManager;
+import info.itsthesky.DiSky.tools.Metrics;
 import info.itsthesky.DiSky.tools.Utils;
-import info.itsthesky.DiSky.tools.Webhooktest;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,10 +43,11 @@ public class DiSky extends JavaPlugin {
             pluginManager.disablePlugin(this);
         }
         Utils.saveResourceAs("config.yml");
+        int pluginId = 10911;
+        Metrics metrics = new Metrics(this, pluginId);
         getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9seems to be loaded correctly!"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&9Join our &bDiscord &9for new update and support:"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&bhttps://discord.gg/whWuXwaVwM"));
-
     }
 
     @Override
