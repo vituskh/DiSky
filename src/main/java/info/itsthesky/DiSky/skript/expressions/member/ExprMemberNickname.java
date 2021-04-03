@@ -39,7 +39,7 @@ public class ExprMemberNickname extends SimpleExpression<String> {
 	protected String[] get(final Event e) {
 		Member member = exprMember.getSingle(e);
 		if (member == null) return new String[0];
-		return new String[] {member.getEffectiveName()};
+		return new String[] {member.getNickname() == null ? member.getUser().getName() : member.getNickname()};
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             finalName = (String) entity.getClass().getDeclaredMethod("getName").invoke(entity);
         } catch (final Exception ignored) { }
         if (finalName == null) {
-            if (entity instanceof Member) finalName = ((Member) entity).getEffectiveName();
+            if (entity instanceof Member) finalName = ((Member) entity).getUser().getName();
             if (entity instanceof TextChannel) finalName = ((TextChannel) entity).getName();
             if (entity instanceof Webhook) finalName = ((Webhook) entity).getName();
             if (entity instanceof TextChannelBuilder) finalName = ((TextChannelBuilder) entity).getName();
