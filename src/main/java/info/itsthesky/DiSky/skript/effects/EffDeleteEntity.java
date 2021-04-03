@@ -20,9 +20,12 @@ import org.bukkit.event.Event;
 
 @Name("Delete Discord Entity")
 @Description("Delete discord entity, such as channel, role, message, etc...")
-@Examples("reply with \"This message will be removed in 2 seconds!\"\n" +
-        "wait 2 second\n" +
-        "delete discord entity last message")
+@Examples("discord command tempMessage <text>:\n" +
+        "\tprefixes: $\n" +
+        "\ttrigger:\n" +
+        "\t\treply with \"The message you want me to say is: `%arg 1%`\" and store it in {_msg}\n" +
+        "\t\twait 5 second\n" +
+        "\t\tdelete discord entity {_msg}")
 @Since("1.2")
 public class EffDeleteEntity extends Effect {
 

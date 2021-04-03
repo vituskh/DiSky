@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 
 @Name("Member Boost State")
 @Description("Return if a member boost the guild or not.")
-@Examples("discord command isBooster <member>\n" +
+@Examples("discord command isBooster <member>:\n" +
 		"\tprefixes: !\n" +
 		"\ttrigger:\n" +
 		"\t\tif arg-1 is a booster:\n" +

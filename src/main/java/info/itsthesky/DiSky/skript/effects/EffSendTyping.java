@@ -18,7 +18,10 @@ import org.bukkit.event.Event;
 
 @Name("Send Typing")
 @Description("Make a bot \"typing\" in a text channel. You can enable it one time, and it automatically expire after 10 seconds.")
-@Examples("make bot typing in event-channel")
+@Examples("discord command typing:\n" +
+        "\tprefixes: %\n" +
+        "\ttrigger:\n" +
+        "\t\tsend bot typing in event-channel")
 @Since("1.5.2")
 public class EffSendTyping extends Effect {
 

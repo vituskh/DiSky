@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 
 @Name("Member is a Booster")
 @Description("See if a member is boosting a specific guild.")
-@Examples("discord command isBooster <member>\n" +
+@Examples("discord command isBooster <member>:\n" +
 		"\tprefixes: !\n" +
 		"\ttrigger:\n" +
 		"\t\tif arg-1 is a booster:\n" +

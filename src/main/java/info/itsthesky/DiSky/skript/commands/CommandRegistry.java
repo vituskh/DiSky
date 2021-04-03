@@ -16,6 +16,7 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
+import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
@@ -78,6 +79,14 @@ public class CommandRegistry extends SelfRegisteringSkriptEvent {
                     @Override
                     public Message get(CommandEvent event) {
                         return event.getMessage();
+                    }
+                }
+                , 0);
+
+        EventValues.registerEventValue(CommandEvent.class, Channel.class, new Getter<Channel, CommandEvent>() {
+                    @Override
+                    public Channel get(CommandEvent event) {
+                        return new Channel(event.getMessageChannel());
                     }
                 }
                 , 0);

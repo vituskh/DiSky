@@ -28,10 +28,14 @@ import org.bukkit.event.Event;
 
 import java.util.Objects;
 
-@Name("Register new Discord Bot")
-@Description("Register and load a new discord bot from a token and with a specific Name." +
-        "\nYou need to follow Discord's developer instruction in order to generate a new bot with a token")
-@Examples("login to \"TOKEN\" with name \"MyBot\"")
+@Name("Send discord Message")
+@Description("Send a message in a specific channel, with a specific bot. Use that syntax only for non-textchannel event.")
+@Examples("on load:\n" +
+        "\tmake embed:\n" +
+        "\t\tset title of embed to \"The bot has been started!\"\n" +
+        "\t\tset color of embed to green\n" +
+        "\t\tset timestamp of embed to now\n" +
+        "\tsend last embed to channel with id \"818182473502294066\"")
 @Since("1.0")
 public class EffSendMessage extends Effect {
 
