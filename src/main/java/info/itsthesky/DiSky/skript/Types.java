@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import java.util.Locale;
 
@@ -108,7 +109,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(JDA o) {
-						return "";
+						return o.getSelfUser().getName();
 					}
 
 					@Override
@@ -141,7 +142,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(TextChannelBuilder o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -174,7 +175,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(TextChannel o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -211,7 +212,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(User o) {
-						return "";
+						return o.getName() + "#" + o.getDiscriminator();
 					}
 
 					@Override
@@ -285,7 +286,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Member o) {
-						return "";
+						return o.getUser().getName() + "#" + o.getUser().getDiscriminator();
 					}
 
 					@Override
@@ -323,7 +324,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Message o) {
-						return "";
+						return o.getContentRaw();
 					}
 
 					@Override
@@ -357,7 +358,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Channel o) {
-						return "";
+						return o.getTextChannel().getName();
 					}
 
 					@Override
@@ -399,7 +400,11 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(MessageReaction.ReactionEmote o) {
-						return "";
+						if (o.isEmote()){
+							return o.getEmote().getAsMention();
+						} else {
+							return o.getAsReactionCode();
+						}
 					}
 
 					@Override
@@ -432,7 +437,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Webhook o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -465,7 +470,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(info.itsthesky.DiSky.tools.object.messages.Message o) {
-						return "";
+						return o.getContent();
 					}
 
 					@Override
@@ -493,7 +498,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Guild o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -533,7 +538,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(EmbedBuilder o) {
-						return "";
+						return ToStringBuilder.reflectionToString(o);
 					}
 
 					@Override
@@ -563,7 +568,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(MessageBuilder o) {
-						return "";
+						return o.toString();
 					}
 
 					@Override
@@ -593,7 +598,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(RoleBuilder o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -629,7 +634,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(Permission perm) {
-						return "" + perm.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+						return perm.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 					}
 
 					@Override
@@ -654,7 +659,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(SlashCommand o) {
-						return "";
+						return o.getName();
 					}
 
 					@Override
@@ -690,7 +695,7 @@ public class Types {
 
 					@Override
 					public String toVariableNameString(OptionType o) {
-						return "";
+						return o.name();
 					}
 
 					@Override
