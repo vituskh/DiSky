@@ -63,6 +63,12 @@ public class Types {
 				.description("Represent a category builder, which is not created yet in a guild.")
 				.since("1.4.1")
 				.parser(new Parser<CategoryBuilder>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
+
 					@Override
 					public CategoryBuilder parse(String input, ParseContext context) {
 						return null;
@@ -89,6 +95,11 @@ public class Types {
 				.description("Represent a loaded Discord Bot")
 				.since("1.0")
 				.parser(new Parser<JDA>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
 
 					@Override
 					public String toString(JDA o, int flags) {
@@ -119,6 +130,11 @@ public class Types {
 				.parser(new Parser<TextChannelBuilder>() {
 
 					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
 					public String toString(TextChannelBuilder o, int flags) {
 						return o.getName();
 					}
@@ -145,6 +161,11 @@ public class Types {
 				.description("Represent a Discord text channel (where file and message can be sent)")
 				.since("1.0")
 				.parser(new Parser<TextChannel>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
 
 					@Override
 					public String toString(TextChannel o, int flags) {
@@ -180,6 +201,10 @@ public class Types {
 				.parser(new Parser<User>() {
 
 					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
+					@Override
 					public String toString(User o, int flags) {
 						return o.getId();
 					}
@@ -212,6 +237,11 @@ public class Types {
 				.parser(new Parser<Role>() {
 
 					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
+
+					@Override
 					public String toString(Role o, int flags) {
 						return o.getName();
 					}
@@ -242,6 +272,11 @@ public class Types {
 				.description("Represent a discord user which is in any guild.")
 				.since("1.0")
 				.parser(new Parser<Member>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
 
 					@Override
 					public String toString(Member o, int flags) {
@@ -277,6 +312,11 @@ public class Types {
 				.parser(new Parser<Message>() {
 
 					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
 					public String toString(Message o, int flags) {
 						return o.getId();
 					}
@@ -304,6 +344,11 @@ public class Types {
 						"\n Mainly made for better event value using lol")
 				.since("1.1")
 				.parser(new Parser<Channel>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
 
 					@Override
 					public String toString(Channel o, int flags) {
@@ -339,6 +384,11 @@ public class Types {
 				.parser(new Parser<MessageReaction.ReactionEmote>() {
 
 					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
 					public String toString(MessageReaction.ReactionEmote o, int flags) {
 						if (o.isEmote()){
 							return o.getEmote().getAsMention();
@@ -371,6 +421,11 @@ public class Types {
 				.parser(new Parser<Webhook>() {
 
 					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
 					public String toString(Webhook o, int flags) {
 						return o.getId();
 					}
@@ -401,6 +456,11 @@ public class Types {
 					@Override
 					public String toString(info.itsthesky.DiSky.tools.object.messages.Message o, int flags) {
 						return o.toString();
+					}
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
 					}
 
 					@Override
@@ -441,6 +501,11 @@ public class Types {
 						return ".+";
 					}
 
+					@Override
+					public boolean canParse(ParseContext context) {
+						return context.equals(ParseContext.COMMAND);
+					}
+
 					@SuppressWarnings("unchecked")
 					@Override
 					public Guild parse(final String s, final ParseContext context) {
@@ -448,105 +513,6 @@ public class Types {
 							CommandEvent lastEvent = CommandEvent.lastEvent;
 							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getBot().getGuildById(Utils.parseLong(s, false, true)));
 						}
-						return null;
-					}
-				})
-		);
-		Classes.registerClass(new ClassInfo<>(Command.class, "command")
-				.user("commands?")
-				.name("Event Command")
-				.description(new String[] {
-						"Represent a core command in a command event.",
-						"For example, in the command:",
-						".say Hello :D",
-						"The 'say' represent the core command."
-				})
-				.since("1.0")
-				.parser(new Parser<Command>() {
-
-					@Override
-					public String toString(Command o, int flags) {
-						return o.getValue();
-					}
-
-					@Override
-					public String toVariableNameString(Command o) {
-						return "";
-					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return ".+";
-					}
-
-					@Override
-					public Command parse(String s, final ParseContext context) {
-						return null;
-					}
-				})
-		);
-		Classes.registerClass(new ClassInfo<>(Prefix.class, "prefix")
-				.user("prefix")
-				.name("Event Prefix")
-				.description(new String[] {
-						"Represent the prefix in a command event.",
-						"For example, in the command:",
-						".say Hello :D",
-						"The '.' represent the prefix."
-				})
-				.since("1.0")
-				.parser(new Parser<Prefix>() {
-
-					@Override
-					public String toString(Prefix o, int flags) {
-						return o.getValue();
-					}
-
-					@Override
-					public String toVariableNameString(Prefix o) {
-						return "";
-					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return ".+";
-					}
-
-					@Override
-					public Prefix parse(String s, final ParseContext context) {
-						return null;
-					}
-				})
-		);
-		Classes.registerClass(new ClassInfo<>(Arguments.class, "argument")
-				.user("argument")
-				.name("Event Arguments")
-				.description(new String[] {
-						"Represent all arguments in a command event.",
-						"For example, in the command:",
-						".say Hello :D",
-						"The 'Hello' and the ':D' represent arguments."
-				})
-				.since("1.0")
-				.parser(new Parser<Arguments>() {
-
-					@Override
-					public String toString(Arguments o, int flags) {
-						return o.getArgs().toString();
-					}
-
-					@Override
-					public String toVariableNameString(Arguments o) {
-						return "";
-					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return ".+";
-					}
-
-					@Override
-					public Arguments parse(String s, final ParseContext context) {
 						return null;
 					}
 				})
