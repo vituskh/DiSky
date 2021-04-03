@@ -22,6 +22,7 @@ import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -84,6 +85,12 @@ public class Types {
 					public String getVariableNamePattern() {
 						return "[a-z ]+";
 					}
+
+					@Nullable
+					@Override
+					public CategoryBuilder parse(String s, ParseContext context) {
+						return null;
+					}
 				}));
 		Classes.registerClass(new ClassInfo<>(JDA.class, "bot")
 				.user("bots?")
@@ -111,7 +118,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public JDA parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(TextChannelBuilder.class, "textchannelbuilder")
@@ -140,7 +151,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public TextChannelBuilder parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(TextChannel.class, "textchannel")
@@ -318,7 +333,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public Message parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Channel.class, "channel")
@@ -394,7 +413,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public MessageReaction.ReactionEmote parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Webhook.class, "webhookbuilder")
@@ -423,7 +446,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public Webhook parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(info.itsthesky.DiSky.tools.object.messages.Message.class, "staticmessage")
@@ -452,7 +479,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public info.itsthesky.DiSky.tools.object.messages.Message parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Guild.class, "guild")
@@ -516,7 +547,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public EmbedBuilder parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(MessageBuilder.class, "messagebuilder")
@@ -542,7 +577,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public MessageBuilder parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(RoleBuilder.class, "rolebuilder")
@@ -568,7 +607,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public RoleBuilder parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Permission.class, "permission")
@@ -625,7 +668,11 @@ public class Types {
 					public String getVariableNamePattern() {
 						return ".+";
 					}
-
+					@Nullable
+					@Override
+					public SlashCommand parse(String s, ParseContext context) {
+						return null;
+					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(OptionType.class, "optiontype")
