@@ -6,6 +6,8 @@ import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.managers.WebhookManager;
 import info.itsthesky.DiSky.tools.Metrics;
 import info.itsthesky.DiSky.tools.Utils;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

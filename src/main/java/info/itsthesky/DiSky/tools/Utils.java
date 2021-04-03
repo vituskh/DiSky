@@ -166,6 +166,14 @@ public class Utils extends ListenerAdapter {
         return (T) configuration.get(path, defaultValue);
     }
 
+    public static String[] valuesToString(Object... values) {
+        List<String> s = new ArrayList<>();
+        for (Object o : values) {
+            s.add(o.toString());
+        }
+        return s.toArray(new String[0]);
+    }
+
     public static void saveResourceAs(String inPath) {
         if (inPath == null || inPath.isEmpty()) {
             throw new IllegalArgumentException("The input path cannot be null or empty");
