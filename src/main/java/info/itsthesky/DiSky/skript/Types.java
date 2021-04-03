@@ -71,11 +71,6 @@ public class Types {
 					}
 
 					@Override
-					public CategoryBuilder parse(String input, ParseContext context) {
-						return null;
-					}
-
-					@Override
 					public String toString(CategoryBuilder c, int flags) {
 						return c.getName();
 					}
@@ -117,10 +112,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public JDA parse(final String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(TextChannelBuilder.class, "textchannelbuilder")
@@ -150,10 +141,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public TextChannelBuilder parse(final String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(TextChannel.class, "textchannel")
@@ -332,10 +319,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public Message parse(final String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Channel.class, "channel")
@@ -412,10 +395,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public MessageReaction.ReactionEmote parse(final String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Webhook.class, "webhookbuilder")
@@ -445,10 +424,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public Webhook parse(final String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(info.itsthesky.DiSky.tools.object.messages.Message.class, "staticmessage")
@@ -478,10 +453,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public info.itsthesky.DiSky.tools.object.messages.Message parse(final String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Guild.class, "guild")
@@ -546,10 +517,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public EmbedBuilder parse(String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(MessageBuilder.class, "messagebuilder")
@@ -576,10 +543,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public MessageBuilder parse(String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(RoleBuilder.class, "rolebuilder")
@@ -606,10 +569,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public RoleBuilder parse(String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(Permission.class, "permission")
@@ -667,10 +626,6 @@ public class Types {
 						return ".+";
 					}
 
-					@Override
-					public SlashCommand parse(String s, final ParseContext context) {
-						return null;
-					}
 				})
 		);
 		Classes.registerClass(new ClassInfo<>(OptionType.class, "optiontype")
