@@ -4,6 +4,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.commands.CommandEvent;
 import info.itsthesky.DiSky.tools.Utils;
@@ -15,11 +16,8 @@ import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Command.OptionType;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -645,10 +643,41 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(OnlineStatus.class, "onlinestatus")
+				.user("onlinestatus")
+				.name("Online Status")
+				.description("Represent a user / bot online status.")
+				.usage("online, offline, idle, do not disturb")
+				.since("1.6")
+				.parser(new Parser<OnlineStatus>() {
+					@Override
+					public OnlineStatus parse(String input, ParseContext context) {
+						for (OnlineStatus status : OnlineStatus.values()) {
+							if (status.name().equalsIgnoreCase(input.replaceAll(" ", "_").toUpperCase())) return status;
+						}
+						return null;
+					}
+
+					@Override
+					public String toString(OnlineStatus c, int flags) {
+						return c.name();
+					}
+
+					@Override
+					public String toVariableNameString(OnlineStatus perm) {
+						return perm.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				})
+		);
 		Classes.registerClass(new ClassInfo<>(SlashCommand.class, "commandbuilder")
 				.user("commandbuilders?")
 				.name("Command Builder")
-				.description(new String[] {
+				.description(new String[]{
 						"Represent a non-registered discord slash command."
 				})
 				.since("1.5")
@@ -671,6 +700,37 @@ public class Types {
 					@Nullable
 					@Override
 					public SlashCommand parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(AudioTrack.class, "track")
+				.user("tracks?")
+				.name("Audio Track")
+				.description(new String[]{
+						"Represent an audio track, with duration, name, etc..."
+				})
+				.since("1.6")
+				.parser(new Parser<AudioTrack>() {
+
+					@Override
+					public String toString(AudioTrack o, int flags) {
+						return o.getInfo().title;
+					}
+
+					@Override
+					public String toVariableNameString(AudioTrack o) {
+						return o.getInfo().title;
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public AudioTrack parse(String s, ParseContext context) {
 						return null;
 					}
 				})
