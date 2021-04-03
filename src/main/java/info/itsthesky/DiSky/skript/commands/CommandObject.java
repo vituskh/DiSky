@@ -8,6 +8,7 @@ import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.Utils;
 import info.itsthesky.DiSky.managers.BotManager;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 
 import java.io.File;
@@ -19,6 +20,7 @@ public class CommandObject {
     private String name;
     private List<String> aliases;
     private List<String> roles;
+    private List<String> perms;
     private List<ChannelType> executableIn;
     private List<Expression<String>> prefixes;
     private String description;
@@ -32,7 +34,7 @@ public class CommandObject {
 
     public CommandObject(File script, String name, String pattern, List<Argument<?>> arguments, List<Expression<String>> prefixes,
                          List<String> aliases, String description, String usage, List<String> roles,
-                         List<ChannelType> executableIn, List<String> bots, List<TriggerItem> items) {
+                         List<ChannelType> executableIn, List<String> bots, List<TriggerItem> items, List<String> perms) {
         this.name = name;
         if (aliases != null) {
             aliases.removeIf(alias -> alias.equalsIgnoreCase(name));
@@ -45,6 +47,7 @@ public class CommandObject {
         this.pattern = pattern;
         this.prefixes = prefixes;
         this.bots = bots;
+        this.perms = perms;
         this.arguments = arguments;
 
         trigger = new Trigger(script, "discord command " + name, new SimpleEvent(), items);
@@ -69,6 +72,11 @@ public class CommandObject {
                 }
             }
             if (bots != null && !bots.contains(BotManager.getNameByJDA(event.getBot()))) {
+                return false;
+            }
+
+            List<Permission> permissions = info.itsthesky.DiSky.tools.Utils.convertPerms(perms.toArray(new String[0]));
+            if (!event.getMember().hasPermission(permissions)) {
                 return false;
             }
 
@@ -129,6 +137,9 @@ public class CommandObject {
 
     public List<String> getRoles() {
         return roles;
+    }
+    public List<String> getPerms() {
+        return perms;
     }
 
     public File getScript() {

@@ -2,12 +2,12 @@ package info.itsthesky.DiSky.tools;
 
 import ch.njol.skript.lang.Variable;
 import ch.njol.skript.util.Date;
-import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -21,8 +21,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class Utils extends ListenerAdapter {
 
@@ -41,6 +40,16 @@ public class Utils extends ListenerAdapter {
         } else {
             return defaultObject;
         }
+    }
+
+    public static List<Permission> convertPerms(String... perms) {
+        List<Permission> permissions = new ArrayList<>();
+        for (String s : perms) {
+            try {
+                permissions.add(Permission.valueOf(s.replace(" ", "_").toUpperCase()));
+            } catch (IllegalArgumentException ignored) {}
+        }
+        return permissions;
     }
 
     @Nullable

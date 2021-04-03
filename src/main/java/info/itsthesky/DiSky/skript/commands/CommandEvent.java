@@ -12,6 +12,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class CommandEvent extends Event implements Cancellable {
 
     public static CommandEvent lastEvent;
@@ -27,7 +29,7 @@ public class CommandEvent extends Event implements Cancellable {
     private boolean cancelled;
     private final GuildChannel channel;
     private final JDA bot;
-	private String arguments;
+    private String arguments;
 
 	public CommandEvent(String prefix, String usedAlias, CommandObject command, String arguments, Guild guild,
                         MessageChannel messagechannel, GuildChannel channel, Message message, User user,
