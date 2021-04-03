@@ -26,6 +26,7 @@ public class CommandObject {
     private String description;
     private String usage;
     private String pattern;
+    private String permMessage;
     private List<String> bots;
 
     private Trigger trigger;
@@ -34,7 +35,7 @@ public class CommandObject {
 
     public CommandObject(File script, String name, String pattern, List<Argument<?>> arguments, List<Expression<String>> prefixes,
                          List<String> aliases, String description, String usage, List<String> roles,
-                         List<ChannelType> executableIn, List<String> bots, List<TriggerItem> items, List<String> perms) {
+                         List<ChannelType> executableIn, List<String> bots, List<TriggerItem> items, List<String> perms, String permMessage) {
         this.name = name;
         if (aliases != null) {
             aliases.removeIf(alias -> alias.equalsIgnoreCase(name));
@@ -49,6 +50,7 @@ public class CommandObject {
         this.bots = bots;
         this.perms = perms;
         this.arguments = arguments;
+        this.permMessage = permMessage;
 
         trigger = new Trigger(script, "discord command " + name, new SimpleEvent(), items);
 
@@ -77,6 +79,9 @@ public class CommandObject {
 
             List<Permission> permissions = info.itsthesky.DiSky.tools.Utils.convertPerms(perms.toArray(new String[0]));
             if (!event.getMember().hasPermission(permissions)) {
+                if (permMessage != null) {
+                    event.getMessageChannel().sendMessage(permMessage).queue();
+                }
                 return false;
             }
 

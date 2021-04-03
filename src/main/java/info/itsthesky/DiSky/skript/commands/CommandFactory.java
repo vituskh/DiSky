@@ -43,6 +43,7 @@ public class CommandFactory {
             .addEntry("bots", true)
             .addEntry("executable in", true)
             .addEntry("permissions", true)
+            .addEntry("permission message", true)
             .addSection("trigger", false);
 
     public HashMap<CommandData, CommandObject> commandMap = new HashMap<>();
@@ -219,6 +220,7 @@ public class CommandFactory {
         String usage = ScriptLoader.replaceOptions(node.get("usage", ""));
 
         String description = ScriptLoader.replaceOptions(node.get("description", ""));
+        String permMessage = ScriptLoader.replaceOptions(node.get("permission message", ""));
 
         String permList = ScriptLoader.replaceOptions(node.get("permissions", ""));
         List<String> perms = permList.isEmpty() ? new ArrayList<>() : Arrays.asList(permList.split(listPattern));
@@ -266,7 +268,7 @@ public class CommandFactory {
         try {
             commandObject = new CommandObject(
                     node.getConfig().getFile(), command, pattern.toString(), currentArguments,
-                    prefixes, aliases, description, usage, roles, places, bots, ScriptLoader.loadItems(trigger), perms
+                    prefixes, aliases, description, usage, roles, places, bots, ScriptLoader.loadItems(trigger), perms, permMessage
             );
         } finally {
             this.currentArguments = null;
