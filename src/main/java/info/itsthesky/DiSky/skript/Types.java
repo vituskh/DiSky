@@ -659,13 +659,13 @@ public class Types {
 					}
 
 					@Override
-					public String toString(OnlineStatus c, int flags) {
-						return c.name();
+					public String toString(OnlineStatus status, int flags) {
+						return status.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 					}
 
 					@Override
-					public String toVariableNameString(OnlineStatus perm) {
-						return perm.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					public String toVariableNameString(OnlineStatus status) {
+						return status.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
 					}
 
 					@Override
