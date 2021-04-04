@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.DiSky;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -14,24 +15,31 @@ import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
 
-@Name("Embed Title")
-@Description("Set or clear the title of an embed.")
+@Name("Title of Track / Embed")
+@Description("Get the title of a track and an embed, and set it for embed.")
 @Examples({"set embed title of {_embed} to \"The addon's developer link\"",
-        "clear embed title of {_embed}"})
+        "clear embed title of {_embed}",
+        "set {_title} to title of last played track"
+})
 @Since("1.0")
-public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, String> {
+public class ExprEmbedTitle extends SimplePropertyExpression<Object, String> {
 
     static {
         register(ExprEmbedTitle.class, String.class,
-                "[embed] title",
-                "embed"
+                "[(embed|track)] title",
+                "embed/track"
         );
     }
 
     @Nullable
     @Override
-    public String convert(EmbedBuilder areaStyle) {
-        return areaStyle.getFields().getClass().getName();
+    public String convert(Object entity) {
+        if (entity instanceof EmbedBuilder) {
+            return ((EmbedBuilder) entity).build().getTitle();
+        } else if (entity instanceof AudioTrack) {
+            return ((AudioTrack) entity).getInfo().title;
+        }
+        return null;
     }
 
     @Override
@@ -58,7 +66,9 @@ public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, Strin
         if (delta == null || delta[0] == null) return;
         switch (mode) {
             case RESET:
-                for (EmbedBuilder embed : getExpr().getArray(e)) {
+                for (Object entity : getExpr().getArray(e)) {
+                    if (entity instanceof AudioTrack) return;
+                    EmbedBuilder embed = (EmbedBuilder) entity;
                     MessageEmbed builded = embed.build();
                     embed.setTitle(
                             null,
@@ -73,7 +83,9 @@ public class ExprEmbedTitle extends SimplePropertyExpression<EmbedBuilder, Strin
                             .warning("The embed's title cannot be bigger than 256 characters. The one you're trying to set is '"+value.length()+"' length!");
                     return;
                 }
-                for (EmbedBuilder embed : getExpr().getArray(e)) {
+                for (Object entity : getExpr().getArray(e)) {
+                    if (entity instanceof AudioTrack) return;
+                    EmbedBuilder embed = (EmbedBuilder) entity;
                     MessageEmbed builded = embed.build();
                     embed.setTitle(
                             value,

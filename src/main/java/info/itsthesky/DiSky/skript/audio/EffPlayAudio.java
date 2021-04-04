@@ -59,7 +59,8 @@ public class EffPlayAudio extends Effect {
                 ExprLastAudioError.lastError = PlayError.NOT_FOUND;
                 return;
             }
-            for (AudioTrack track : tracks) AudioUtils.play(guild, AudioUtils.getGuildAudioPlayer(guild), track);
+            AudioUtils.play(guild, AudioUtils.getGuildAudioPlayer(guild), tracks[0]);
+            ExprLastPlayedAudio.lastTrack = tracks[0];
         });
     }
 
