@@ -42,6 +42,50 @@ public class Utils extends ListenerAdapter {
         }
     }
 
+    public static boolean containURL(String input) {
+        return input.contains("http://") ||
+                input.contains("https://") ||
+                input.contains(".com") ||
+                input.contains(".org") ||
+                input.contains(".html") ||
+                input.contains(".php");
+    }
+
+    public static LinkedHashMap<String, Integer> sortHashMapByValues(
+            HashMap<String, Integer> passedMap) {
+        List<String> mapKeys = new ArrayList<>(passedMap.keySet());
+        List<Integer> mapValues = new ArrayList<>(passedMap.values());
+        Collections.sort(mapValues);
+        Collections.sort(mapKeys);
+
+        LinkedHashMap<String, Integer> sortedMap =
+                new LinkedHashMap<>();
+
+        for (Integer val : mapValues) {
+            Iterator<String> keyIt = mapKeys.iterator();
+
+            while (keyIt.hasNext()) {
+                String key = keyIt.next();
+                Integer comp1 = passedMap.get(key);
+
+                if (comp1.equals(val)) {
+                    keyIt.remove();
+                    sortedMap.put(key, val);
+                    break;
+                }
+            }
+        }
+        return sortedMap;
+    }
+
+    public static <T, Q> LinkedHashMap<T, Q> reverseMap(LinkedHashMap<T, Q> toReverse) {
+        LinkedHashMap<T, Q> reversedMap = new LinkedHashMap<>();
+        List<T> reverseOrderedKeys = new ArrayList<>(toReverse.keySet());
+        Collections.reverse(reverseOrderedKeys);
+        reverseOrderedKeys.forEach((key)->reversedMap.put(key,toReverse.get(key)));
+        return reversedMap;
+    }
+
     public static List<Permission> convertPerms(String... perms) {
         List<Permission> permissions = new ArrayList<>();
         for (String s : perms) {
@@ -113,6 +157,27 @@ public class Utils extends ListenerAdapter {
     public static <T> void setSkriptVariable(Variable<T> variable, Object value, Event event) {
         String name = variable.getName().toString(event);
         Variables.setVariable(name, value, event, variable.isLocal());
+    }
+
+    public static <T> void setSkriptList(Variable<T> variable, Event event, Object... value) {
+        String name = variable.getName().toString(event);
+        setList(name, event, variable.isLocal(), value);
+    }
+
+    /**
+     * Small edition for DiSky
+     * @author Blitz
+     */
+    public static void setList(String name, Event e, boolean isLocal, Object... objects) {
+        if (objects == null || name == null) return;
+        List<Object> list = Arrays.asList(objects.clone());
+
+        int separatorLength = Variable.SEPARATOR.length() + 1;
+        name = name.substring(0, (name.length() - separatorLength));
+        name = name.toLowerCase() + Variable.SEPARATOR;
+        for (int i = 1; i < list.size()+1; i++){
+            Variables.setVariable(name + i, list.get(i-1), e, isLocal);
+        }
     }
 
     public static String colored(String s) {

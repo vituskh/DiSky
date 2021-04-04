@@ -8,10 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.commands.CommandEvent;
 import info.itsthesky.DiSky.tools.Utils;
-import info.itsthesky.DiSky.tools.object.CategoryBuilder;
-import info.itsthesky.DiSky.tools.object.RoleBuilder;
-import info.itsthesky.DiSky.tools.object.SlashCommand;
-import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
+import info.itsthesky.DiSky.tools.object.*;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
@@ -635,6 +632,76 @@ public class Types {
 					@Override
 					public String toVariableNameString(Permission perm) {
 						return perm.getName().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(PlayError.class, "playerror")
+				.user("playerrors?")
+				.name("Audio Play Error")
+				.description("Represent an audio play error.")
+				.usage("not exist - The track you're trying to play doesn't exist, or the input for youtube search doesn't found anything.",
+						"")
+				.since("1.6")
+				.parser(new Parser<PlayError>() {
+					@Override
+					public PlayError parse(String input, ParseContext context) {
+						for (PlayError perm : PlayError.values()) {
+							if (perm.name().equalsIgnoreCase(input.replaceAll(" ", "_").toUpperCase(Locale.ROOT))) return perm;
+						}
+						return null;
+					}
+
+					@Override
+					public String toString(PlayError c, int flags) {
+						return c.name();
+					}
+
+					@Override
+					public String toVariableNameString(PlayError perm) {
+						return perm.name().toLowerCase(Locale.ENGLISH).replace('_', ' ');
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(VoiceChannel.class, "voicechannel")
+				.user("voicechannels?")
+				.name("Voice Channel")
+				.description("Represent a discord voice channel.")
+				.since("1.6")
+				.parser(new Parser<VoiceChannel>() {
+
+					@SuppressWarnings("unchecked")
+					@Override
+					public VoiceChannel parse(final String s, final ParseContext context) {
+						if (context.equals(ParseContext.COMMAND)) {
+							CommandEvent lastEvent = CommandEvent.lastEvent;
+							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getBot().getVoiceChannelById(Utils.parseLong(s, false, true)));
+						}
+						return null;
+					}
+
+					@Override
+					public String toString(VoiceChannel c, int flags) {
+						return c.getName();
+					}
+
+					@Override
+					public String toVariableNameString(VoiceChannel perm) {
+						return perm.getName();
+					}
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return true;
 					}
 
 					@Override

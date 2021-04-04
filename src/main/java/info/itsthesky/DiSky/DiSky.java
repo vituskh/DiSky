@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.managers.WebhookManager;
+import info.itsthesky.DiSky.managers.music.AudioUtils;
 import info.itsthesky.DiSky.tools.Metrics;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Member;
@@ -45,8 +46,14 @@ public class DiSky extends JavaPlugin {
             pluginManager.disablePlugin(this);
         }
         Utils.saveResourceAs("config.yml");
+
+        /* Metrics */
         int pluginId = 10911;
         Metrics metrics = new Metrics(this, pluginId);
+
+        /* Audio system */
+        AudioUtils.initializeAudio();
+
         getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9seems to be loaded correctly!"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&9Join our &bDiscord &9for new update and support:"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&bhttps://discord.gg/whWuXwaVwM"));

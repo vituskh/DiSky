@@ -51,6 +51,8 @@ public class BotManager {
                     .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .enableIntents(GatewayIntent.DIRECT_MESSAGES)
                     .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                    .enableIntents(GatewayIntent.GUILD_VOICE_STATES)
+                    .enableCache(CacheFlag.ACTIVITY)
                     .setChunkingFilter(ChunkingFilter.NONE)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .build();
