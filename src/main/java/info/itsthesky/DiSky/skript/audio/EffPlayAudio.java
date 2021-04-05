@@ -49,19 +49,17 @@ public class EffPlayAudio extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     protected void execute(Event e) {
-        DiSkyErrorHandler.executeHandleCode(e, Event -> {
-            String input = exprInput.getSingle(e);
-            Guild guild = exprGuild.getSingle(e);
-            if (input == null || guild == null) return;
-            AudioTrack[] tracks = AudioUtils.search(input);
-            ExprLastAudioError.lastError = PlayError.NONE;
-            if (tracks == null || tracks.length == 0) {
-                ExprLastAudioError.lastError = PlayError.NOT_FOUND;
-                return;
-            }
-            AudioUtils.play(guild, AudioUtils.getGuildAudioPlayer(guild), tracks[0]);
-            ExprLastPlayedAudio.lastTrack = tracks[0];
-        });
+        String input = exprInput.getSingle(e);
+        Guild guild = exprGuild.getSingle(e);
+        if (input == null || guild == null) return;
+        AudioTrack[] tracks = AudioUtils.search(input);
+        ExprLastAudioError.lastError = PlayError.NONE;
+        ExprLastPlayedAudio.lastTrack = null;
+        if (tracks == null || tracks.length == 0) {
+            ExprLastAudioError.lastError = PlayError.NOT_FOUND;
+            return;
+        }
+        AudioUtils.play(guild, AudioUtils.getGuildAudioPlayer(guild), tracks[0]);
     }
 
     @Override
