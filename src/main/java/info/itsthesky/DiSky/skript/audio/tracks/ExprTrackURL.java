@@ -20,7 +20,7 @@ public class ExprTrackURL extends SimplePropertyExpression<AudioTrack, String> {
 
     static {
         register(ExprTrackURL.class, String.class,
-                "[discord] [audio] (url|uri)",
+                "[discord] [audio] track (url|uri)",
                 "track"
         );
     }

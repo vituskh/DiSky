@@ -6,40 +6,39 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
 
-@Name("Track Duration")
-@Description("Return the duration of a specific track")
-@Examples("set {_duration} to duration of last played track.")
+@Name("Track Author")
+@Description("Return the author of a specific track")
+@Examples("set {_author} to author of last played track.")
 @Since("1.6-pre2")
-public class ExprTrackDuration extends SimplePropertyExpression<AudioTrack, Timespan> {
+public class ExprTrackAuthor extends SimplePropertyExpression<AudioTrack, String> {
 
     static {
-        register(ExprTrackDuration.class, Timespan.class,
-                "[discord] [audio] track duration",
+        register(ExprTrackAuthor.class, String.class,
+                "[discord] [audio] track author",
                 "track"
         );
     }
 
     @Nullable
     @Override
-    public Timespan convert(AudioTrack entity) {
-        return new Timespan(entity.getDuration());
+    public String convert(AudioTrack entity) {
+        return entity.getInfo().author;
     }
 
     @Override
-    public Class<? extends Timespan> getReturnType() {
-        return Timespan.class;
+    public Class<? extends String> getReturnType() {
+        return String.class;
     }
 
     @Override
     protected String getPropertyName() {
-        return "duration";
+        return "track author";
     }
 
     @Nullable
