@@ -24,9 +24,9 @@ import org.bukkit.event.Event;
 public class ExprIsBot extends SimpleExpression<Boolean> {
 
 	static {
-		Skript.registerExpression(ExprIsBot.class, Boolean.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] %user% (is|was) a [discord] bot",
-		"["+ Utils.getPrefixName() +"] %user% (is not|isn't) a [discord] bot");
+		//Skript.registerExpression(ExprIsBot.class, Boolean.class, ExpressionType.SIMPLE,
+		//		"["+ Utils.getPrefixName() +"] %user% (is|was) a [discord] bot",
+		//"["+ Utils.getPrefixName() +"] %user% (is not|isn't) a [discord] bot");
 	}
 
 	private Expression<User> exprUser;

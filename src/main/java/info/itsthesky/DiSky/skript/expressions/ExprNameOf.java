@@ -60,6 +60,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof Category) finalName = ((Category) entity).getName();
             if (entity instanceof CategoryBuilder) finalName = ((CategoryBuilder) entity).getName();
             if (entity instanceof SlashCommand) finalName = ((SlashCommand) entity).getName();
+            if (entity instanceof User) finalName = ((User) entity).getName();
         }
         return finalName;
     }
