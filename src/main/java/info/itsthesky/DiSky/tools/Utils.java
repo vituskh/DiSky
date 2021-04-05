@@ -8,6 +8,8 @@ import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -178,6 +180,15 @@ public class Utils extends ListenerAdapter {
         for (int i = 1; i < list.size()+1; i++){
             Variables.setVariable(name + i, list.get(i-1), e, isLocal);
         }
+    }
+
+    public static Member searchMember(JDA bot, String id) {
+        for (Guild guild : bot.getGuilds()) {
+            for (Member member : guild.getMembers()) {
+                if (member.getId().equalsIgnoreCase(id)) return member;
+            }
+        }
+        return null;
     }
 
     public static String colored(String s) {
