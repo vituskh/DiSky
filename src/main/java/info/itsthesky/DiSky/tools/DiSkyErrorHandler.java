@@ -12,7 +12,7 @@ public class DiSkyErrorHandler {
     private final static Logger logger = DiSky.getInstance().getLogger();
 
     public static void executeHandleCode(Event e,Consumer<Event> consumer) {
-        new Thread(() -> {
+        //new Thread(() -> {
             try {
                 consumer.accept(e);
             } catch (InsufficientPermissionException ex) {
@@ -30,7 +30,7 @@ public class DiSkyErrorHandler {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }).start();
+        //}).start();
     }
 
 }

@@ -9,6 +9,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.tools.Utils;
 import org.bukkit.event.Event;
@@ -23,7 +24,7 @@ public class ExprLastPlayedAudio extends SimpleExpression<AudioTrack> {
 				"["+ Utils.getPrefixName() +"] [the] last played (audio|track)");
 	}
 
-	public static AudioTrack lastTrack;
+	public static AudioTrack lastTrack = null;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
@@ -32,7 +33,7 @@ public class ExprLastPlayedAudio extends SimpleExpression<AudioTrack> {
 
 	@Override
 	protected AudioTrack[] get(final Event e) {
-		return new AudioTrack[] {lastTrack};
+		return lastTrack == null ? new AudioTrack[0] : new AudioTrack[] {lastTrack.makeClone()};
 	}
 
 	@Override
