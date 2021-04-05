@@ -28,7 +28,8 @@ public class ExprFromID extends SimpleExpression<Object> {
 	static {
 		Skript.registerExpression(ExprFromID.class, Object.class, ExpressionType.SIMPLE,
 				"["+ Utils.getPrefixName() +"] [text][ ][-][ ]channel with [the] id %string%",
-				"["+ Utils.getPrefixName() +"] (user|member) with [the] id %string%",
+				"["+ Utils.getPrefixName() +"] user with [the] id %string%",
+				"["+ Utils.getPrefixName() +"] member with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] (guild|server) with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] [guild] role with [the] id %string%",
 				"["+ Utils.getPrefixName() +"] message with [the] id %string% in [channel] %channel/textchannel%",
@@ -61,14 +62,16 @@ public class ExprFromID extends SimpleExpression<Object> {
 				case 1:
 					return new User[] {bot.getUserById(Long.parseLong(id))};
 				case 2:
-					return new Guild[] {bot.getGuildById(Long.parseLong(id))};
+					return Utils.searchMember(bot, id) == null ? new Member[0] : new Member[] {Utils.searchMember(bot, id)};
 				case 3:
-					return new Role[] {bot.getRoleById(Long.parseLong(id))};
+					return new Guild[] {bot.getGuildById(Long.parseLong(id))};
 				case 4:
+					return new Role[] {bot.getRoleById(Long.parseLong(id))};
+				case 5:
 					TextChannel channel = Utils.checkChannel(exprChannel.getSingle(e));
 					if (channel == null) return new String[0];
 					return new Message[] {channel.retrieveMessageById(Long.parseLong(id)).complete()};
-				case 5:
+				case 6:
 					return new Category[] {bot.getCategoryById(Long.parseLong(id))};
 			}
 			return new String[0];
