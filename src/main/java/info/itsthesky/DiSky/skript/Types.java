@@ -27,7 +27,7 @@ public class Types {
 				.user("categor(y|ies)")
 				.name("Category")
 				.description("Represent a category in a guild, which is already created.")
-				.since("1.4.1")
+				.since("1.4.2")
 				.parser(new Parser<Category>() {
 					@SuppressWarnings("unchecked")
 					@Override
