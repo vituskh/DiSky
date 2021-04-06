@@ -98,6 +98,15 @@ public class Utils extends ListenerAdapter {
         return permissions;
     }
 
+    public static boolean isClassExist(String className) {
+        try {
+            Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
     @Nullable
     public static Long parseLong(@NotNull String s, boolean shouldPrintError, boolean manageDiscordValue) {
         Long id = null;

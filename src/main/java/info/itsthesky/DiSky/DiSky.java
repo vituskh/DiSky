@@ -3,6 +3,7 @@ package info.itsthesky.DiSky;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.managers.DependManager;
 import info.itsthesky.DiSky.managers.WebhookManager;
 import info.itsthesky.DiSky.managers.music.AudioUtils;
 import info.itsthesky.DiSky.tools.Metrics;
@@ -29,6 +30,8 @@ public class DiSky extends JavaPlugin {
         instance = this;
         logger = getLogger();
         pluginManager = getServer().getPluginManager();
+
+        //DependManager.registerDepend();
 
         /* Skript loading */
         getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9is loading ..."));
