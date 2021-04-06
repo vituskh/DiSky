@@ -8,21 +8,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.managers.music.AudioUtils;
-import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.PlayError;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import org.bukkit.event.Event;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Name("Play Audio")
 @Description("Play an URL or an input (if it's only text, DiSky will search the input within YHouTube). Also connect to bot to the member channel.\nCould send multiple error, see 'Audio Player Error' for more information.")

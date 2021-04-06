@@ -24,10 +24,10 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ExprGuildSpeed extends SimplePropertyExpression<Guild, Number> {
 
     static {
-        //register(ExprGuildSpeed.class, Number.class,
-        //        "[discord] [audio] [guild] speed",
-        //        "guild"
-        //);
+        register(ExprGuildSpeed.class, Number.class,
+                "[discord] [audio] [guild] speed",
+                "guild"
+        );
     }
 
     @Nullable
@@ -74,9 +74,7 @@ public class ExprGuildSpeed extends SimplePropertyExpression<Guild, Number> {
             case SET:
                 for (Guild guild : getExpr().getArray(e)) {
                     AudioUtils.getGuildAudioPlayer(guild).getPlayer().setFilterFactory((track, format, output)->{
-                        System.out.println(value.doubleValue());
                         TimescalePcmAudioFilter audioFilter = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
-                        System.out.println(value.doubleValue());
                         audioFilter.setSpeed(value.doubleValue());
                         return Collections.singletonList(audioFilter);
                     });

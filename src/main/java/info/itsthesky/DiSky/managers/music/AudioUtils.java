@@ -33,6 +33,7 @@ public class AudioUtils {
 
     public static void initializeAudio() {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+        playerManager.getConfiguration().setFilterHotSwapEnabled(true);
         MANAGER = playerManager;
         MUSIC_MANAGERS = new HashMap<>();
         AudioSourceManagers
@@ -80,7 +81,6 @@ public class AudioUtils {
         }
 
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
-
         return musicManager;
     }
 
