@@ -26,7 +26,8 @@ public class ExprFromName extends SimpleExpression<Object> {
 
 	static {
 		Skript.registerExpression(ExprFromName.class, Object.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [text][ ][-][ ]channel (named|with name) %string%",
+				"["+ Utils.getPrefixName() +"] text[ ][-][ ]channel (named|with name) %string%",
+				"["+ Utils.getPrefixName() +"] voice[ ][-][ ]channel (named|with name) %string%",
 				"["+ Utils.getPrefixName() +"] (user|member) (named|with name) %string%",
 				"["+ Utils.getPrefixName() +"] (guild|server) (named|with name) %string%",
 				"["+ Utils.getPrefixName() +"] [guild] role (named|with name) %string%",
@@ -55,12 +56,14 @@ public class ExprFromName extends SimpleExpression<Object> {
 				case 0:
 					return new TextChannel[] {bot.getTextChannelsByName(id, true).get(0)};
 				case 1:
-					return new User[] {bot.getUsersByName(id, true).get(0)};
+					return new VoiceChannel[] {bot.getVoiceChannelsByName(id, true).get(0)};
 				case 2:
-					return new Guild[] {bot.getGuildsByName(id, true).get(0)};
+					return new User[] {bot.getUsersByName(id, true).get(0)};
 				case 3:
-					return new Role[] {bot.getRolesByName(id, true).get(0)};
+					return new Guild[] {bot.getGuildsByName(id, true).get(0)};
 				case 4:
+					return new Role[] {bot.getRolesByName(id, true).get(0)};
+				case 5:
 					return new Category[] {bot.getCategoriesByName(id, true).get(0)};
 			}
 			return new String[0];
