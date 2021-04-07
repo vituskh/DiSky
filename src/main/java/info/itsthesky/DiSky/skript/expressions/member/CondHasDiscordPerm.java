@@ -29,8 +29,8 @@ public class CondHasDiscordPerm extends Condition {
 
 	static {
 		Skript.registerCondition(CondHasDiscordPerm.class,
-				"["+ Utils.getPrefixName() +"] [the] [member] %member% has [discord] permission %permissions% [in [channel] %-channel/textchannel%]",
-				"["+ Utils.getPrefixName() +"] [the] [member] %member% (has not|hasn't|don't have|doesn't have) [discord] permission %permissions% [in [channel] %-channel/textchannel%]"
+				"["+ Utils.getPrefixName() +"] [the] [member] %member% has [discord] permission %permission% [in [channel] %-channel/textchannel%]",
+				"["+ Utils.getPrefixName() +"] [the] [member] %member% (has not|hasn't|don't have|doesn't have) [discord] permission %permission% [in [channel] %-channel/textchannel%]"
 		);
 	}
 
@@ -52,7 +52,7 @@ public class CondHasDiscordPerm extends Condition {
 	@Override
 	public boolean check(Event e) {
 		Member member = exprMember.getSingle(e);
-		Permission[] permission = exprPerm.getArray(e);
+		Permission permission = exprPerm.getSingle(e);
 		TextChannel channel = null;
 		if (exprChannel != null) channel = Utils.checkChannel(exprChannel);
 

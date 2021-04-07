@@ -609,6 +609,42 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(VoiceChannelBuilder.class, "voicechannelbuilder")
+				.user("voicechannelbuilders?")
+				.name("Voice Channel Builder")
+				.description(new String[] {
+						"Represent a discord voice channel builder, which is not created yet in a guild."
+				})
+				.since("1.6")
+				.parser(new Parser<VoiceChannelBuilder>() {
+
+					@Override
+					public String toString(VoiceChannelBuilder o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(VoiceChannelBuilder o) {
+						return o.getName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Nullable
+					@Override
+					public VoiceChannelBuilder parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
 		Classes.registerClass(new ClassInfo<>(Permission.class, "permission")
 				.user("permissions?")
 				.name("Discord Permission")
@@ -619,7 +655,7 @@ public class Types {
 					@Override
 					public Permission parse(String input, ParseContext context) {
 						for (Permission perm : Permission.values()) {
-							if (perm.getName().equalsIgnoreCase(input.replaceAll("_", " ").toLowerCase())) return perm;
+							if (perm.name().equalsIgnoreCase(input.toUpperCase(Locale.ROOT).replace(" ", "_"))) return perm;
 						}
 						return null;
 					}

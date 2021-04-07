@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.effects.webhook;
+package info.itsthesky.DiSky.skript.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -9,14 +9,11 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.skript.scope.role.ScopeRole;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.RoleBuilder;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.exceptions.PermissionException;
 import org.bukkit.event.Event;
 
 @Name("Allow / Deny permission")
@@ -27,8 +24,8 @@ public class EffManagePermission extends Effect {
 
     static {
         Skript.registerEffect(EffManagePermission.class,
-                "["+ Utils.getPrefixName() +"] allow [discord] [perm[ission]] %permission% to %member/role/rolebuilder% in %channel/textchannel%",
-                "["+ Utils.getPrefixName() +"] deny [discord] [perm[ission]] %permission% to %member/role/rolebuilder% in %channel/textchannel%"
+                "["+ Utils.getPrefixName() +"] allow [discord] [perm[ission]] %permissions% to %member/role/rolebuilder% in [the] [channel] %channel/textchannel%",
+                "["+ Utils.getPrefixName() +"] deny [discord] [perm[ission]] %permissions% to %member/role/rolebuilder% in [the] [channel] %channel/textchannel%"
         );
     }
 
@@ -49,7 +46,7 @@ public class EffManagePermission extends Effect {
 
     @Override
     protected void execute(Event e) {
-        Permission perm = exprPerm.getSingle(e);
+        Permission[] perm = exprPerm.getArray(e);
         Object target = exprTarget.getSingle(e);
         Object entity = exprEntity.getSingle(e);
         if (perm == null || target == null) return;
