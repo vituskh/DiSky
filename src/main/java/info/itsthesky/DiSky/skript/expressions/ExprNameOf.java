@@ -14,10 +14,8 @@ import info.itsthesky.DiSky.skript.scope.category.ScopeCategory;
 import info.itsthesky.DiSky.skript.scope.commands.ScopeCommand;
 import info.itsthesky.DiSky.skript.scope.role.ScopeRole;
 import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
-import info.itsthesky.DiSky.tools.object.CategoryBuilder;
-import info.itsthesky.DiSky.tools.object.RoleBuilder;
-import info.itsthesky.DiSky.tools.object.SlashCommand;
-import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
+import info.itsthesky.DiSky.skript.scope.voicechannels.ScopeVoiceChannel;
+import info.itsthesky.DiSky.tools.object.*;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -34,7 +32,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprNameOf.class, String.class,
                 "discord name",
-                "member/role/rolebuilder/commandbuilder/webhookbuilder/category/categorybuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
+                "member/role/rolebuilder/commandbuilder/voicechannel/voicechannelbuilder/webhookbuilder/category/categorybuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
         );
     }
 
@@ -61,6 +59,8 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof CategoryBuilder) finalName = ((CategoryBuilder) entity).getName();
             if (entity instanceof SlashCommand) finalName = ((SlashCommand) entity).getName();
             if (entity instanceof User) finalName = ((User) entity).getName();
+            if (entity instanceof VoiceChannel) finalName = ((VoiceChannel) entity).getName();
+            if (entity instanceof VoiceChannelBuilder) finalName = ((VoiceChannelBuilder) entity).getName();
         }
         return finalName;
     }
@@ -132,6 +132,13 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                             .lastBuilder
                             .setName(delta[0].toString());
                     return;
+                } else if (entity instanceof VoiceChannelBuilder) {
+                    VoiceChannelBuilder channel = (VoiceChannelBuilder) entity;
+                    channel.setName(delta[0].toString());
+                    ScopeVoiceChannel
+                            .lastBuilder
+                            .setName(delta[0].toString());
+                    return;
                 } else if (entity instanceof CategoryBuilder) {
                     CategoryBuilder category = (CategoryBuilder) entity;
                     category.setName(delta[0].toString());
@@ -142,6 +149,10 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                 } else if (entity instanceof Category) {
                     Category category = (Category) entity;
                     category.getManager().setName(delta[0].toString()).queue();
+                    return;
+                } else if (entity instanceof VoiceChannel) {
+                    VoiceChannel voice = (VoiceChannel) entity;
+                    voice.getManager().setName(delta[0].toString()).queue();
                     return;
                 }
                 DiSky.getInstance().getLogger().severe("Cannot change the discord name of entity '"+entity.getClass().getName()+"', since that's not a Discord entity!");
