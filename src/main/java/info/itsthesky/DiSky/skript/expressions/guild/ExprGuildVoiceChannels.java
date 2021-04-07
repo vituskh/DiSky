@@ -12,19 +12,18 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.bukkit.event.Event;
 
-@Name("Guild Text Channels")
-@Description("Return all text channels of the guilds")
-@Examples("set {_channels::*} to text channels of event-guild")
-@Since("1.3")
-public class ExprGuildTextChannels extends SimpleExpression<TextChannel> {
+@Name("Guild Voice Channels")
+@Description("Return all voice channels of the guilds")
+@Examples("set {_voice::*} to voice channels of event-guild")
+@Since("1.6")
+public class ExprGuildVoiceChannels extends SimpleExpression<VoiceChannel> {
 
 	static {
-		Skript.registerExpression(ExprGuildTextChannels.class, TextChannel.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] text[ ]channel[s] of [the] [guild] %guild%");
+		Skript.registerExpression(ExprGuildVoiceChannels.class, VoiceChannel.class, ExpressionType.SIMPLE,
+				"["+ Utils.getPrefixName() +"] [the] [discord] voice[ ]channel[s] of [the] [guild] %guild%");
 	}
 
 	private Expression<Guild> exprGuild;
@@ -37,10 +36,10 @@ public class ExprGuildTextChannels extends SimpleExpression<TextChannel> {
 	}
 
 	@Override
-	protected TextChannel[] get(final Event e) {
+	protected VoiceChannel[] get(final Event e) {
 		Guild guild = exprGuild.getSingle(e);
-		if (guild == null) return new TextChannel[0];
-		return guild.getTextChannels().toArray(new TextChannel[0]);
+		if (guild == null) return new VoiceChannel[0];
+		return guild.getVoiceChannels().toArray(new VoiceChannel[0]);
 	}
 
 	@Override
@@ -49,13 +48,13 @@ public class ExprGuildTextChannels extends SimpleExpression<TextChannel> {
 	}
 
 	@Override
-	public Class<? extends TextChannel> getReturnType() {
-		return TextChannel.class;
+	public Class<? extends VoiceChannel> getReturnType() {
+		return VoiceChannel.class;
 	}
 
 	@Override
 	public String toString(Event e, boolean debug) {
-		return "text channels of guild " + exprGuild.toString(e, debug);
+		return "voice channels of guild " + exprGuild.toString(e, debug);
 	}
 
 }
