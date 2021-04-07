@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.requests.restaction.RoleAction;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RoleBuilder {
@@ -83,10 +84,10 @@ public class RoleBuilder {
         this.separate = separate;
     }
 
-    public void addDeny(Permission permission) {
-        deny.add(permission);
+    public void addDeny(Permission... permission) {
+        deny.addAll(Arrays.asList(permission));
     }
-    public void addAllow(Permission permission) {
-        allow.add(permission);
+    public void addAllow(Permission... permission) {
+        allow.addAll(Arrays.asList(permission));
     }
 }
