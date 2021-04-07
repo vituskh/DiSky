@@ -41,7 +41,7 @@ public class CondIsBot extends Condition {
 	@Override
 	public boolean check(Event e) {
 		Object entity = exprUser.getSingle(e);
-		if (entity == null) return false;
+		if (entity == null) return true;
 		User user;
 		if (entity instanceof User) {
 			user = (User) entity;
