@@ -167,7 +167,7 @@ public class Types {
 
 					@Override
 					public String toString(TextChannel o, int flags) {
-						return o.getId();
+						return o.getName();
 					}
 
 					@Override
@@ -204,7 +204,7 @@ public class Types {
 					}
 					@Override
 					public String toString(User o, int flags) {
-						return o.getId();
+						return o.getName();
 					}
 
 					@Override
@@ -278,7 +278,7 @@ public class Types {
 
 					@Override
 					public String toString(Member o, int flags) {
-						return o.getId();
+						return o.getEffectiveName();
 					}
 
 					@Override
@@ -316,7 +316,7 @@ public class Types {
 
 					@Override
 					public String toString(Message o, int flags) {
-						return o.getId();
+						return o.getContentRaw();
 					}
 
 					@Override
@@ -350,7 +350,7 @@ public class Types {
 
 					@Override
 					public String toString(Channel o, int flags) {
-						return o.getChannel().getId();
+						return o.getChannel().getName();
 					}
 
 					@Override
@@ -429,7 +429,7 @@ public class Types {
 
 					@Override
 					public String toString(Webhook o, int flags) {
-						return o.getId();
+						return o.getName();
 					}
 
 					@Override
@@ -490,7 +490,7 @@ public class Types {
 
 					@Override
 					public String toString(Guild o, int flags) {
-						return o.getId();
+						return o.getName();
 					}
 
 					@Override
