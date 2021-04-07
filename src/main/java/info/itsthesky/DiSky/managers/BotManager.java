@@ -4,10 +4,9 @@ import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.cache.EditedMessages;
 import info.itsthesky.DiSky.managers.cache.Messages;
 import info.itsthesky.DiSky.skript.commands.CommandListener;
-import info.itsthesky.DiSky.skript.events.bukkit.JDAListener;
-import info.itsthesky.DiSky.skript.events.skript.EventBotJoin;
+import info.itsthesky.DiSky.skript.events.JDAListener;
+import info.itsthesky.DiSky.skript.events.skript.EventBotConnect;
 import info.itsthesky.DiSky.tools.Utils;
-import net.dv8tion.jda.api.GatewayEncoding;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -64,6 +63,7 @@ public class BotManager {
 
         bots.put(name, jda);
         logger.info("The bot named '"+name+"' seems to be loaded correctly!");
+        DiSky.getInstance().getServer().getPluginManager().callEvent(new EventBotConnect(jda));
     }
 
     /**

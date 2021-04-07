@@ -1,4 +1,4 @@
-package info.itsthesky.DiSky.skript.events.bukkit;
+package info.itsthesky.DiSky.skript.events;
 
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
