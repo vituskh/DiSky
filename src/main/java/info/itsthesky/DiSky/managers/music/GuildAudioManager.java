@@ -13,7 +13,7 @@ public class GuildAudioManager {
 
     public GuildAudioManager(Guild guild, JDA jda) {
         musicPlayer = AudioUtils.MANAGER.createPlayer();
-        trackScheduler = new TrackScheduler(musicPlayer);
+        trackScheduler = new TrackScheduler(musicPlayer, guild);
         musicPlayer.addListener(trackScheduler);
         this.guild = guild;
         this.jda = jda;
