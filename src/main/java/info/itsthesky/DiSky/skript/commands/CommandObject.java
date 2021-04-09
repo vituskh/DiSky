@@ -25,6 +25,7 @@ public class CommandObject {
     private List<Expression<String>> prefixes;
     private String description;
     private String usage;
+    private String category;
     private String pattern;
     private String permMessage;
     private List<String> bots;
@@ -35,7 +36,9 @@ public class CommandObject {
 
     public CommandObject(File script, String name, String pattern, List<Argument<?>> arguments, List<Expression<String>> prefixes,
                          List<String> aliases, String description, String usage, List<String> roles,
-                         List<ChannelType> executableIn, List<String> bots, List<TriggerItem> items, List<String> perms, String permMessage) {
+                         List<ChannelType> executableIn, List<String> bots, List<TriggerItem> items,
+                         List<String> perms, String permMessage,
+                         String category) {
         this.name = name;
         if (aliases != null) {
             aliases.removeIf(alias -> alias.equalsIgnoreCase(name));
@@ -51,6 +54,7 @@ public class CommandObject {
         this.perms = perms;
         this.arguments = arguments;
         this.permMessage = permMessage;
+        this.category = category;
 
         trigger = new Trigger(script, "discord command " + name, new SimpleEvent(), items);
 
