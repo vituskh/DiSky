@@ -523,7 +523,7 @@ public class Types {
 				.user("embed")
 				.name("Embed")
 				.description(new String[] {
-						"Represent a discord embed, with title, description, fields, etc..."
+						"Represent a discord embed, with title, description, fields, author, footer, etc..."
 				})
 				.since("1.0")
 				.parser(new Parser<EmbedBuilder>() {
