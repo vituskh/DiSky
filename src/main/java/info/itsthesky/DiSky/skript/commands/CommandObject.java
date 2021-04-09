@@ -17,18 +17,18 @@ import java.util.List;
 
 public class CommandObject {
 
-    private String name;
-    private List<String> aliases;
-    private List<String> roles;
-    private List<String> perms;
-    private List<ChannelType> executableIn;
-    private List<Expression<String>> prefixes;
-    private String description;
-    private String usage;
-    private String category;
-    private String pattern;
-    private String permMessage;
-    private List<String> bots;
+    private final String name;
+    private final List<String> aliases;
+    private final List<String> roles;
+    private final List<String> perms;
+    private final List<ChannelType> executableIn;
+    private final List<Expression<String>> prefixes;
+    private final String description;
+    private final String usage;
+    private final String category;
+    private final String pattern;
+    private final String permMessage;
+    private final List<String> bots;
 
     private Trigger trigger;
 

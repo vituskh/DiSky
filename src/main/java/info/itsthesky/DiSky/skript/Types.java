@@ -7,6 +7,7 @@ import ch.njol.skript.registrations.Classes;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.commands.CommandEvent;
+import info.itsthesky.DiSky.skript.commands.CommandObject;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.*;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
@@ -545,6 +546,41 @@ public class Types {
 					@Nullable
 					@Override
 					public EmbedBuilder parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(CommandObject.class, "discordcommand")
+				.user("discordcommands?")
+				.name("Discord Command")
+				.description(new String[] {
+						"Represent a discord command, with arguments, usage, description, category, etc..."
+				})
+				.since("1.7")
+				.parser(new Parser<CommandObject>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(CommandObject o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(CommandObject o) {
+						return o.getName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+					@Nullable
+					@Override
+					public CommandObject parse(String s, ParseContext context) {
 						return null;
 					}
 				})
