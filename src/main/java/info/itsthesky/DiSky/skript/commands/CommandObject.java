@@ -123,6 +123,14 @@ public class CommandObject {
         return description;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public String getPermMessage() {
+        return permMessage;
+    }
+
     public String getUsage() {
         return usage;
     }
