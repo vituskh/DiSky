@@ -7,6 +7,7 @@ import ch.njol.skript.registrations.Classes;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.commands.CommandEvent;
+import info.itsthesky.DiSky.skript.commands.CommandFactory;
 import info.itsthesky.DiSky.skript.commands.CommandObject;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.*;
@@ -21,6 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Types {
 	static  {
@@ -585,6 +587,50 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(Invite.class, "invite")
+				.user("invites?")
+				.name("Discord Invite")
+				.description(new String[] {
+						"Represent a discord invite, with creator, used time, code, etc..."
+				})
+				.since("1.7")
+				.parser(new Parser<Invite>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(Invite o, int flags) {
+						return o.getCode();
+					}
+
+					@Override
+					public String toVariableNameString(Invite o) {
+						return o.getCode();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public Invite parse(String s, ParseContext context) {
+						if (context != ParseContext.COMMAND) return null;
+						CommandEvent event = CommandEvent.lastEvent;
+						String input = s
+								.replace("http://discord.gg/", "");
+						AtomicReference<Invite> inviteAtomicReference = new AtomicReference<>();
+						event.getGuild().retrieveInvites().complete().forEach((invite) -> {
+							if (invite.getCode().equalsIgnoreCase(s)) inviteAtomicReference.set(invite);
+						});
+						return inviteAtomicReference.get();
+					}
+				})
+		);
 		Classes.registerClass(new ClassInfo<>(MessageBuilder.class, "messagebuilder")
 				.user("messagebuilders?")
 				.name("Message Builder")
@@ -611,6 +657,37 @@ public class Types {
 					@Nullable
 					@Override
 					public MessageBuilder parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(InviteBuilder.class, "invitebuilder")
+				.user("invitebuilders?")
+				.name("Invite Builder")
+				.description(new String[] {
+						"Represent a discord invite builder, with max use, max age, etc..."
+				})
+				.since("1.7")
+				.parser(new Parser<InviteBuilder>() {
+
+					@Override
+					public String toString(InviteBuilder o, int flags) {
+						return o.toString();
+					}
+
+					@Override
+					public String toVariableNameString(InviteBuilder o) {
+						return o.toString();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public InviteBuilder parse(String s, ParseContext context) {
 						return null;
 					}
 				})
