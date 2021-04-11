@@ -40,6 +40,7 @@ public class CommandFactory {
             .addEntry("roles", true)
             .addEntry("aliases", true)
             .addEntry("prefixes", true)
+            .addEntry("category", true)
             .addEntry("bots", true)
             .addEntry("executable in", true)
             .addEntry("permissions", true)
@@ -217,10 +218,10 @@ public class CommandFactory {
 
         SectionNode trigger = (SectionNode) node.get("trigger");
 
-        String usage = ScriptLoader.replaceOptions(node.get("usage", ""));
-
         String description = ScriptLoader.replaceOptions(node.get("description", ""));
         String permMessage = ScriptLoader.replaceOptions(node.get("permission message", ""));
+        String usage = ScriptLoader.replaceOptions(node.get("usage", ""));
+        String category = ScriptLoader.replaceOptions(node.get("category", ""));
 
         String permList = ScriptLoader.replaceOptions(node.get("permissions", ""));
         List<String> perms = permList.isEmpty() ? new ArrayList<>() : Arrays.asList(permList.split(listPattern));
@@ -268,7 +269,9 @@ public class CommandFactory {
         try {
             commandObject = new CommandObject(
                     node.getConfig().getFile(), command, pattern.toString(), currentArguments,
-                    prefixes, aliases, description, usage, roles, places, bots, ScriptLoader.loadItems(trigger), perms, permMessage
+                    prefixes, aliases, description, usage, roles, places, bots, ScriptLoader.loadItems(trigger),
+                    perms, permMessage,
+                    category
             );
         } finally {
             this.currentArguments = null;

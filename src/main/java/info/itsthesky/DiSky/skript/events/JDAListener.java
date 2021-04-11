@@ -63,23 +63,6 @@ public class JDAListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMemberJoin(GuildMemberJoinEvent e) {
-        Event event;
-        if (e.getUser().isBot() && e.getUser().getId().equals(BotManager.getFirstBot().getSelfUser().getId())) {
-           event = new EventBotJoin(
-                    BotManager.getFirstBotName(),
-                    e.getGuild()
-            );
-        } else {
-            event = new EventMemberJoin(
-                    e.getMember(),
-                    e.getGuild()
-            );
-        }
-        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(event));
-    }
-
-    @Override
     public void onSlashCommand(@NotNull SlashCommandEvent e) {
         Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventSlashCommand(e)));
     }

@@ -19,7 +19,7 @@ public class ExprLastEmbed extends SimpleExpression<EmbedBuilder> {
 
     static {
         Skript.registerExpression(ExprLastEmbed.class, EmbedBuilder.class, ExpressionType.SIMPLE,
-                "[the] last[ly] [(made|created|generated)] embed[[ ]builder]"
+                "[the] [last] [(made|created|generated)] embed"
         );
     }
 

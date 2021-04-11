@@ -2,8 +2,6 @@
 
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
-import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -11,21 +9,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public abstract class DiSkyEvent extends Event {
+public abstract class DiSkyEvent<E> extends Event {
 
     private static final HandlerList HANDLERS = new HandlerList();
-    private final GenericEvent event;
 
-    public DiSkyEvent(GenericEvent e) {
+    public DiSkyEvent() {
         super(true);
-        this.event = e;
     }
 
-    public <T> void registerEventValue(final T object, final Function<GenericEvent, T> function) {
-        EventValues.registerEventValue(DiSkyEvent.class, object.getClass(), new Getter<T, GenericEvent>() {
+    public <T> void registerEventValue(final T object, final Class<E> eventClass, final Class<T> valueClass, final Function<E, T> function) {
+        EventValues.registerEventValue(eventClass, valueClass, new Getter<T, E>() {
             @Nullable
             @Override
-            public T get(final @NotNull GenericEvent event) {
+            public T get(final @NotNull E event) {
                 return function.apply(event);
             }
         }, 0);
@@ -42,4 +38,4 @@ public abstract class DiSkyEvent extends Event {
     public E getEvent() {
         return event;
     }
-}*/
+} */

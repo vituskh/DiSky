@@ -9,9 +9,12 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.Utils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Fired when a user join any guild where the bot is in.")
 @Examples({"on member join guild:",
             "\tsend message \"**Welcome to the server, `%name of event-user%`!**\" to channel with id \"750449611302371469\""})
-@Since("1.0")
+@Since("1.0, 1.7 (event-invite)")
 public class EventMemberJoin extends Event {
 
     static {
@@ -32,15 +35,7 @@ public class EventMemberJoin extends Event {
             @Nullable
             @Override
             public User get(final @NotNull EventMemberJoin event) {
-                return event.getUser();
-            }
-        }, 0);
-
-        EventValues.registerEventValue(EventMemberJoin.class, Guild.class, new Getter<Guild, EventMemberJoin>() {
-            @Nullable
-            @Override
-            public Guild get(final @NotNull EventMemberJoin event) {
-                return event.getGuild();
+                return event.getEvent().getUser();
             }
         }, 0);
 
@@ -48,36 +43,54 @@ public class EventMemberJoin extends Event {
             @Nullable
             @Override
             public Member get(final @NotNull EventMemberJoin event) {
-                return event.getMember();
+                return event.getEvent().getMember();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMemberJoin.class, Guild.class, new Getter<Guild, EventMemberJoin>() {
+            @Nullable
+            @Override
+            public Guild get(final @NotNull EventMemberJoin event) {
+                return event.getEvent().getGuild();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMemberJoin.class, Invite.class, new Getter<Invite, EventMemberJoin>() {
+            @Nullable
+            @Override
+            public Invite get(final @NotNull EventMemberJoin event) {
+                return event.getInvite();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMemberJoin.class, JDA.class, new Getter<JDA, EventMemberJoin>() {
+            @Nullable
+            @Override
+            public JDA get(final @NotNull EventMemberJoin event) {
+                return event.getEvent().getJDA();
             }
         }, 0);
 
     }
 
-    public Guild getGuild() {
-        return guild;
-    }
-    public User getUser() {
-        return user;
-    }
-    public Member getMember() {
-        return member;
-    }
-
-    private static final HandlerList HANDLERS = new HandlerList();
-
-    private final Guild guild;
-    private final User user;
-    private final Member member;
+    private final GuildMemberJoinEvent event;
+    private final Invite invite;
 
     public EventMemberJoin(
-            final Member member,
-            final Guild guild
-            ) {
+            final GuildMemberJoinEvent event,
+            final Invite invite
+    ) {
         super(Utils.areEventAsync());
-        this.guild = guild;
-        this.user = member.getUser();
-        this.member = member;
+        this.event = event;
+        this.invite = invite;
+    }
+
+    public GuildMemberJoinEvent getEvent() {
+        return event;
+    }
+
+    public Invite getInvite() {
+        return invite;
     }
 
     @NotNull
@@ -85,7 +98,7 @@ public class EventMemberJoin extends Event {
     public HandlerList getHandlers() {
         return HANDLERS;
     }
-
+    private static final HandlerList HANDLERS = new HandlerList();
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }

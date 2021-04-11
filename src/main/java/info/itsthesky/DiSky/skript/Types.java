@@ -7,6 +7,8 @@ import ch.njol.skript.registrations.Classes;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.commands.CommandEvent;
+import info.itsthesky.DiSky.skript.commands.CommandFactory;
+import info.itsthesky.DiSky.skript.commands.CommandObject;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.*;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
@@ -20,6 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Types {
 	static  {
@@ -101,7 +104,7 @@ public class Types {
 
 					@Override
 					public String toString(JDA o, int flags) {
-						return o.getToken();
+						return o.getSelfUser().getName();
 					}
 
 					@Override
@@ -523,7 +526,7 @@ public class Types {
 				.user("embed")
 				.name("Embed")
 				.description(new String[] {
-						"Represent a discord embed, with title, description, fields, etc..."
+						"Represent a discord embed, with title, description, fields, author, footer, etc..."
 				})
 				.since("1.0")
 				.parser(new Parser<EmbedBuilder>() {
@@ -546,6 +549,85 @@ public class Types {
 					@Override
 					public EmbedBuilder parse(String s, ParseContext context) {
 						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(CommandObject.class, "discordcommand")
+				.user("discordcommands?")
+				.name("Discord Command")
+				.description(new String[] {
+						"Represent a discord command, with arguments, usage, description, category, etc..."
+				})
+				.since("1.7")
+				.parser(new Parser<CommandObject>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(CommandObject o, int flags) {
+						return o.getName();
+					}
+
+					@Override
+					public String toVariableNameString(CommandObject o) {
+						return o.getName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+					@Nullable
+					@Override
+					public CommandObject parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Invite.class, "invite")
+				.user("invites?")
+				.name("Discord Invite")
+				.description(new String[] {
+						"Represent a discord invite, with creator, used time, code, etc..."
+				})
+				.since("1.7")
+				.parser(new Parser<Invite>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(Invite o, int flags) {
+						return o.getCode();
+					}
+
+					@Override
+					public String toVariableNameString(Invite o) {
+						return o.getCode();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public Invite parse(String s, ParseContext context) {
+						if (context != ParseContext.COMMAND) return null;
+						CommandEvent event = CommandEvent.lastEvent;
+						String input = s
+								.replace("http://discord.gg/", "");
+						AtomicReference<Invite> inviteAtomicReference = new AtomicReference<>();
+						event.getGuild().retrieveInvites().complete().forEach((invite) -> {
+							if (invite.getCode().equalsIgnoreCase(s)) inviteAtomicReference.set(invite);
+						});
+						return inviteAtomicReference.get();
 					}
 				})
 		);
@@ -575,6 +657,68 @@ public class Types {
 					@Nullable
 					@Override
 					public MessageBuilder parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(InviteBuilder.class, "invitebuilder")
+				.user("invitebuilders?")
+				.name("Invite Builder")
+				.description(new String[] {
+						"Represent a discord invite builder, with max use, max age, etc..."
+				})
+				.since("1.7")
+				.parser(new Parser<InviteBuilder>() {
+
+					@Override
+					public String toString(InviteBuilder o, int flags) {
+						return o.toString();
+					}
+
+					@Override
+					public String toVariableNameString(InviteBuilder o) {
+						return o.toString();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public InviteBuilder parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Message.Attachment.class, "attachment")
+				.user("attachments?")
+				.name("Message Attachment")
+				.description(new String[] {
+						"Represent a discord message attachment."
+				})
+				.since("1.7")
+				.parser(new Parser<Message.Attachment>() {
+
+					@Override
+					public String toString(Message.Attachment o, int flags) {
+						return o.getFileName();
+					}
+
+					@Override
+					public String toVariableNameString(Message.Attachment o) {
+						return o.getFileName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public Message.Attachment parse(String s, ParseContext context) {
 						return null;
 					}
 				})

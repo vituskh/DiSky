@@ -10,6 +10,8 @@ import info.itsthesky.DiSky.skript.events.skript.audio.EventTrackEnd;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -53,6 +55,10 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public BlockingQueue<AudioTrack> getQueue() {
         return queue;
+    }
+
+    public void shuffleQueue() {
+        Collections.shuffle(Arrays.asList(queue.toArray()));
     }
 
     public void clearQueue() {
