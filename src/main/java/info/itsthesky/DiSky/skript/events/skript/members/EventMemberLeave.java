@@ -48,7 +48,7 @@ public class EventMemberLeave extends Event {
             @Nullable
             @Override
             public Member get(final @NotNull EventMemberJoin event) {
-                return event.getMember();
+                return event.getEvent().getMember();
             }
         }, 0);
 

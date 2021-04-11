@@ -2,6 +2,7 @@ package info.itsthesky.DiSky.managers;
 
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.cache.EditedMessages;
+import info.itsthesky.DiSky.managers.cache.InviteTracker;
 import info.itsthesky.DiSky.managers.cache.Messages;
 import info.itsthesky.DiSky.skript.commands.CommandListener;
 import info.itsthesky.DiSky.skript.events.JDAListener;
@@ -46,6 +47,7 @@ public class BotManager {
                     .addEventListeners(new EditedMessages())
                     .addEventListeners(new Utils())
                     .addEventListeners(new CommandListener())
+                    .addEventListeners(new InviteTracker())
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .enableIntents(GatewayIntent.DIRECT_MESSAGES)
