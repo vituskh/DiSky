@@ -104,7 +104,7 @@ public class Types {
 
 					@Override
 					public String toString(JDA o, int flags) {
-						return o.getToken();
+						return o.getSelfUser().getName();
 					}
 
 					@Override
@@ -688,6 +688,37 @@ public class Types {
 					@Nullable
 					@Override
 					public InviteBuilder parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Message.Attachment.class, "attachment")
+				.user("attachments?")
+				.name("Message Attachment")
+				.description(new String[] {
+						"Represent a discord message attachment."
+				})
+				.since("1.7")
+				.parser(new Parser<Message.Attachment>() {
+
+					@Override
+					public String toString(Message.Attachment o, int flags) {
+						return o.getFileName();
+					}
+
+					@Override
+					public String toVariableNameString(Message.Attachment o) {
+						return o.getFileName();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+
+					@Nullable
+					@Override
+					public Message.Attachment parse(String s, ParseContext context) {
 						return null;
 					}
 				})

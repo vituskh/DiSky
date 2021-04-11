@@ -8,7 +8,9 @@ import info.itsthesky.DiSky.managers.WebhookManager;
 import info.itsthesky.DiSky.managers.music.AudioUtils;
 import info.itsthesky.DiSky.tools.Metrics;
 import info.itsthesky.DiSky.tools.Utils;
+import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -56,6 +58,8 @@ public class DiSky extends JavaPlugin {
 
         /* Audio system */
         AudioUtils.initializeAudio();
+
+        getServer().getConsoleSender().sendMessage(Utils.colored("&aYou're using the &2JDA&a version &2" + JDAInfo.VERSION));
 
         getServer().getConsoleSender().sendMessage(Utils.colored("&bDiSky &9seems to be loaded correctly!"));
         getServer().getConsoleSender().sendMessage(Utils.colored("&9Join our &bDiscord &9for new update and support:"));
