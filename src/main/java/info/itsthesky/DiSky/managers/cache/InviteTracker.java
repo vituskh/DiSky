@@ -1,6 +1,7 @@
 package info.itsthesky.DiSky.managers.cache;
 
 import info.itsthesky.DiSky.DiSky;
+import info.itsthesky.DiSky.skript.events.skript.EventBotJoin;
 import info.itsthesky.DiSky.skript.events.skript.members.EventMemberJoin;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.Permission;
@@ -41,11 +42,7 @@ public class InviteTracker extends ListenerAdapter {
     public void onGuildMemberJoin(final GuildMemberJoinEvent event)
     {
         final Guild guild = event.getGuild();
-        final User user = event.getUser();
-        final Member selfMember = guild.getSelfMember();
-
-        if (!selfMember.hasPermission(Permission.MANAGE_SERVER) || user.isBot())
-            return;
+        final Invite[] invite = new Invite[1];
 
         guild.retrieveInvites().queue(retrievedInvites ->
         {
@@ -58,10 +55,11 @@ public class InviteTracker extends ListenerAdapter {
                 if (retrievedInvite.getUses() == cachedInvite.getUses())
                     continue;
                 cachedInvite.incrementUses();
-                Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberJoin(event, retrievedInvite)));
+                invite[0] = retrievedInvite;
                 break;
             }
         });
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMemberJoin(event, invite[0])));
     }
 
     @Override
@@ -76,6 +74,8 @@ public class InviteTracker extends ListenerAdapter {
     {
         final Guild guild = event.getGuild();
         attemptInviteCaching(guild);
+
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventBotJoin(event)));
     }
 
     @Override

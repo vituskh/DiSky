@@ -9,8 +9,9 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.Utils;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Bot Join Guild")
 @Description("Fired when a bot join any guild where the bot is in.")
 @Examples({"on bot join guild:",
-            "\tsend message \"I'm the better bot ever, made with Vixio3 by Sky!\" to channel with id \"750449611302371469\""})
+            "\tsend message \"I'm the better bot ever, made with DiSky by Sky!\" to text channel with id \"750449611302371469\""})
 @Since("1.0")
 public class EventBotJoin extends Event {
 
@@ -27,11 +28,11 @@ public class EventBotJoin extends Event {
         // [seen by [bot] [(named|with name)]%string%]
         Skript.registerEvent("Bot Join", SimpleEvent.class, EventBotJoin.class, "[discord] bot join (guild|server)");
 
-        EventValues.registerEventValue(EventBotJoin.class, String.class, new Getter<String, EventBotJoin>() {
+        EventValues.registerEventValue(EventBotJoin.class, JDA.class, new Getter<JDA, EventBotJoin>() {
             @Nullable
             @Override
-            public String get(final @NotNull EventBotJoin event) {
-                return event.getBot();
+            public JDA get(final @NotNull EventBotJoin event) {
+                return event.getEvent().getJDA();
             }
         }, 0);
 
@@ -39,34 +40,24 @@ public class EventBotJoin extends Event {
             @Nullable
             @Override
             public Guild get(final @NotNull EventBotJoin event) {
-                return event.getGuild();
+                return event.getEvent().getGuild();
             }
         }, 0);
 
     }
 
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public String getBot() {
-        return bot;
-    }
-
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final Guild guild;
-    private final String bot;
+    private final GuildJoinEvent event;
 
     public EventBotJoin(
-            final String bot,
-            final Guild guild
-            ) {
+            final GuildJoinEvent event) {
         super(Utils.areEventAsync());
-        this.guild = guild;
-        this.bot = bot;
-        TextChannel channel;
+        this.event = event;
+    }
 
+    public GuildJoinEvent getEvent() {
+        return event;
     }
 
     @NotNull
@@ -74,7 +65,6 @@ public class EventBotJoin extends Event {
     public HandlerList getHandlers() {
         return HANDLERS;
     }
-
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
