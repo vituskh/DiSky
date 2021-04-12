@@ -76,7 +76,7 @@ public class EffReplyWith extends Effect {
                 return;
             }
             TextChannel channel = null;
-            Message storedMessage = null;
+            Message storedMessage;
 
             EventPrivateMessage eventPrivate = null;
             if (e.getEventName().equalsIgnoreCase("EventPrivateMessage")) {
@@ -121,39 +121,39 @@ public class EffReplyWith extends Effect {
 
             if (message instanceof Message) {
                 if (isFromPrivate) {
-                    eventPrivate
+                    storedMessage = eventPrivate
                             .getEvent()
                             .getPrivateChannel()
-                            .sendMessage((Message) message).queue();
+                            .sendMessage((Message) message).complete();
                 } else {
-                    channel.getJDA()
+                    storedMessage = channel.getJDA()
                             .getTextChannelById(
                                     channel.getId()
-                            ).sendMessage((Message) message).queue();
+                            ).sendMessage((Message) message).complete();
                 }
             } else if (message instanceof EmbedBuilder) {
                 if (isFromPrivate) {
-                    eventPrivate
+                    storedMessage = eventPrivate
                             .getEvent()
                             .getPrivateChannel()
-                            .sendMessage(((EmbedBuilder) message).build()).queue();
+                            .sendMessage(((EmbedBuilder) message).build()).complete();
                 } else {
-                    channel.getJDA()
+                    storedMessage = channel.getJDA()
                             .getTextChannelById(
                                     channel.getId()
-                            ).sendMessage(((EmbedBuilder) message).build()).queue();
+                            ).sendMessage(((EmbedBuilder) message).build()).complete();
                 }
             }  else if (message instanceof MessageBuilder) {
                 if (isFromPrivate) {
-                    eventPrivate
+                    storedMessage = eventPrivate
                             .getEvent()
                             .getPrivateChannel()
-                            .sendMessage(((MessageBuilder) message).build()).queue();
+                            .sendMessage(((MessageBuilder) message).build()).complete();
                 } else {
-                    channel.getJDA()
+                    storedMessage = channel.getJDA()
                             .getTextChannelById(
                                     channel.getId()
-                            ).sendMessage(((MessageBuilder) message).build()).queue();
+                            ).sendMessage(((MessageBuilder) message).build()).complete();
                 }
             } else {
                 if (isFromPrivate) {
