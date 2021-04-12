@@ -11,10 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
 @Name("Remove Reaction")
@@ -28,18 +25,18 @@ public class EffRemoveReaction extends Effect {
 
     static {
         Skript.registerEffect(EffRemoveReaction.class,
-                "["+ Utils.getPrefixName() +"] (remove|delete) %emote% added by %user% from %message%");
+                "["+ Utils.getPrefixName() +"] (remove|delete) %emote% added by %user/member% from %message%");
     }
 
     private Expression<MessageReaction.ReactionEmote> exprEmote;
-    private Expression<User> exprUser;
+    private Expression<Object> exprUser;
     private Expression<Message> exprMessage;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.exprEmote = (Expression<MessageReaction.ReactionEmote>) exprs[0];
-        this.exprUser = (Expression<User>) exprs[1];
+        this.exprUser = (Expression<Object>) exprs[1];
         this.exprMessage = (Expression<Message>) exprs[2];
         return true;
     }
@@ -48,9 +45,17 @@ public class EffRemoveReaction extends Effect {
     protected void execute(Event e) {
         DiSkyErrorHandler.executeHandleCode(e, Event -> {
             MessageReaction.ReactionEmote emote = exprEmote.getSingle(e);
-            User user = exprUser.getSingle(e);
+            Object entity = exprUser.getSingle(e);
             Message message = exprMessage.getSingle(e);
-            if (emote == null || user == null || message == null) return;
+            if (emote == null || entity == null || message == null) return;
+
+            User user;
+            if (entity instanceof User) {
+                user = (User) entity;
+            } else {
+                user = ((Member) entity).getUser();
+            }
+
             if (emote.isEmoji()) {
                 message.removeReaction(emote.getEmoji(), user).queue();
             } else {
