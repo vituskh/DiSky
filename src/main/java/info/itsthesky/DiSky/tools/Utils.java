@@ -5,6 +5,7 @@ import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import info.itsthesky.DiSky.DiSky;
+import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -51,6 +52,13 @@ public class Utils extends ListenerAdapter {
                 input.contains(".org") ||
                 input.contains(".html") ||
                 input.contains(".php");
+    }
+
+    public static boolean areJDASimilar(JDA jda, String botName) {
+        if (botName == null || jda == null) return false;
+        JDA botJDA = BotManager.getBot(botName);
+        if (botJDA == null) return false;
+        return jda == botJDA;
     }
 
     public static LinkedHashMap<String, Integer> sortHashMapByValues(

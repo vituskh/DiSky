@@ -26,7 +26,6 @@ public class DiSky extends JavaPlugin {
     private static DiSky instance;
     private Logger logger;
     private static PluginManager pluginManager;
-    public static EventWaiter waiter = new EventWaiter();
 
     @Override
     public void onEnable() {
