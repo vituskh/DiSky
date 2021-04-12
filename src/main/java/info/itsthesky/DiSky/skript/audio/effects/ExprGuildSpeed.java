@@ -8,19 +8,22 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter;
+import com.github.natanbc.lavadsp.tremolo.TremoloPcmAudioFilter;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import info.itsthesky.DiSky.managers.music.AudioUtils;
 import net.dv8tion.jda.api.entities.Guild;
 import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Name("Guild Speed")
 @Description("Get or change the speed of a guild. (Of course, the audio speed)")
 @Examples("set speed of event-guild to 1.3")
-@Since("1.6-pre2")
+@Since("1.7")
 public class ExprGuildSpeed extends SimplePropertyExpression<Guild, Number> {
 
     static {
@@ -33,14 +36,7 @@ public class ExprGuildSpeed extends SimplePropertyExpression<Guild, Number> {
     @Nullable
     @Override
     public Number convert(Guild guild) {
-        AudioPlayer player = AudioUtils.getGuildAudioPlayer(guild).getPlayer();
-        AtomicReference<Double> speed = new AtomicReference<>(1.0);
-        player.setFilterFactory((track, format, output)->{
-            TimescalePcmAudioFilter timescale = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
-            speed.set(timescale.getSpeed());
-            return Collections.singletonList(timescale);
-        });
-        return speed.get();
+        return AudioUtils.getEffectData(guild).getSpeed();
     }
 
     @Override
@@ -50,7 +46,7 @@ public class ExprGuildSpeed extends SimplePropertyExpression<Guild, Number> {
 
     @Override
     protected String getPropertyName() {
-        return "guild volume";
+        return "guild speed";
     }
 
     @Nullable
@@ -73,31 +69,35 @@ public class ExprGuildSpeed extends SimplePropertyExpression<Guild, Number> {
         switch (mode) {
             case SET:
                 for (Guild guild : getExpr().getArray(e)) {
-                    AudioUtils.getGuildAudioPlayer(guild).getPlayer().setFilterFactory((track, format, output)->{
+                    AudioPlayer player = AudioUtils.getGuildAudioPlayer(guild).getPlayer();
+                    player.setFilterFactory((track, format, output)->{
                         TimescalePcmAudioFilter audioFilter = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
                         audioFilter.setSpeed(value.doubleValue());
                         return Collections.singletonList(audioFilter);
                     });
+                    AudioUtils.getEffectData(guild).setSpeed(value.doubleValue());
                 }
                 break;
             case ADD:
                 for (Guild guild : getExpr().getArray(e)) {
                     AudioPlayer player = AudioUtils.getGuildAudioPlayer(guild).getPlayer();
                     player.setFilterFactory((track, format, output)->{
-                        TimescalePcmAudioFilter timescale = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
-                        timescale.setSpeed(value.doubleValue() + timescale.getSpeed());
-                        return Collections.singletonList(timescale);
+                        TimescalePcmAudioFilter audioFilter = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
+                        audioFilter.setSpeed(audioFilter.getSpeed() + value.doubleValue());
+                        return Collections.singletonList(audioFilter);
                     });
+                    AudioUtils.getEffectData(guild).addSpeed(value.doubleValue());
                 }
                 break;
             case REMOVE:
                 for (Guild guild : getExpr().getArray(e)) {
                     AudioPlayer player = AudioUtils.getGuildAudioPlayer(guild).getPlayer();
                     player.setFilterFactory((track, format, output)->{
-                        TimescalePcmAudioFilter timescale = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
-                        timescale.setSpeed(timescale.getSpeed() - value.doubleValue());
-                        return Collections.singletonList(timescale);
+                        TimescalePcmAudioFilter audioFilter = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
+                        audioFilter.setSpeed(audioFilter.getSpeed() - value.doubleValue());
+                        return Collections.singletonList(audioFilter);
                     });
+                    AudioUtils.getEffectData(guild).removeSpeed(value.doubleValue());
                 }
                 break;
         }

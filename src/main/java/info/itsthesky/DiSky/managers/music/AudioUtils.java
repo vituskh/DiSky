@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.audio.ExprLastPlayedAudio;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -30,6 +31,17 @@ public class AudioUtils {
     public static YoutubeAudioSourceManager YOUTUBE_MANAGER_SOURCE;
     public static final YoutubeSearchProvider YOUTUBE_MANAGER_SEARCH = new YoutubeSearchProvider();
     public static Map<Long, GuildAudioManager> MUSIC_MANAGERS;
+    private static Map<Long, EffectData> GUILDS_EFFECTS = new HashMap<>();
+
+    public static EffectData getEffectData(Guild guild) {
+        if (!GUILDS_EFFECTS.containsKey(guild.getIdLong())) {
+            EffectData data = new EffectData(guild);
+            GUILDS_EFFECTS.put(guild.getIdLong(), data);
+            return data;
+        } else {
+            return GUILDS_EFFECTS.get(guild.getIdLong());
+        }
+    }
 
     public static void initializeAudio() {
         AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
