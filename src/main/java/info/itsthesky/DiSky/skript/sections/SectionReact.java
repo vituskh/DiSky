@@ -1,12 +1,13 @@
 package info.itsthesky.DiSky.skript.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
 import info.itsthesky.DiSky.tools.EffectSection;
@@ -14,7 +15,6 @@ import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import org.bukkit.event.Event;
 
 @Name("React to Message")

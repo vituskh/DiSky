@@ -2,18 +2,12 @@ package info.itsthesky.DiSky;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import info.itsthesky.DiSky.managers.BotManager;
-import info.itsthesky.DiSky.managers.DependManager;
 import info.itsthesky.DiSky.managers.WebhookManager;
 import info.itsthesky.DiSky.managers.music.AudioUtils;
-import info.itsthesky.DiSky.skript.sections.SectionReact;
 import info.itsthesky.DiSky.tools.Metrics;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.JDAInfo;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
