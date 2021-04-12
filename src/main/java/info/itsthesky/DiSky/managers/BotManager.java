@@ -39,7 +39,7 @@ public class BotManager {
             return;
         }
 
-        JDA jda = null;
+        JDA jda;
         try {
             jda = JDABuilder.createDefault(token)
                     .addEventListeners(new JDAListener())

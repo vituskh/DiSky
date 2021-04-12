@@ -2,10 +2,12 @@ package info.itsthesky.DiSky;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.managers.DependManager;
 import info.itsthesky.DiSky.managers.WebhookManager;
 import info.itsthesky.DiSky.managers.music.AudioUtils;
+import info.itsthesky.DiSky.skript.sections.SectionReact;
 import info.itsthesky.DiSky.tools.Metrics;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.JDAInfo;
@@ -24,6 +26,7 @@ public class DiSky extends JavaPlugin {
     private static DiSky instance;
     private Logger logger;
     private static PluginManager pluginManager;
+    public static EventWaiter waiter = new EventWaiter();
 
     @Override
     public void onEnable() {

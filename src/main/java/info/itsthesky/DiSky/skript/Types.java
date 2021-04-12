@@ -104,12 +104,12 @@ public class Types {
 
 					@Override
 					public String toString(JDA o, int flags) {
-						return o.getSelfUser().getName();
+						return BotManager.getNameByJDA(o);
 					}
 
 					@Override
 					public String toVariableNameString(JDA o) {
-						return o.getSelfUser().getName();
+						return BotManager.getNameByJDA(o);
 					}
 
 					@Override
