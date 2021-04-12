@@ -21,9 +21,9 @@ public class ExprCommandCore extends SimpleExpression<String> {
     public static String commandCore;
 
     static {
-        Skript.registerExpression(ExprCommandCore.class, String.class, ExpressionType.SIMPLE,
-                "[the] [command] core"
-        );
+        //Skript.registerExpression(ExprCommandCore.class, String.class, ExpressionType.SIMPLE,
+        //        "[the] [command] core"
+        //);
     }
 
     @Override

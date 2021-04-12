@@ -40,7 +40,7 @@ public class EventCommand extends Event {
 
     static {
         // [seen by [bot] [(named|with name)]%string%]
-        Skript.registerEvent("DiSky Command", SimpleEvent.class, EventCommand.class, "disky command");
+        //Skript.registerEvent("DiSky Command", SimpleEvent.class, EventCommand.class, "disky command");
 
         EventValues.registerEventValue(EventCommand.class, TextChannel.class, new Getter<TextChannel, EventCommand>() {
             @Nullable

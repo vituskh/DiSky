@@ -21,9 +21,9 @@ public class ExprCommandArgs extends SimpleExpression<String> {
     public static String[] commandArgs;
 
     static {
-        Skript.registerExpression(ExprCommandArgs.class, String.class, ExpressionType.SIMPLE,
-                "[the] [command] arg([s]|[uments])"
-        );
+        //Skript.registerExpression(ExprCommandArgs.class, String.class, ExpressionType.SIMPLE,
+        //        "[the] [command] arg([s]|[uments])"
+        //);
     }
 
     @Override

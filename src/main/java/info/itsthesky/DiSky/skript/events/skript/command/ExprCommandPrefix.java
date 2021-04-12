@@ -21,9 +21,9 @@ public class ExprCommandPrefix extends SimpleExpression<String> {
     public static String commandPrefix;
 
     static {
-        Skript.registerExpression(ExprCommandPrefix.class, String.class, ExpressionType.SIMPLE,
-                "[the] [command] prefix"
-        );
+        //Skript.registerExpression(ExprCommandPrefix.class, String.class, ExpressionType.SIMPLE,
+        //        "[the] [command] prefix"
+        //);
     }
 
     @Override
