@@ -178,7 +178,7 @@ public class EffReplyWith extends Effect {
 
     @Override
     public String toString(Event e, boolean debug) {
-        return "reply with the message " + exprMessage.toString(e, debug);
+        return "reply with the message " + exprMessage.toString(e, debug) + exprVar != null ? " and store it in " + exprVar.toString(e, debug) : "";
     }
 
 }
