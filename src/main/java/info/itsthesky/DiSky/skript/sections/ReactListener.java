@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -24,7 +25,7 @@ public class ReactListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         events.forEach((waiter) -> {
-            if (waiter.getVerify().test(event)) waiter.getRunnable().run();
+            if (waiter.getVerify().test(event)) waiter.getConsumer().accept(event);
         });
     }
 
@@ -34,10 +35,10 @@ public class ReactListener extends ListenerAdapter {
     public static class ReactWaitingEvent {
 
         private final Predicate<GuildMessageReactionAddEvent> verify;
-        private final Runnable runnable;
+        private final Consumer<GuildMessageReactionAddEvent> consumer;
 
-        public ReactWaitingEvent(Predicate<GuildMessageReactionAddEvent> verify, Runnable runnable) {
-            this.runnable = runnable;
+        public ReactWaitingEvent(Predicate<GuildMessageReactionAddEvent> verify, Consumer<GuildMessageReactionAddEvent> consumer) {
+            this.consumer = consumer;
             this.verify = verify;
         }
 
@@ -45,8 +46,8 @@ public class ReactListener extends ListenerAdapter {
             return verify;
         }
 
-        public Runnable getRunnable() {
-            return runnable;
+        public Consumer<GuildMessageReactionAddEvent> getConsumer() {
+            return consumer;
         }
     }
 

@@ -63,7 +63,7 @@ public class SectionReact extends EffectSection {
 						&& !e.getUser().isBot()
 						&& e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
 						&& e.getReaction().getReactionEmote().getAsReactionCode().equalsIgnoreCase(react),
-				() -> runSection(event)
+				e -> runSection(event)
 		));
 	}
 
