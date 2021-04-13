@@ -11,34 +11,25 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.Badge;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Name("User Badges")
-@Description("Get all badges the user have. It does NOT contain the nitro badge! Available badge are:\n"+
-		"STAFF\n" +
-		"PARTNER\n" +
-		"HYPESQUAD\n" +
-		"BUG_HUNTER_LEVEL_1\n" +
-		"HYPESQUAD_BRAVERY\n" +
-		"HYPESQUAD_BRILLIANCE\n" +
-		"HYPESQUAD_BALANCE\n" +
-		"EARLY_SUPPORTER\n" +
-		"TEAM_USER\n" +
-		"SYSTEM\n" +
-		"BUG_HUNTER_LEVEL_2\n" +
-		"VERIFIED_BOT\n" +
-		"VERIFIED_DEVELOPER")
+@Description("Get all badges the user have. It does NOT contain the nitro badge (either the boost one)!")
 @Examples("discord command badge <user>:\n" +
 		"\tprefixes: !\n" +
 		"\ttrigger:\n" +
 		"\t\treply with \"%mention tag of arg-1% have %size of badges of arg-1% badge(s)!\"")
 @Since("1.5.4")
-public class ExprUserBadges extends SimpleExpression<String> {
+public class ExprUserBadges extends SimpleExpression<Badge> {
 
 	static {
-		Skript.registerExpression(ExprUserBadges.class, String.class, ExpressionType.SIMPLE,
+		Skript.registerExpression(ExprUserBadges.class, Badge.class, ExpressionType.SIMPLE,
 				"["+ Utils.getPrefixName() +"] [discord] badges of [the] [user] %user/member%");
 	}
 
@@ -52,17 +43,19 @@ public class ExprUserBadges extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(final Event e) {
+	protected Badge[] get(final Event e) {
 		Object entity = exprMember.getSingle(e);
-		if (entity == null) return new String[0];
+		if (entity == null) return new Badge[0];
 		User user = null;
 		if (entity instanceof Member) {
 			user = ((Member) entity).getUser();
 		} else if (entity instanceof User) {
 			user = (User) entity;
 		}
-		if (user == null) return new String[0];
-		return Utils.valuesToString(user.getFlags());
+		if (user == null) return new Badge[0];
+		List<Badge> badges = new ArrayList<>();
+		user.getFlags().forEach(b -> badges.add(Badge.getFromOriginal(b)));
+		return badges.toArray(new Badge[0]);
 	}
 
 	@Override
@@ -71,8 +64,8 @@ public class ExprUserBadges extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
+	public Class<? extends Badge> getReturnType() {
+		return Badge.class;
 	}
 
 	@Override

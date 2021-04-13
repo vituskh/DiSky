@@ -123,6 +123,39 @@ public class Types {
 					}
 				})
 		);
+		Classes.registerClass(new ClassInfo<>(Badge.class, "bot")
+				.user("bots?")
+				.name("Discord Bot")
+				.description("Represent a loaded Discord Bot")
+				.since("1.0")
+				.parser(new Parser<Badge>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(Badge o, int flags) {
+						return o.name().toLowerCase(Locale.ROOT).replace("_", "");
+					}
+
+					@Override
+					public String toVariableNameString(Badge o) {
+						return o.name().toLowerCase(Locale.ROOT).replace("_", "");
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+					@Nullable
+					@Override
+					public Badge parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
 		Classes.registerClass(new ClassInfo<>(TextChannelBuilder.class, "textchannelbuilder")
 				.user("textchannelbuilders?")
 				.name("TextChannel Builder")
