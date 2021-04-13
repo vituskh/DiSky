@@ -12,12 +12,11 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioItem;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.audio.ExprLastPlayedAudio;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
-import org.apache.commons.logging.impl.LogFactoryImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class AudioUtils {
     public static YoutubeAudioSourceManager YOUTUBE_MANAGER_SOURCE;
     public static final YoutubeSearchProvider YOUTUBE_MANAGER_SEARCH = new YoutubeSearchProvider();
     public static Map<Long, GuildAudioManager> MUSIC_MANAGERS;
-    private static Map<Long, EffectData> GUILDS_EFFECTS = new HashMap<>();
+    private static final Map<Long, EffectData> GUILDS_EFFECTS = new HashMap<>();
 
     public static EffectData getEffectData(Guild guild) {
         if (!GUILDS_EFFECTS.containsKey(guild.getIdLong())) {
@@ -96,18 +95,15 @@ public class AudioUtils {
         return musicManager;
     }
 
-    public static void play(Guild guild, GuildAudioManager musicManager, AudioTrack track) {
-        connectToFirstVoiceChannel(guild.getAudioManager());
+    public static void play(Guild guild, GuildAudioManager musicManager, AudioTrack track, Member member) {
+        connectToFirstVoiceChannel(guild.getAudioManager(), member);
         musicManager.trackScheduler.queue(track);
         ExprLastPlayedAudio.lastTrack = track;
     }
 
-    private static void connectToFirstVoiceChannel(AudioManager audioManager) {
+    private static void connectToFirstVoiceChannel(AudioManager audioManager, Member member) {
         if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
-            for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
-                audioManager.openAudioConnection(voiceChannel);
-                break;
-            }
+            audioManager.openAudioConnection(member.getVoiceState().getChannel());
         }
     }
 
@@ -116,19 +112,19 @@ public class AudioUtils {
         musicManager.trackScheduler.nextTrack();
     }
 
-    public static void loadAndPlay(final Guild guild, final AudioTrack track) {
+    public static void loadAndPlay(final Guild guild, final AudioTrack track, Member member) {
         GuildAudioManager musicManager = getGuildAudioPlayer(guild);
         MANAGER.loadItemOrdered(musicManager, track.getIdentifier(), new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                play(guild, musicManager, track);
+                play(guild, musicManager, track, member);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
                 AudioTrack firstTrack = playlist.getSelectedTrack();
                 if (firstTrack == null) firstTrack = playlist.getTracks().get(0);
-                play(guild, musicManager, firstTrack);
+                play(guild, musicManager, firstTrack, member);
             }
 
             @Override
