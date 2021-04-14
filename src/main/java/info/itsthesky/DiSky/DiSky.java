@@ -66,7 +66,6 @@ public class DiSky extends JavaPlugin {
     public void onDisable() {
         /* Clients Shutdown */
         BotManager.clearBots();
-        WebhookManager.clearClients();
     }
 
     public static DiSky getInstance() { return instance; }

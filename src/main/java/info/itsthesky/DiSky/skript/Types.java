@@ -4,6 +4,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.commands.CommandEvent;
@@ -123,7 +124,7 @@ public class Types {
 					}
 				})
 		);
-		Classes.registerClass(new ClassInfo<>(Badge.class, "bot")
+		Classes.registerClass(new ClassInfo<>(Badge.class, "badge")
 				.user("bots?")
 				.name("Discord Bot")
 				.description("Represent a loaded Discord Bot")
@@ -152,6 +153,39 @@ public class Types {
 					@Nullable
 					@Override
 					public Badge parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(WebhookMessageBuilder.class, "webhookmessagebuilder")
+				.user("webhookmessagebuilders?")
+				.name("Webhook Message Builder")
+				.description("Represent a webhook message builder, with multiple embed, text content AND a different appearance than the original webhook.")
+				.since("1.8")
+				.parser(new Parser<WebhookMessageBuilder>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(WebhookMessageBuilder o, int flags) {
+						return o.build().getUsername();
+					}
+
+					@Override
+					public String toVariableNameString(WebhookMessageBuilder o) {
+						return o.build().getUsername();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+					@Nullable
+					@Override
+					public WebhookMessageBuilder parse(String s, ParseContext context) {
 						return null;
 					}
 				})
