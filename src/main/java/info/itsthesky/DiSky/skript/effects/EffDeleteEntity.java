@@ -51,20 +51,20 @@ public class EffDeleteEntity extends Effect {
             for (Object en : entity) {
                 if (en instanceof Role) {
                     Role role = (Role) en;
-                    role.delete().queue();
+                    role.delete().queue(null, DiSkyErrorHandler::logException);
                 } else if (en instanceof Webhook) {
                     Webhook webhook = (Webhook) en;
-                    webhook.delete().queue();
+                    webhook.delete().queue(null, DiSkyErrorHandler::logException);
                 } else if (
                         (en instanceof Channel) ||
                                 (en instanceof TextChannel)
                 ) {
                     TextChannel channel = Utils.checkChannel(en);
                     if (channel == null) return;
-                    channel.delete().queue();
+                    channel.delete().queue(null, DiSkyErrorHandler::logException);
                 } else if (en instanceof Message) {
                     Message message = (Message) en;
-                    message.delete().queue();
+                    message.delete().queue(null, DiSkyErrorHandler::logException);
                 }
             }
         });

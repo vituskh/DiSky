@@ -55,9 +55,9 @@ public class EffPinMessage extends Effect {
             Message message = exprMessage.getSingle(e);
             if (message == null) return;
             if (pattern == 0) {
-                message.pin().queue();
+                message.pin().queue(null, DiSkyErrorHandler::logException);
             } else {
-                message.unpin().queue();
+                message.unpin().queue(null, DiSkyErrorHandler::logException);
             }
         });
     }

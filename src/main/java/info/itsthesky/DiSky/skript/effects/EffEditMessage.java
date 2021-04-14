@@ -48,7 +48,7 @@ public class EffEditMessage extends Effect {
             if (newValue instanceof EmbedBuilder) {
                 message.editMessage(((EmbedBuilder) newValue).build()).queue();
             } else {
-                message.editMessage(newValue.toString()).queue();
+                message.editMessage(newValue.toString()).queue(null, DiSkyErrorHandler::logException);
             }
         });
     }

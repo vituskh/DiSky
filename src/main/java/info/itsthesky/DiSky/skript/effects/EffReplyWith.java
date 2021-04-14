@@ -108,10 +108,10 @@ public class EffReplyWith extends Effect {
                     hook.sendMessage(":warning: Error, see console for more information!").queue();
                     return;
                 } else if (message instanceof MessageBuilder) {
-                    hook.sendMessage(((MessageBuilder) message).build()).queue();
+                    hook.sendMessage(((MessageBuilder) message).build()).queue(null, DiSkyErrorHandler::logException);
                     return;
                 } else {
-                    hook.sendMessage(message.toString()).queue();
+                    hook.sendMessage(message.toString()).queue(null, DiSkyErrorHandler::logException);
                     return;
                 }
             }
