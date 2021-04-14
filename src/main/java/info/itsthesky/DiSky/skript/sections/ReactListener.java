@@ -25,7 +25,10 @@ public class ReactListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         events.forEach((waiter) -> {
-            if (waiter.getVerify().test(event)) waiter.getConsumer().accept(event);
+            if (waiter.getVerify().test(event)) {
+                System.out.println("YEP !!");
+                waiter.getConsumer().accept(event);
+            }
         });
     }
 

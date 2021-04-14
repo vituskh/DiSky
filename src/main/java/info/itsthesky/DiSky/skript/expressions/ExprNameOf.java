@@ -7,14 +7,15 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
-import info.itsthesky.DiSky.skript.effects.webhook.ScopeWebhook;
 import info.itsthesky.DiSky.skript.scope.category.ScopeCategory;
 import info.itsthesky.DiSky.skript.scope.commands.ScopeCommand;
 import info.itsthesky.DiSky.skript.scope.role.ScopeRole;
 import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.skript.scope.voicechannels.ScopeVoiceChannel;
+import info.itsthesky.DiSky.skript.scope.webhookmessage.ScopeWebhookMessage;
 import info.itsthesky.DiSky.tools.object.*;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
@@ -32,7 +33,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprNameOf.class, String.class,
                 "discord name",
-                "member/role/rolebuilder/commandbuilder/voicechannel/voicechannelbuilder/webhookbuilder/category/categorybuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
+                "member/role/rolebuilder/commandbuilder/voicechannel/voicechannelbuilder/webhookmessagebuilder/category/categorybuilder/channel/textchannel/textchannelbuilder/guild/user/emote"
         );
     }
 
@@ -101,10 +102,10 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                     Member member = (Member) entity;
                     member.modifyNickname(delta[0].toString()).queue();
                     return;
-                } else if (entity instanceof Webhook) {
-                    Webhook webhook = (Webhook) entity;
-                    webhook.getManager().setName(delta[0].toString()).queue();
-                    ScopeWebhook.lastWebhook = webhook;
+                } else if (entity instanceof WebhookMessageBuilder) {
+                    WebhookMessageBuilder webhook = (WebhookMessageBuilder) entity;
+                    webhook.setUsername(delta[0].toString());
+                    ScopeWebhookMessage.lastBuilder = webhook;
                     return;
                 } else if (entity instanceof SlashCommand) {
                     SlashCommand cmd = (SlashCommand) entity;
