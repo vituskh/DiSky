@@ -21,7 +21,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.bukkit.event.Event;
 
 @Name("Make Webhook Talk")
-@Description("Make a webhook send a specific message, embed or webhook message builder in his channel.")
+@Description("Make a webhook send a specific message, embed or webhook message builder in his channel.\nSee more information about this on the wiki: https://github.com/SkyCraft78/DiSky/wiki/Webhooks")
 @Examples("make webhook \"name\" send message \"Hello World !\"")
 @Since("1.8")
 public class EffMakeWebhookTalk extends Effect {
