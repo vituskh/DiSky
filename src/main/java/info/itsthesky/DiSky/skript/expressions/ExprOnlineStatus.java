@@ -72,6 +72,7 @@ public class ExprOnlineStatus extends SimplePropertyExpression<Object, OnlineSta
             for (Object entity : getExpr().getArray(e)) {
                 if (entity instanceof String) {
                     JDA bot = BotManager.getBot(entity.toString());
+                    if (bot == null) return;
                     bot.getPresence().setStatus(status);
                 }
             }
