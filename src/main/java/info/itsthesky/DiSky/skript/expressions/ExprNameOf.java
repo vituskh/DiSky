@@ -17,6 +17,7 @@ import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.skript.scope.voicechannels.ScopeVoiceChannel;
 import info.itsthesky.DiSky.skript.scope.webhookmessage.ScopeWebhookMessage;
 import info.itsthesky.DiSky.tools.object.*;
+import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -64,6 +65,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof GuildChannel) finalName = ((GuildChannel) entity).getName();
             if (entity instanceof VoiceChannelBuilder) finalName = ((VoiceChannelBuilder) entity).getName();
             if (entity instanceof WebhookMessageBuilder) finalName = ((WebhookMessageBuilder) entity).build().getContent();
+            if (entity instanceof Emote) finalName = ((Emote) entity).getName();
         }
         return finalName;
     }

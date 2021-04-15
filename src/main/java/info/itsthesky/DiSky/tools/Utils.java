@@ -4,8 +4,11 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.skript.util.Date;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
+import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
+import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
@@ -130,6 +133,67 @@ public class Utils extends ListenerAdapter {
         return true;
     }
 
+    public static Emote unicodeFrom(String input, Guild guild) {
+        String id = input.replaceAll("[^0-9]", "");
+        if (id.isEmpty()) {
+            try {
+                if (guild == null) {
+                    Set<JDA> jdaInstances = BotManager.getBotsJDA();
+                    for (JDA jda : jdaInstances) {
+                        Collection<net.dv8tion.jda.api.entities.Emote> emoteCollection = jda.getEmotesByName(input, false);
+                        if (!emoteCollection.isEmpty()) {
+                            return new Emote(emoteCollection.iterator().next());
+                        }
+                    }
+                    return unicodeFrom(input);
+                }
+                Collection<net.dv8tion.jda.api.entities.Emote> emotes = guild.getEmotesByName(input, false);
+                if (emotes.isEmpty()) {
+                    return unicodeFrom(input);
+                }
+
+                return new Emote(emotes.iterator().next());
+            } catch (UnsupportedOperationException | NoSuchElementException x) {
+                return null;
+            }
+        } else {
+            if (guild == null) {
+                Set<JDA> jdaInstances = BotManager.getBotsJDA();
+                for (JDA jda : jdaInstances) {
+                    net.dv8tion.jda.api.entities.Emote emote = jda.getEmoteById(id);
+                    if (emote != null) {
+                        return new Emote(emote);
+                    }
+                }
+                return unicodeFrom(input);
+            }
+            try {
+                net.dv8tion.jda.api.entities.Emote emote = guild.getEmoteById(id);
+                if (emote == null) {
+                    net.dv8tion.jda.api.entities.Emote emote1 = guild.getJDA().getEmoteById(id);
+                    if (!(emote1 == null)) {
+                        return new Emote(emote1);
+                    }
+                    return null;
+                }
+
+                return new Emote(emote);
+            } catch (UnsupportedOperationException | NoSuchElementException x) {
+                return null;
+            }
+        }
+    }
+
+    public static Emote unicodeFrom(String input) {
+        if (EmojiManager.isEmoji(input)) {
+            return new Emote(input);
+        } else {
+            String emote = input.contains(":") ? input : ":" + input + ":";
+            return new Emote(EmojiParser.parseToUnicode(emote));
+        }
+    }
+
+
     @Nullable
     public static Long parseLong(@NotNull String s, boolean shouldPrintError, boolean manageDiscordValue) {
         Long id = null;
@@ -186,6 +250,15 @@ public class Utils extends ListenerAdapter {
     public static Integer round(Double number) {
         String t = number.toString().split("\\.")[0];
         return Integer.valueOf(t);
+    }
+
+    public static boolean isNumeric(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
     }
 
     public static <T> void setSkriptVariable(Variable<T> variable, Object value, Event event) {

@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
@@ -59,13 +60,8 @@ public class ExprMentionTag extends SimpleExpression<String> {
 			return new String[] {((Role) entity).getAsMention()};
 		} else if (entity instanceof Member) {
 			return new String[] {((Member) entity).getAsMention()};
-		} else if (entity instanceof MessageReaction.ReactionEmote) {
-			MessageReaction.ReactionEmote emote = ((MessageReaction.ReactionEmote) entity);
-			if (emote.isEmoji()) {
-				return new String[] {emote.getAsReactionCode()};
-			} else {
-				return new String[] {emote.getEmote().getAsMention()};
-			}
+		} else if (entity instanceof Emote) {
+			return new String[] {((Emote) entity).getAsMention()};
 		}
 
 		return new String[0];

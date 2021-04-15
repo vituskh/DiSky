@@ -56,6 +56,7 @@ public class ExprFromID extends SimpleExpression<Object> {
 		String id = exprID.getSingle(e);
 		JDA bot = BotManager.getFirstBot();
 		if (bot == null || id == null) return new Object[0];
+		if (!Utils.isNumeric(id)) return new Object[0];
 		try {
 			switch (pattern) {
 				case 0:

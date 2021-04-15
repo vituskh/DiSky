@@ -9,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
@@ -76,11 +77,11 @@ public class EventReactionRemove extends Event {
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionRemove.class, MessageReaction.ReactionEmote.class, new Getter<MessageReaction.ReactionEmote, EventReactionRemove>() {
+        EventValues.registerEventValue(EventReactionRemove.class, info.itsthesky.DiSky.tools.object.Emote.class, new Getter<info.itsthesky.DiSky.tools.object.Emote, EventReactionRemove>() {
             @Nullable
             @Override
-            public MessageReaction.ReactionEmote get(final @NotNull EventReactionRemove event) {
-                return event.getEvent().getReactionEmote();
+            public info.itsthesky.DiSky.tools.object.Emote get(final @NotNull EventReactionRemove event) {
+                return new Emote(event.getEvent().getReactionEmote().getEmote());
             }
         }, 0);
 

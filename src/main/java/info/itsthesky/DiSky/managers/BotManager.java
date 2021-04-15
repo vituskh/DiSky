@@ -18,6 +18,9 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
@@ -68,6 +71,16 @@ public class BotManager {
         bots.put(name, jda);
         logger.info("The bot named '"+name+"' seems to be loaded correctly!");
         DiSky.getInstance().getServer().getPluginManager().callEvent(new EventBotConnect(jda));
+    }
+
+    /**
+     * Get all JDA instance of the current bot hashmap.
+     * @return Set of JDA instance
+     */
+    public static Set<JDA> getBotsJDA() {
+        Set<JDA> set = new HashSet<>();
+        bots.forEach((name, jda) -> set.add(jda));
+        return set;
     }
 
     /**

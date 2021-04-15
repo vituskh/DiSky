@@ -12,6 +12,7 @@ import info.itsthesky.DiSky.skript.commands.CommandFactory;
 import info.itsthesky.DiSky.skript.commands.CommandObject;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.*;
+import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.command.Arguments;
 import info.itsthesky.DiSky.tools.object.command.Command;
 import info.itsthesky.DiSky.tools.object.command.Prefix;
@@ -120,6 +121,39 @@ public class Types {
 					@Nullable
 					@Override
 					public JDA parse(String s, ParseContext context) {
+						return null;
+					}
+				})
+		);
+		Classes.registerClass(new ClassInfo<>(Emote.class, "emote")
+				.user("emotes?")
+				.name("Discord Emote")
+				.description("Represent a discord emote")
+				.since("1.8")
+				.parser(new Parser<Emote>() {
+
+					@Override
+					public boolean canParse(ParseContext context) {
+						return false;
+					}
+
+					@Override
+					public String toString(Emote o, int flags) {
+						return o.getAsMention();
+					}
+
+					@Override
+					public String toVariableNameString(Emote o) {
+						return o.getAsMention();
+					}
+
+					@Override
+					public String getVariableNamePattern() {
+						return ".+";
+					}
+					@Nullable
+					@Override
+					public Emote parse(String s, ParseContext context) {
 						return null;
 					}
 				})
@@ -439,47 +473,6 @@ public class Types {
 							CommandEvent lastEvent = CommandEvent.lastEvent;
 							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getGuild().getGuildChannelById(Utils.parseLong(s, false, true)));
 						}
-						return null;
-					}
-				})
-		);
-		Classes.registerClass(new ClassInfo<>(MessageReaction.ReactionEmote.class, "emote")
-				.user("emotes?")
-				.name("Discord Emote")
-				.description("Represent a discord emote in a guild, with id, url, unicode, etc...")
-				.since("1.3")
-				.parser(new Parser<MessageReaction.ReactionEmote>() {
-
-					@Override
-					public boolean canParse(ParseContext context) {
-						return false;
-					}
-
-					@Override
-					public String toString(MessageReaction.ReactionEmote o, int flags) {
-						if (o.isEmote()){
-							return o.getEmote().getAsMention();
-						} else {
-							return o.getAsReactionCode();
-						}
-					}
-
-					@Override
-					public String toVariableNameString(MessageReaction.ReactionEmote o) {
-						if (o.isEmote()){
-							return o.getEmote().getAsMention();
-						} else {
-							return o.getAsReactionCode();
-						}
-					}
-
-					@Override
-					public String getVariableNamePattern() {
-						return ".+";
-					}
-					@Nullable
-					@Override
-					public MessageReaction.ReactionEmote parse(String s, ParseContext context) {
 						return null;
 					}
 				})

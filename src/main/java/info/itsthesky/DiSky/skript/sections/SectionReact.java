@@ -16,6 +16,7 @@ import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
 import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.EffectSection;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.Emote;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -23,17 +24,17 @@ import org.bukkit.event.Event;
 
 @Name("React to Message")
 @Description("React to a message with an emote like the 'add reaction' effect. However, this section will be fired when someone react to this emote too.")
-@Examples("react to event-message with \"\uD83D\uDE00\"")
+@Examples("react to event-message with reaction \"smile\"")
 @Since("1.8")
 public class SectionReact extends EffectSection {
 
 	static {
 		Skript.registerCondition(SectionReact.class,
-				"["+ Utils.getPrefixName() +"] react to [the] [message] %message% with [emote] %string% [using [the] [bot] [(named|with name)] %-string%] [to run]"
+				"["+ Utils.getPrefixName() +"] react to [the] [message] %message% with [emote] %emote% [using [the] [bot] [(named|with name)] %-string%] [to run]"
 		);
 	}
 
-	private Expression<String> exprReact;
+	private Expression<Emote> exprReact;
 	private Expression<Message> exprMessage;
 	private Expression<String> exprName;
 
@@ -41,7 +42,7 @@ public class SectionReact extends EffectSection {
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
 		exprMessage = (Expression<Message>) exprs[0];
-		exprReact = (Expression<String>) exprs[1];
+		exprReact = (Expression<Emote>) exprs[1];
 		if (exprs.length != 2) exprName = (Expression<String>) exprs[2];
 		if (checkIfCondition()) return false;
 		if (hasSection()) loadSection("react effect", false, EventReactionAdd.class);
@@ -51,8 +52,8 @@ public class SectionReact extends EffectSection {
 	@Override
 	public void execute(Event event) {
 		Message message = exprMessage.getSingle(event);
-		String react = exprReact.getSingle(event);
-		if (message == null || react == null) return;
+		Emote emote = exprReact.getSingle(event);
+		if (message == null || emote == null) return;
 		if (exprName != null) {
 			JDA msgJDA = message.getJDA();
 			JDA botJDA = BotManager.getBot(exprName.getSingle(event));
@@ -63,7 +64,12 @@ public class SectionReact extends EffectSection {
 
 		VariablesMaps.map.put(code, new Pair<>(event, Variables.removeLocals(event)));
 
-		message.addReaction(react).queue();
+		if (emote.isEmote()) {
+			message.addReaction(emote.getEmote()).queue();
+		} else {
+			message.addReaction(emote.getName()).queue();
+		}
+
 		final Long msgID = message.getIdLong();
 		final TextChannel channel = message.getTextChannel();
 		ReactListener.events.add(new ReactListener.ReactWaitingEvent(
@@ -71,7 +77,7 @@ public class SectionReact extends EffectSection {
 						&& e.getChannel().equals(channel)
 						&& !e.getUser().isBot()
 						&& e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
-						&& e.getReaction().getReactionEmote().getAsReactionCode().equalsIgnoreCase(react),
+						&& e.getReaction().getReactionEmote().getAsReactionCode().equalsIgnoreCase(emote.getAsMention()),
 				e -> {
 					Pair<Event, Object> pair = VariablesMaps.map.get(code);
 					if (pair.getSecond() != null) Variables.setLocalVariables(pair.getFirst(), pair.getSecond());

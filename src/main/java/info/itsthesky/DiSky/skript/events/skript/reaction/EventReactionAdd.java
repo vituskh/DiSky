@@ -9,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -76,11 +77,11 @@ public class EventReactionAdd extends Event {
             }
         }, 0);
 
-        EventValues.registerEventValue(EventReactionAdd.class, MessageReaction.ReactionEmote.class, new Getter<MessageReaction.ReactionEmote, EventReactionAdd>() {
+        EventValues.registerEventValue(EventReactionAdd.class, Emote.class, new Getter<Emote, EventReactionAdd>() {
             @Nullable
             @Override
-            public MessageReaction.ReactionEmote get(final @NotNull EventReactionAdd event) {
-                return event.getEvent().getReactionEmote();
+            public Emote get(final @NotNull EventReactionAdd event) {
+                return new Emote(event.getEvent().getReactionEmote().getEmote());
             }
         }, 0);
 
