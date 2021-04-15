@@ -61,6 +61,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof SlashCommand) finalName = ((SlashCommand) entity).getName();
             if (entity instanceof User) finalName = ((User) entity).getName();
             if (entity instanceof VoiceChannel) finalName = ((VoiceChannel) entity).getName();
+            if (entity instanceof GuildChannel) finalName = ((GuildChannel) entity).getName();
             if (entity instanceof VoiceChannelBuilder) finalName = ((VoiceChannelBuilder) entity).getName();
         }
         return finalName;
@@ -94,8 +95,8 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
                     TextChannel channel = (TextChannel) entity;
                     channel.getManager().setName(delta[0].toString()).queue();
                     return;
-                } else if (entity instanceof Channel) {
-                    TextChannel channel = ((Channel) entity).getTextChannel();
+                } else if (entity instanceof GuildChannel) {
+                    GuildChannel channel = (GuildChannel) entity;
                     channel.getManager().setName(delta[0].toString()).queue();
                     return;
                 } else if (entity instanceof Member) {

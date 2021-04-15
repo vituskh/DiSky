@@ -10,6 +10,8 @@ import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
 
@@ -31,16 +33,9 @@ public class ExprTopic extends SimplePropertyExpression<Object, String> {
     @Nullable
     @Override
     public String convert(Object entity) {
-        TextChannel textChannel = Utils.checkChannel(entity);
-        if (textChannel == null) {
-            if (entity instanceof TextChannelBuilder) {
-                TextChannelBuilder channel = (TextChannelBuilder) entity;
-                return channel.getTopic();
-            }
-        } else {
-            return textChannel.getTopic();
-        }
-        return "";
+        if (entity instanceof TextChannel) return ((TextChannel) entity).getTopic();
+        if (entity instanceof GuildChannel) return ((GuildChannel) entity).getType().equals(ChannelType.TEXT) ? ((TextChannel) entity).getTopic() : null;
+        return null;
     }
 
     @Override
@@ -68,19 +63,8 @@ public class ExprTopic extends SimplePropertyExpression<Object, String> {
         String topic = delta[0].toString();
         if (mode == Changer.ChangeMode.SET) {
             for (Object entity : getExpr().getArray(e)) {
-                TextChannel textChannel = Utils.checkChannel(entity);
-                if (textChannel == null) {
-                    if (entity instanceof TextChannelBuilder) {
-                        TextChannelBuilder channel = (TextChannelBuilder) entity;
-                        channel.setTopic(topic);
-                        ScopeTextChannel.lastBuilder.setTopic(topic);
-                    }
-                } else {
-                    textChannel
-                            .getManager()
-                            .setTopic(topic)
-                            .queue();
-                }
+                if (entity instanceof TextChannel) ((TextChannel) entity).getManager().setTopic(topic).queue();
+                if ((entity instanceof GuildChannel) && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) ((TextChannel) entity).getManager().setTopic(topic).queue();
             }
         }
     }

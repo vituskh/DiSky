@@ -405,13 +405,12 @@ public class Types {
 					}
 				})
 		);
-		Classes.registerClass(new ClassInfo<>(Channel.class, "channel")
+		Classes.registerClass(new ClassInfo<>(GuildChannel.class, "channel")
 				.user("channels?")
-				.name("Discord Channel")
-				.description("Represent a discord channel in a guild. Can be both vocal or text channel." +
-						"\n Mainly made for better event value using lol")
-				.since("1.1")
-				.parser(new Parser<Channel>() {
+				.name("Guild Channel")
+				.description("Represent a Guild discord channel. Can be both text OR voice. Action specific of a voice channel (like user limit), used on text channel will throw an error.")
+				.since("1.8")
+				.parser(new Parser<GuildChannel>() {
 
 					@Override
 					public boolean canParse(ParseContext context) {
@@ -419,13 +418,13 @@ public class Types {
 					}
 
 					@Override
-					public String toString(Channel o, int flags) {
-						return o.getChannel().getName();
+					public String toString(GuildChannel o, int flags) {
+						return o.getName();
 					}
 
 					@Override
-					public String toVariableNameString(Channel o) {
-						return o.getTextChannel().getName();
+					public String toVariableNameString(GuildChannel o) {
+						return o.getName();
 					}
 
 					@Override
@@ -435,10 +434,10 @@ public class Types {
 
 					@SuppressWarnings("unchecked")
 					@Override
-					public Channel parse(final String s, final ParseContext context) {
+					public GuildChannel parse(final String s, final ParseContext context) {
 						if (context.equals(ParseContext.COMMAND)) {
 							CommandEvent lastEvent = CommandEvent.lastEvent;
-							return (Utils.parseLong(s, false, true) == null ? null : new Channel(lastEvent.getGuild().getTextChannelById(Utils.parseLong(s, false, true))));
+							return (Utils.parseLong(s, false, true) == null ? null : lastEvent.getGuild().getGuildChannelById(Utils.parseLong(s, false, true)));
 						}
 						return null;
 					}

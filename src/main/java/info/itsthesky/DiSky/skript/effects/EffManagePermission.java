@@ -24,8 +24,8 @@ public class EffManagePermission extends Effect {
 
     static {
         Skript.registerEffect(EffManagePermission.class,
-                "["+ Utils.getPrefixName() +"] allow [discord] [perm[ission]] %permissions% to %member/role/rolebuilder% in [the] [channel] %channel/textchannel%",
-                "["+ Utils.getPrefixName() +"] deny [discord] [perm[ission]] %permissions% to %member/role/rolebuilder% in [the] [channel] %channel/textchannel%"
+                "["+ Utils.getPrefixName() +"] allow [discord] [perm[ission]] %permissions% to %member/role/rolebuilder% in [the] [channel] %channel/textchannel/voicechannel%",
+                "["+ Utils.getPrefixName() +"] deny [discord] [perm[ission]] %permissions% to %member/role/rolebuilder% in [the] [channel] %channel/textchannel/voicechannel%"
         );
     }
 
@@ -51,7 +51,10 @@ public class EffManagePermission extends Effect {
         Object entity = exprEntity.getSingle(e);
         if (perm == null || target == null) return;
 
-        TextChannel channel = Utils.checkChannel(entity);
+        TextChannel channel = null;
+        if (entity instanceof TextChannel) channel = (TextChannel) entity;
+        if (entity instanceof GuildChannel && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) channel = (TextChannel) entity;
+
         if (channel != null ) {
             /* IF IN CHANNEL */
 

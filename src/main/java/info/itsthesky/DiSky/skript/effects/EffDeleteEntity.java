@@ -12,10 +12,7 @@ import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.Webhook;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
 @Name("Delete Discord Entity")
@@ -31,7 +28,7 @@ public class EffDeleteEntity extends Effect {
 
     static {
         Skript.registerEffect(EffDeleteEntity.class,
-                "["+ Utils.getPrefixName() +"] delete discord entity %messages/channels/textchannels/roles%");
+                "["+ Utils.getPrefixName() +"] delete discord entity %messages/channels/voicechannel/textchannels/roles%");
     }
 
     private Expression<Object> exprEntity;
@@ -55,13 +52,10 @@ public class EffDeleteEntity extends Effect {
                 } else if (en instanceof Webhook) {
                     Webhook webhook = (Webhook) en;
                     webhook.delete().queue(null, DiSkyErrorHandler::logException);
-                } else if (
-                        (en instanceof Channel) ||
-                                (en instanceof TextChannel)
-                ) {
-                    TextChannel channel = Utils.checkChannel(en);
-                    if (channel == null) return;
-                    channel.delete().queue(null, DiSkyErrorHandler::logException);
+                } else if (en instanceof TextChannel) {
+                    ((TextChannel) en).delete().queue(null, DiSkyErrorHandler::logException);
+                } else if (en instanceof GuildChannel && ((GuildChannel) en).getType().equals(ChannelType.TEXT)) {
+                    ((TextChannel) en).delete().queue(null, DiSkyErrorHandler::logException);
                 } else if (en instanceof Message) {
                     Message message = (Message) en;
                     message.delete().queue(null, DiSkyErrorHandler::logException);

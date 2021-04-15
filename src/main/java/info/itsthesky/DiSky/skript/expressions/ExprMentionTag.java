@@ -51,8 +51,10 @@ public class ExprMentionTag extends SimpleExpression<String> {
 			return new String[] {((User) entity).getAsMention()};
 		} else if (entity instanceof TextChannel) {
 			return new String[] {((TextChannel) entity).getAsMention()};
-		} else if (entity instanceof Channel) {
-			return new String[] {((Channel) entity).getTextChannel().getAsMention()};
+		} else if (entity instanceof GuildChannel) {
+			GuildChannel channel = (GuildChannel) entity;
+			if (channel.getType().equals(ChannelType.TEXT)) return new String[] {((TextChannel) channel).getAsMention()};
+			return new String[] {channel.getName()};
 		} else if (entity instanceof Role) {
 			return new String[] {((Role) entity).getAsMention()};
 		} else if (entity instanceof Member) {

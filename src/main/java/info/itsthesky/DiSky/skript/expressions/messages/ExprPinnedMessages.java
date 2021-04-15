@@ -8,6 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.tools.MultiplyPropertyExpression;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
@@ -30,7 +32,7 @@ public class ExprPinnedMessages extends MultiplyPropertyExpression<Object, Messa
     @Nullable
     @Override
     public Message[] convert(Object entity) {
-        if (entity instanceof Channel) return ((Channel) entity).getTextChannel().retrievePinnedMessages().complete().toArray(new Message[0]);
+        if (entity instanceof GuildChannel && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) return ((TextChannel) entity).retrievePinnedMessages().complete().toArray(new Message[0]);
         if (entity instanceof TextChannel) return ((TextChannel) entity).retrievePinnedMessages().complete().toArray(new Message[0]);
         return null;
     }

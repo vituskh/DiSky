@@ -82,7 +82,7 @@ public class EffReplyWith extends Effect {
             if (e.getEventName().equalsIgnoreCase("EventPrivateMessage")) {
                 eventPrivate = (EventPrivateMessage) e;
             } else if (e instanceof EventMessageReceive) {
-                channel = ((EventMessageReceive) e).getTextChannel();
+                channel = ((EventMessageReceive) e).getEvent().getTextChannel();
             } else if (e instanceof EventCommand) {
                 channel = (TextChannel) ((EventCommand) e).getEvent().getChannel();
             } else if (e instanceof CommandEvent) {

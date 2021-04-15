@@ -10,6 +10,9 @@ import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
 
@@ -31,15 +34,8 @@ public class ExprNewsState extends SimplePropertyExpression<Object, Boolean> {
     @Nullable
     @Override
     public Boolean convert(Object entity) {
-        TextChannel textChannel = Utils.checkChannel(entity);
-        if (textChannel == null) {
-            if (entity instanceof TextChannelBuilder) {
-                TextChannelBuilder channel = (TextChannelBuilder) entity;
-                return channel.isNews();
-            }
-        } else {
-            return textChannel.isNews();
-        }
+        if (entity instanceof TextChannel) return ((TextChannel) entity).isNews();
+        if (entity instanceof GuildChannel) return ((GuildChannel) entity).getType().equals(ChannelType.TEXT) ? ((TextChannel) entity).isNews() : null;
         return false;
     }
 
@@ -69,19 +65,8 @@ public class ExprNewsState extends SimplePropertyExpression<Object, Boolean> {
         boolean newState = (Boolean) delta[0];
         if (mode == Changer.ChangeMode.SET) {
             for (Object entity : getExpr().getArray(e)) {
-                TextChannel textChannel = Utils.checkChannel(entity);
-                if (textChannel == null) {
-                    if (entity instanceof TextChannelBuilder) {
-                        TextChannelBuilder channel = (TextChannelBuilder) entity;
-                        channel.setNews(newState);
-                        ScopeTextChannel.lastBuilder.setNews(newState);
-                    }
-                } else {
-                    textChannel
-                            .getManager()
-                            .setNews(newState)
-                            .queue();
-                }
+                if (entity instanceof TextChannel) ((TextChannel) entity).getManager().setNews(newState).queue();
+                if ((entity instanceof GuildChannel) && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) ((TextChannel) entity).getManager().setNews(newState).queue();
             }
         }
     }

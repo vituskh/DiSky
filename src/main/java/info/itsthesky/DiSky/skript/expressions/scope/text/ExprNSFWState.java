@@ -31,15 +31,8 @@ public class ExprNSFWState extends SimplePropertyExpression<Object, Boolean> {
     @Nullable
     @Override
     public Boolean convert(Object entity) {
-        TextChannel textChannel = Utils.checkChannel(entity);
-        if (textChannel == null) {
-            if (entity instanceof TextChannelBuilder) {
-                TextChannelBuilder channel = (TextChannelBuilder) entity;
-                return channel.isNsfw();
-            }
-        } else {
-            return textChannel.isNSFW();
-        }
+        if (entity instanceof TextChannel) return ((TextChannel) entity).isNews();
+        if (entity instanceof GuildChannel) return ((GuildChannel) entity).getType().equals(ChannelType.TEXT) ? ((TextChannel) entity).isNSFW() : null;
         return false;
     }
 
@@ -69,19 +62,8 @@ public class ExprNSFWState extends SimplePropertyExpression<Object, Boolean> {
         boolean newState = (Boolean) delta[0];
         if (mode == Changer.ChangeMode.SET) {
             for (Object entity : getExpr().getArray(e)) {
-                TextChannel textChannel = Utils.checkChannel(entity);
-                if (textChannel == null) {
-                    if (entity instanceof TextChannelBuilder) {
-                        TextChannelBuilder channel = (TextChannelBuilder) entity;
-                        channel.setNsfw(newState);
-                        ScopeTextChannel.lastBuilder.setNsfw(newState);
-                    }
-                } else {
-                    textChannel
-                            .getManager()
-                            .setNSFW(newState)
-                            .queue();
-                }
+                if (entity instanceof TextChannel) ((TextChannel) entity).getManager().setNSFW(newState).queue();
+                if ((entity instanceof GuildChannel) && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) ((TextChannel) entity).getManager().setNSFW(newState).queue();
             }
         }
     }

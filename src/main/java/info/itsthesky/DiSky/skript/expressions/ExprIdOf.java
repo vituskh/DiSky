@@ -55,8 +55,8 @@ public class ExprIdOf extends SimpleExpression<String> {
 			return new String[] {((MessageChannel) entity).getId()};
 		} else if (entity instanceof Message) {
 			return new String[] {((Message) entity).getId()};
-		} else if (entity instanceof Channel) {
-			return new String[] {((Channel) entity).getChannel().getId()};
+		} else if (entity instanceof GuildChannel) {
+			return new String[] {((GuildChannel) entity).getId()};
 		} else if (entity instanceof Role) {
 			return new String[] {((Role) entity).getId()};
 		} else if (entity instanceof Member) {

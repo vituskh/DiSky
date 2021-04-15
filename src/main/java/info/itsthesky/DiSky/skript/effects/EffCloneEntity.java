@@ -12,12 +12,8 @@ import ch.njol.skript.lang.Variable;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
-import info.itsthesky.DiSky.tools.object.messages.Channel;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
-
-import javax.annotation.Nullable;
 
 @Name("Clone Discord Entity")
 @Description("Clone an existing discord entity (channel, category or role) in another guild.")
@@ -33,7 +29,7 @@ public class EffCloneEntity extends Effect {
 
     static {
         Skript.registerEffect(EffCloneEntity.class,
-                "["+ Utils.getPrefixName() +"] clone [discord] [entity] %role/textchannel/channel/category% [in [the] [guild] %-guild%] [and store (it|the entity) in %-object%]");
+                "["+ Utils.getPrefixName() +"] clone [discord] [entity] %role/textchannel/channel/category/voicechannel% [in [the] [guild] %-guild%] [and store (it|the entity) in %-object%]");
     }
 
     private Expression<Object> exprEntity;
@@ -72,9 +68,15 @@ public class EffCloneEntity extends Effect {
                 } else {
                     newEntity = category.createCopy().complete();
                 }
-            } else if (entity instanceof Channel || entity instanceof TextChannel) {
-                TextChannel channel = Utils.checkChannel(entity);
-                if (channel == null) return;
+            } else if (entity instanceof TextChannel) {
+                TextChannel channel = (TextChannel) entity;
+                if (guildSpecified) {
+                    newEntity = channel.createCopy(guild).complete();
+                } else {
+                    newEntity = channel.createCopy().complete();
+                }
+            } else if (entity instanceof GuildChannel && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) {
+                TextChannel channel = (TextChannel) entity;
                 if (guildSpecified) {
                     newEntity = channel.createCopy(guild).complete();
                 } else {

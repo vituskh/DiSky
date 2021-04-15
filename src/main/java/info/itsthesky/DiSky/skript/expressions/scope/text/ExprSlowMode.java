@@ -10,6 +10,8 @@ import ch.njol.util.coll.CollectionUtils;
 import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
 
@@ -31,15 +33,8 @@ public class ExprSlowMode extends SimplePropertyExpression<Object, Number> {
     @Nullable
     @Override
     public Number convert(Object entity) {
-        TextChannel textChannel = Utils.checkChannel(entity);
-        if (textChannel == null) {
-            if (entity instanceof TextChannelBuilder) {
-                TextChannelBuilder channel = (TextChannelBuilder) entity;
-                return channel.getSlowmode();
-            }
-        } else {
-            return textChannel.getSlowmode();
-        }
+        if (entity instanceof TextChannel) return ((TextChannel) entity).getSlowmode();
+        if (entity instanceof GuildChannel) return ((GuildChannel) entity).getType().equals(ChannelType.TEXT) ? ((TextChannel) entity).getSlowmode() : null;
         return null;
     }
 
@@ -68,19 +63,8 @@ public class ExprSlowMode extends SimplePropertyExpression<Object, Number> {
         int slow = Utils.round(Double.valueOf(delta[0].toString()));
         if (mode == Changer.ChangeMode.SET) {
             for (Object entity : getExpr().getArray(e)) {
-                TextChannel textChannel = Utils.checkChannel(entity);
-                if (textChannel == null) {
-                    if (entity instanceof TextChannelBuilder) {
-                        TextChannelBuilder channel = (TextChannelBuilder) entity;
-                        channel.setSlowmode(slow);
-                        ScopeTextChannel.lastBuilder.setSlowmode(slow);
-                    }
-                } else {
-                    textChannel
-                            .getManager()
-                            .setSlowmode(slow)
-                            .queue();
-                }
+                if (entity instanceof TextChannel) ((TextChannel) entity).getManager().setSlowmode(slow).queue();
+                if ((entity instanceof GuildChannel) && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) ((TextChannel) entity).getManager().setSlowmode(slow).queue();
             }
         }
     }

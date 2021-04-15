@@ -11,9 +11,7 @@ import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.VoiceChannelBuilder;
-import net.dv8tion.jda.api.entities.Category;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
@@ -36,15 +34,7 @@ public class ExprCategoryParent extends SimplePropertyExpression<Object, Categor
     public Category convert(Object entity) {
         if (entity instanceof VoiceChannel) return ((VoiceChannel) entity).getParent();
         if (entity instanceof VoiceChannelBuilder) return ((VoiceChannelBuilder) entity).getParent();
-        TextChannel textChannel = Utils.checkChannel(entity);
-        if (textChannel == null) {
-            if (entity instanceof TextChannelBuilder) {
-                TextChannelBuilder channel = (TextChannelBuilder) entity;
-                return channel.getCategory();
-            }
-        } else {
-            return textChannel.getParent();
-        }
+        if (entity instanceof GuildChannel) return ((GuildChannel) entity).getType().equals(ChannelType.TEXT) ? ((TextChannel) entity).getParent() : null;
         return null;
     }
 
@@ -77,20 +67,9 @@ public class ExprCategoryParent extends SimplePropertyExpression<Object, Categor
 
                 if (entity instanceof VoiceChannelBuilder) ((VoiceChannelBuilder) entity).setParent(category);
                 if (entity instanceof VoiceChannel) ((VoiceChannel) entity).getManager().setParent(category).queue();
+                if (entity instanceof TextChannel) ((TextChannel) entity).getManager().setParent(category).queue();
+                if (entity instanceof GuildChannel) ((GuildChannel) entity).getManager().setParent(category).queue();
 
-                TextChannel textChannel = Utils.checkChannel(entity);
-                if (textChannel == null) {
-                    if (entity instanceof TextChannelBuilder) {
-                        TextChannelBuilder channel = (TextChannelBuilder) entity;
-                        channel.setCategory(category);
-                        ScopeTextChannel.lastBuilder.setCategory(category);
-                    }
-                } else {
-                    textChannel
-                            .getManager()
-                            .setParent(category)
-                            .queue();
-                }
             }
         }
     }

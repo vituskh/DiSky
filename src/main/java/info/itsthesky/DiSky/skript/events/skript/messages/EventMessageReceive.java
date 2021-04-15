@@ -10,6 +10,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.bukkit.event.Event;
@@ -33,15 +34,16 @@ public class EventMessageReceive extends Event {
             @Nullable
             @Override
             public TextChannel get(final @NotNull EventMessageReceive event) {
-                return event.getTextChannel();
+                return event.getEvent().getTextChannel();
             }
         }, 0);
 
-        EventValues.registerEventValue(EventMessageReceive.class, Channel.class, new Getter<Channel, EventMessageReceive>() {
+
+        EventValues.registerEventValue(EventMessageReceive.class, GuildChannel.class, new Getter<GuildChannel, EventMessageReceive>() {
             @Nullable
             @Override
-            public Channel get(final @NotNull EventMessageReceive event) {
-                return event.getChannel();
+            public GuildChannel get(final @NotNull EventMessageReceive event) {
+                return Utils.getChannel(event.getEvent().getTextChannel(), event.getEvent().getGuild());
             }
         }, 0);
 
@@ -49,7 +51,7 @@ public class EventMessageReceive extends Event {
             @Nullable
             @Override
             public Message get(final @NotNull EventMessageReceive event) {
-                return event.getMessage();
+                return event.getEvent().getMessage();
             }
         }, 0);
 
@@ -57,7 +59,15 @@ public class EventMessageReceive extends Event {
             @Nullable
             @Override
             public User get(final @NotNull EventMessageReceive event) {
-                return event.getUser();
+                return event.getEvent().getMember().getUser();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EventMessageReceive.class, JDA.class, new Getter<JDA, EventMessageReceive>() {
+            @Nullable
+            @Override
+            public JDA get(final @NotNull EventMessageReceive event) {
+                return event.getEvent().getJDA();
             }
         }, 0);
 
@@ -65,7 +75,7 @@ public class EventMessageReceive extends Event {
             @Nullable
             @Override
             public Guild get(final @NotNull EventMessageReceive event) {
-                return event.getGuild();
+                return event.getEvent().getGuild();
             }
         }, 0);
 
@@ -73,40 +83,26 @@ public class EventMessageReceive extends Event {
             @Nullable
             @Override
             public Member get(final @NotNull EventMessageReceive event) {
-                return event.getMember();
+                return event.getEvent().getMember();
             }
         }, 0);
+
 
     }
 
     private static final HandlerList HANDLERS = new HandlerList();
 
-    private final Channel channel;
-    private final Guild guild;
-    private final User user;
-    private final Member member;
-    private final Message message;
-    private final MessageReceivedEvent e;
+    private final MessageReceivedEvent event;
 
     public EventMessageReceive(
             final MessageReceivedEvent e
             ) {
         super(Utils.areEventAsync());
-        this.channel = new Channel(e.getTextChannel());
-        this.guild = e.getGuild();
-        if (!e.isWebhookMessage()) {
-            this.user = e.getMember().getUser();
-            this.member = e.getMember();
-        } else {
-            this.user = null;
-            this.member = null;
-        }
-        this.message = e.getMessage();
-        this.e = e;
+        this.event = e;
     }
 
-    public Member getMember() {
-        return member;
+    public MessageReceivedEvent getEvent() {
+        return event;
     }
 
     @NotNull
@@ -117,29 +113,5 @@ public class EventMessageReceive extends Event {
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
-    }
-
-    public MessageReceivedEvent getEvent() {
-        return e;
-    }
-
-    public TextChannel getTextChannel() {
-        return channel.getTextChannel();
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Message getMessage() {
-        return message;
     }
 }

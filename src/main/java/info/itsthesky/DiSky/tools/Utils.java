@@ -10,6 +10,7 @@ import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -43,6 +44,10 @@ public class Utils extends ListenerAdapter {
         } else {
             return defaultObject;
         }
+    }
+
+    public static GuildChannel getChannel(TextChannel channel, Guild guild) {
+        return guild.getGuildChannelById(channel.getId());
     }
 
     public static String generateCode(final int size) {

@@ -19,10 +19,7 @@ import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.bukkit.event.Event;
 
@@ -68,15 +65,12 @@ public class EffSendMessage extends Effect {
             Object content = exprMessage.getSingle(e);
             if (channel == null || content == null) return;
             Message storedMessage;
+
             TextChannel channel1 = null;
-            if (channel instanceof TextChannel) {
-                channel1 = (TextChannel) channel;
-            } else if (channel instanceof Channel) {
-                channel1 = ((Channel) channel).getTextChannel();
-            } else if (
-                    channel instanceof User ||
-                            channel instanceof Member
-            ) {
+            if (channel1 instanceof TextChannel) channel1 = (TextChannel) channel;
+            if (channel instanceof GuildChannel && ((GuildChannel) channel).getType().equals(ChannelType.TEXT)) channel1 = (TextChannel) channel;
+
+            if (channel instanceof User || channel instanceof Member) {
                 User user;
                 if (channel instanceof Member) {
                     user = ((Member) channel).getUser();

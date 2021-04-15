@@ -17,10 +17,7 @@ import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.bukkit.event.Event;
 
 import java.io.IOException;
@@ -65,14 +62,10 @@ public class EffUploadFile extends Effect {
             String ext = url.substring(url.lastIndexOf("."));
 
             TextChannel channel1 = null;
-            if (channel instanceof TextChannel) {
-                channel1 = (TextChannel) channel;
-            } else if (channel instanceof Channel) {
-                channel1 = ((Channel) channel).getTextChannel();
-            } else if (
-                    channel instanceof User ||
-                            channel instanceof Member
-            ) {
+            if (channel1 instanceof TextChannel) channel1 = (TextChannel) channel;
+            if (channel instanceof GuildChannel && ((GuildChannel) channel).getType().equals(ChannelType.TEXT)) channel1 = (TextChannel) channel;
+
+            if (channel instanceof User || channel instanceof Member) {
                 User user;
                 if (channel instanceof Member) {
                     user = ((Member) channel).getUser();

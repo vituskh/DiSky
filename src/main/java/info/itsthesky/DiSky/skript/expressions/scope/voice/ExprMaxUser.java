@@ -11,6 +11,8 @@ import info.itsthesky.DiSky.skript.scope.textchannels.ScopeTextChannel;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.TextChannelBuilder;
 import info.itsthesky.DiSky.tools.object.VoiceChannelBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.bukkit.event.Event;
@@ -26,7 +28,7 @@ public class ExprMaxUser extends SimplePropertyExpression<Object, Number> {
     static {
         register(ExprMaxUser.class, Number.class,
                 "max user[s]",
-                "voicechannel/voicechannelbuilder"
+                "voicechannel/voicechannelbuilder/channel"
         );
     }
 
@@ -35,7 +37,7 @@ public class ExprMaxUser extends SimplePropertyExpression<Object, Number> {
     public Number convert(Object entity) {
         if (entity instanceof VoiceChannelBuilder) return ((VoiceChannelBuilder) entity).getUserLimit();
         if (entity instanceof VoiceChannel) return ((VoiceChannel) entity).getUserLimit();
-
+        if (entity instanceof GuildChannel) return ((GuildChannel) entity).getType().equals(ChannelType.VOICE) ? ((VoiceChannel) entity).getUserLimit() : null;
         return null;
     }
 
@@ -67,6 +69,7 @@ public class ExprMaxUser extends SimplePropertyExpression<Object, Number> {
             for (Object entity : getExpr().getArray(e)) {
                 if (entity instanceof VoiceChannelBuilder) ((VoiceChannelBuilder) entity).setUserLimit(value.intValue());
                 if (entity instanceof VoiceChannel) ((VoiceChannel) entity).getManager().setUserLimit(value.intValue()).queue();
+                if ((entity instanceof GuildChannel) && ((GuildChannel) entity).getType().equals(ChannelType.VOICE)) ((TextChannel) entity).getManager().setUserLimit(value.intValue()).queue();
             }
         }
     }

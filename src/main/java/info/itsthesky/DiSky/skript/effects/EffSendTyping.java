@@ -12,6 +12,8 @@ import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.bukkit.event.Event;
@@ -44,8 +46,8 @@ public class EffSendTyping extends Effect {
         DiSkyErrorHandler.executeHandleCode(e, Event -> {
             Object entity = exprEntity.getSingle(e);
             if (entity == null) return;
-            TextChannel channel = Utils.checkChannel(entity);
-            if (channel != null) channel.sendTyping().queue();
+            if (entity instanceof TextChannel) ((TextChannel) entity).sendTyping().queue();
+            if (entity instanceof GuildChannel && ((GuildChannel) entity).getType().equals(ChannelType.TEXT)) ((TextChannel) entity).sendTyping().queue();
         });
     }
 
