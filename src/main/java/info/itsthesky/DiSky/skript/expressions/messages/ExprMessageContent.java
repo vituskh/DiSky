@@ -1,50 +1,37 @@
 package info.itsthesky.DiSky.skript.expressions.messages;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
+import club.minnced.discord.webhook.send.WebhookMessage;
+import club.minnced.discord.webhook.send.WebhookMessageBuilder;
+import info.itsthesky.DiSky.skript.scope.webhookmessage.ScopeWebhookMessage;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.entities.Message;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Content of Message")
+@Name("Content of Message (or Webhook Message Builder")
 @Description("Return the content (message itself) of a message instance.")
 @Examples("set {_content} to message content of event-message")
-@Since("1.0")
-public class ExprMessageContent extends SimpleExpression<String> {
+@Since("1.0, 1.8 (Webhook message builder)")
+public class ExprMessageContent extends SimplePropertyExpression<Object, String> {
 
 	static {
-		Skript.registerExpression(ExprMessageContent.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] message content of [the] [message] %message%"
+		register(ExprMessageContent.class, String.class,
+				"[the] [message] content",
+				"message/webhookmessagebuilder"
 		);
-	}
-
-	private Expression<Message> exprMessage;
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		exprMessage = (Expression<Message>) exprs[0];
-		return true;
-	}
-
-	@Override
-	protected String[] get(Event e) {
-		Message message = exprMessage.getSingle(e);
-		if (message == null) return new String[0];
-		return new String[] {message.getContentDisplay()};
-	}
-
-	@Override
-	public boolean isSingle() {
-		return true;
 	}
 
 	@Override
@@ -52,9 +39,42 @@ public class ExprMessageContent extends SimpleExpression<String> {
 		return String.class;
 	}
 
+	@javax.annotation.Nullable
 	@Override
-	public String toString(Event e, boolean debug) {
-		return "content of message " + exprMessage.toString(e, debug);
+	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
+		if (mode == Changer.ChangeMode.SET) {
+			return CollectionUtils.array(String.class);
+		}
+		return CollectionUtils.array();
+	}
+
+	@Override
+	protected String getPropertyName() {
+		return "message content";
+	}
+
+	@Nullable
+	@Override
+	public String convert(Object o) {
+		if (o instanceof Message) return ((Message) o).getContentRaw();
+		if (o instanceof WebhookMessageBuilder) return ((WebhookMessageBuilder) o).build().getContent();
+		return null;
+	}
+
+	@Override
+	public void change(Event e, @Nullable Object[] delta, Changer.ChangeMode mode) {
+		if (delta == null || delta.length == 0 || delta[0] == null || !mode.equals(Changer.ChangeMode.SET)) return;
+		String content = delta[0].toString();
+		for (Object entity : getExpr().getAll(e)) {
+
+			if (entity instanceof WebhookMessageBuilder) {
+				WebhookMessageBuilder builder = (WebhookMessageBuilder) entity;
+				System.out.println(content);
+				builder.setContent(content);
+				ScopeWebhookMessage.lastBuilder.setContent(content);
+			}
+
+		}
 	}
 
 }
