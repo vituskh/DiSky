@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import ch.njol.util.Pair;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
@@ -32,8 +33,6 @@ public class SectionReact extends EffectSection {
 		);
 	}
 
-	private Event event;
-	private Object localVars;
 	private Expression<String> exprReact;
 	private Expression<Message> exprMessage;
 	private Expression<String> exprName;
@@ -60,9 +59,10 @@ public class SectionReact extends EffectSection {
 			if (botJDA == null) return;
 			if (msgJDA != botJDA) return;
 		}
-		this.event = event;
-		localVars = Variables.removeLocals(event);
-		System.out.println(localVars);
+		String code = Utils.generateCode(5);
+
+		VariablesMaps.map.put(code, new Pair<>(event, Variables.removeLocals(event)));
+
 		message.addReaction(react).queue();
 		final Long msgID = message.getIdLong();
 		final TextChannel channel = message.getTextChannel();
@@ -72,11 +72,12 @@ public class SectionReact extends EffectSection {
 						&& !e.getUser().isBot()
 						&& e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
 						&& e.getReaction().getReactionEmote().getAsReactionCode().equalsIgnoreCase(react),
-				e -> DiSkyErrorHandler.executeHandleCode(this.event, Event -> {
-					if (localVars != null) Variables.setLocalVariables(this.event, localVars);
+				e -> {
+					Pair<Event, Object> pair = VariablesMaps.map.get(code);
+					if (pair.getSecond() != null) Variables.setLocalVariables(pair.getFirst(), pair.getSecond());
 					runSection(event);
-					Variables.removeLocals(this.event);
-				})
+					Variables.removeLocals(event);
+				}
 		));
 	}
 

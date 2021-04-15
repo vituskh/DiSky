@@ -45,6 +45,16 @@ public class Utils extends ListenerAdapter {
         }
     }
 
+    public static String generateCode(final int size) {
+        String cars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i <= size; i++) {
+            int r = (int) (Math.random() * (-size)) + size;
+            builder.append(cars.split("")[r]);
+        }
+        return builder.toString();
+    }
+
     public static boolean containURL(String input) {
         return input.contains("http://") ||
                 input.contains("https://") ||
