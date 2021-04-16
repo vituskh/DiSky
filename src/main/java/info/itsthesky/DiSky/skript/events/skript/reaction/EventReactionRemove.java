@@ -81,7 +81,7 @@ public class EventReactionRemove extends Event {
             @Nullable
             @Override
             public info.itsthesky.DiSky.tools.object.Emote get(final @NotNull EventReactionRemove event) {
-                return new Emote(event.getEvent().getReactionEmote().getEmote());
+                return event.getEvent().getReactionEmote().isEmote() ? new Emote(event.getEvent().getReactionEmote().getEmote()) : new Emote(event.getEvent().getReactionEmote().getName());
             }
         }, 0);
 

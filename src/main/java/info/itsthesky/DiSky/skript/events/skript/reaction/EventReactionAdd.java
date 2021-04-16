@@ -81,7 +81,7 @@ public class EventReactionAdd extends Event {
             @Nullable
             @Override
             public Emote get(final @NotNull EventReactionAdd event) {
-                return new Emote(event.getEvent().getReactionEmote().getEmote());
+                return event.getEvent().getReactionEmote().isEmote() ? new Emote(event.getEvent().getReactionEmote().getEmote()) : new Emote(event.getEvent().getReactionEmote().getName());
             }
         }, 0);
 
