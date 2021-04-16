@@ -79,7 +79,9 @@ public class CommandListener extends ListenerAdapter {
 
                                 lastCommandEvent = e;
                                 Bukkit.getPluginManager().callEvent(event);
-                                if (!event.isCancelled()) command.execute(event);
+                                if (!event.isCancelled()) {
+                                    command.execute(event);
+                                }
                                 Bukkit.getPluginManager().callEvent(new EventDiSkyCommand(e, command));
 
                             });
