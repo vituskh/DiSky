@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.tools.DiSkyErrorHandler;
 import info.itsthesky.DiSky.tools.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.bukkit.event.Event;
 
@@ -25,7 +26,7 @@ public class EffEditMessage extends Effect {
 
     static {
         Skript.registerEffect(EffEditMessage.class,
-                "["+ Utils.getPrefixName() +"] edit [discord] [message] %message% (with|to show) [new (embed|string)] %embed/string%");
+                "["+ Utils.getPrefixName() +"] edit [discord] [message] %message% (with|to show) [new (embed|string)] %embed/string/messagebuilder%");
     }
 
     private Expression<Message> exprMessage;
@@ -47,6 +48,8 @@ public class EffEditMessage extends Effect {
             if (message == null || newValue == null) return;
             if (newValue instanceof EmbedBuilder) {
                 message.editMessage(((EmbedBuilder) newValue).build()).queue();
+            } else if (newValue instanceof MessageBuilder) {
+                message.editMessage(((MessageBuilder) newValue).build()).queue(null, DiSkyErrorHandler::logException);
             } else {
                 message.editMessage(newValue.toString()).queue(null, DiSkyErrorHandler::logException);
             }
