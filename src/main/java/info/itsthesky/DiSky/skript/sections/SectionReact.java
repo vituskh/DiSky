@@ -77,7 +77,7 @@ public class SectionReact extends EffectSection {
 						&& e.getChannel().equals(channel)
 						&& !e.getUser().isBot()
 						&& e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
-						&& e.getReaction().getReactionEmote().getAsReactionCode().equalsIgnoreCase(emote.getAsMention()),
+						&& e.getReaction().getReactionEmote().isEmote() ? new Emote(e.getReaction().getReactionEmote().getEmote()).equals(emote) : Utils.unicodeFrom(e.getReaction().getReactionEmote().getAsReactionCode()).equals(emote),
 				e -> {
 					Pair<Event, Object> pair = VariablesMaps.map.get(code);
 					if (pair.getSecond() != null) Variables.setLocalVariables(pair.getFirst(), pair.getSecond());

@@ -1,5 +1,7 @@
 package info.itsthesky.DiSky.skript.sections;
 
+import info.itsthesky.DiSky.tools.Utils;
+import info.itsthesky.DiSky.tools.object.Emote;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -26,7 +28,6 @@ public class ReactListener extends ListenerAdapter {
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         events.forEach((waiter) -> {
             if (waiter.getVerify().test(event)) {
-                System.out.println("YEP !!");
                 waiter.getConsumer().accept(event);
             }
         });

@@ -73,7 +73,8 @@ public class Utils extends ListenerAdapter {
     }
 
     public static boolean areJDASimilar(JDA jda, String botName) {
-        if (botName == null || jda == null) return false;
+        if (botName == null) return true;
+        if (jda == null) return false;
         JDA botJDA = BotManager.getBot(botName);
         if (botJDA == null) return false;
         return jda == botJDA;
