@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.Utils;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.User;
 import org.bukkit.event.Event;
 
@@ -23,29 +24,33 @@ public class ExprIsLoaded extends SimpleExpression<Boolean> {
 
 	static {
 		Skript.registerExpression(ExprIsLoaded.class, Boolean.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] bot [(with name|named)] %string% (is|was) (loaded|online) [on the server]",
-		"["+ Utils.getPrefixName() +"] bot [(with name|named)] %string% (isn't|is not|wasn't|was not) (loaded|online) [on the server]");
+				"["+ Utils.getPrefixName() +"] [bot] [(with name|named)] %string/bot% (is|was) (loaded|online) [on the server]",
+		"["+ Utils.getPrefixName() +"] [bot] [(with name|named)] %string/bot% (isn't|is not|wasn't|was not) (loaded|online) [on the server]");
 	}
 
-	private Expression<String> exprName;
+	private Expression<Object> exprName;
 	private int pattern;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		exprName = (Expression<String>) exprs[0];
+		exprName = (Expression<Object>) exprs[0];
 		pattern = matchedPattern;
 		return true;
 	}
 
 	@Override
 	protected Boolean[] get(Event e) {
-		String name = exprName.getSingle(e);
-		if (name == null) return new Boolean[] {false};
-		if (pattern == 0) {
-			return new Boolean[] {BotManager.getBots().containsKey(name)};
+		Object name = exprName.getSingle(e);
+		if (name == null) return new Boolean[0];
+		if (name instanceof JDA) {
+			return new Boolean[] {true};
 		} else {
-			return new Boolean[] {!BotManager.getBots().containsKey(name)};
+			if (pattern == 0) {
+				return new Boolean[] {BotManager.getBots().containsKey(name.toString())};
+			} else {
+				return new Boolean[] {!BotManager.getBots().containsKey(name.toString())};
+			}
 		}
 	}
 

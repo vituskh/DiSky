@@ -19,13 +19,13 @@ import org.bukkit.event.Event;
 
 @Name("ID of Discord entity")
 @Description("Return the discord ID of a channel, user, member, role, guild, etc...")
-@Examples("set {_id} to discord id of bot named \"test\" # To get bot's ID")
+@Examples("set {_id} to discord id of event-bot")
 @Since("1.0")
 public class ExprIdOf extends SimpleExpression<String> {
 
 	static {
 		Skript.registerExpression(ExprIdOf.class, String.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] [discord] id of [the] [discord] [entity] %string/role/user/member/emote/textchannel/voicechannel/channel/message/guild%");
+				"["+ Utils.getPrefixName() +"] [the] [discord] id of [the] [discord] [entity] %string/role/user/member/bot/emote/textchannel/voicechannel/channel/message/guild%");
 	}
 
 	private Expression<Object> exprEntity;
@@ -61,6 +61,8 @@ public class ExprIdOf extends SimpleExpression<String> {
 			return new String[] {((Role) entity).getId()};
 		} else if (entity instanceof Member) {
 			return new String[] {((Member) entity).getId()};
+		} else if (entity instanceof JDA) {
+			return new String[] {((JDA) entity).getSelfUser().getId()};
 		} else if (entity instanceof MessageReaction.ReactionEmote) {
 			return new String[] {((MessageReaction.ReactionEmote) entity).getId()};
 		} else if (entity instanceof Category) {

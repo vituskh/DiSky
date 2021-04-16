@@ -29,7 +29,7 @@ public class ExprAvatarOf extends SimplePropertyExpression<Object, String> {
     static {
         register(ExprAvatarOf.class, String.class,
                 "[discord] avatar",
-                "user/member/guild/webhookmessagebuilder/string"
+                "user/member/guild/webhookmessagebuilder/string/bot"
         );
     }
 
@@ -42,6 +42,8 @@ public class ExprAvatarOf extends SimplePropertyExpression<Object, String> {
             return ((User) entity).getAvatarUrl();
         } else if (entity instanceof Webhook) {
             return ((Webhook) entity).getDefaultUser().getAvatarUrl();
+        }  else if (entity instanceof JDA) {
+            return ((JDA) entity).getSelfUser().getAvatarUrl();
         } else if (entity instanceof Guild) {
             return ((Guild) entity).getIconUrl();
         } else if (entity instanceof String) {

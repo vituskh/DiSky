@@ -28,7 +28,7 @@ public class ExprOnlineStatus extends SimplePropertyExpression<Object, OnlineSta
     static {
         register(ExprOnlineStatus.class, OnlineStatus.class,
                 "[discord] online status",
-                "member/string"
+                "member/string/bot"
         );
     }
 
@@ -41,6 +41,8 @@ public class ExprOnlineStatus extends SimplePropertyExpression<Object, OnlineSta
             JDA bot = BotManager.getBot(entity.toString());
             if (bot == null) return null;
             return bot.getPresence().getStatus();
+        } else if (entity instanceof JDA) {
+            return ((JDA) entity).getPresence().getStatus();
         }
         return null;
     }
@@ -74,6 +76,8 @@ public class ExprOnlineStatus extends SimplePropertyExpression<Object, OnlineSta
                     JDA bot = BotManager.getBot(entity.toString());
                     if (bot == null) return;
                     bot.getPresence().setStatus(status);
+                } else if (entity instanceof JDA) {
+                    ((JDA) entity).getPresence().setStatus(status);
                 }
             }
         }

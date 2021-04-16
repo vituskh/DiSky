@@ -64,6 +64,7 @@ public class ExprNameOf extends SimplePropertyExpression<Object, String> {
             if (entity instanceof VoiceChannel) finalName = ((VoiceChannel) entity).getName();
             if (entity instanceof GuildChannel) finalName = ((GuildChannel) entity).getName();
             if (entity instanceof VoiceChannelBuilder) finalName = ((VoiceChannelBuilder) entity).getName();
+            if (entity instanceof JDA) finalName = ((JDA) entity).getSelfUser().getName();
             if (entity instanceof WebhookMessageBuilder) finalName = ((WebhookMessageBuilder) entity).build().getContent();
             if (entity instanceof Emote) finalName = ((Emote) entity).getName();
         }

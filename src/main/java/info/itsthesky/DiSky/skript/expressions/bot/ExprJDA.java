@@ -23,25 +23,29 @@ public class ExprJDA extends SimpleExpression<JDA> {
 
 	static {
 		Skript.registerExpression(ExprJDA.class, JDA.class, ExpressionType.SIMPLE,
-				"["+ Utils.getPrefixName() +"] [the] jda [instance] of [the] [bot] [(named|with name)] %string%");
+				"["+ Utils.getPrefixName() +"] [the] jda [instance] of [the] [bot] [(named|with name)] %string/bot%");
 	}
 
-	private Expression<String> exprName;
+	private Expression<Object> exprName;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		exprName = (Expression<String>) exprs[0];
+		exprName = (Expression<Object>) exprs[0];
 		return true;
 	}
 
 	@Override
 	protected JDA[] get(Event e) {
-		String name = exprName.getSingle(e);
-		if (name == null) return new JDA[0];
-		JDA bot = BotManager.getBot(name);
-		if (bot == null) return new JDA[0];
-		return new JDA[] {bot};
+		Object entity = exprName.getSingle(e);
+		if (entity == null) return new JDA[0];
+		if (entity instanceof JDA) {
+			return new JDA[] {(JDA) entity};
+		} else {
+			JDA bot = BotManager.getBot(entity.toString());
+			if (bot == null) return new JDA[0];
+			return new JDA[] {bot};
+		}
 	}
 
 	@Override
