@@ -20,6 +20,7 @@ import info.itsthesky.DiSky.tools.object.Emote;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import org.bukkit.event.Event;
 
 @Name("React to Message")
@@ -80,8 +81,7 @@ public class SectionReact extends EffectSection {
 					ev -> msgID.equals(ev.getMessageIdLong())
 							&& ev.getChannel().equals(channel)
 							&& !botJDA.getSelfUser().getId().equals(ev.getUser().getId())
-							&& ev.getChannel().retrieveMessageById(ev.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
-							&& ev.getReaction().getReactionEmote().isEmote() ? new Emote(ev.getReaction().getReactionEmote().getEmote()).equals(emote) : Utils.unicodeFrom(ev.getReaction().getReactionEmote().getAsReactionCode()).equals(emote),
+							&& Utils.areEmojiSimilar(ev.getReactionEmote(), emote),
 					ev -> {
 						if (VariablesMaps.map.get(event) != null) Variables.setLocalVariables(event, VariablesMaps.map.get(event));
 						runSection(event);

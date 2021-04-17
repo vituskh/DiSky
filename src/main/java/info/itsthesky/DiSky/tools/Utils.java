@@ -12,10 +12,7 @@ import info.itsthesky.DiSky.tools.object.Emote;
 import info.itsthesky.DiSky.tools.object.messages.Channel;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.Bukkit;
@@ -29,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Utils extends ListenerAdapter {
 
@@ -78,6 +76,22 @@ public class Utils extends ListenerAdapter {
         JDA botJDA = bot instanceof JDA ? (JDA) bot : BotManager.getBot(bot.toString());
         if (botJDA == null) return false;
         return jda == botJDA;
+    }
+
+    public static boolean areEmojiSimilar(MessageReaction.ReactionEmote first, Emote second) {
+        //ev.getReaction().getReactionEmote().isEmote() ? new Emote(ev.getReaction().getReactionEmote().getEmote()).equals(emote) : Utils.unicodeFrom(ev.getReaction().getReactionEmote().getAsReactionCode()).equals(emote)
+        if (first.isEmote()) {
+            Emote f = new Emote(first.getEmote());
+            return f.getName().equalsIgnoreCase(second.getName());
+        } else {
+            String name = first.getName();
+            return name.equalsIgnoreCase(second.getName());
+        }
+    }
+
+    @SafeVarargs
+    public static <T> Consumer<T> combine(Consumer<T>... consumers) {
+        return Arrays.stream(consumers).reduce(s -> {}, Consumer::andThen);
     }
 
     public static LinkedHashMap<String, Integer> sortHashMapByValues(

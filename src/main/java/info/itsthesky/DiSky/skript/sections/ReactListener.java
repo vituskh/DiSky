@@ -2,9 +2,10 @@ package info.itsthesky.DiSky.skript.sections;
 
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.Emote;
-import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.bukkit.event.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,7 @@ public class ReactListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
         events.forEach((waiter) -> {
-            if (waiter.getVerify().test(event)) {
-                waiter.getConsumer().accept(event);
-            }
+            if (waiter.getVerify().test(event)) waiter.getConsumer().accept(event);
         });
     }
 
@@ -38,20 +37,23 @@ public class ReactListener extends ListenerAdapter {
      */
     public static class ReactWaitingEvent {
 
-        private final Predicate<GuildMessageReactionAddEvent> verify;
-        private final Consumer<GuildMessageReactionAddEvent> consumer;
+        private Consumer<GuildMessageReactionAddEvent> consumer;
+        private Predicate<GuildMessageReactionAddEvent> verify;
 
         public ReactWaitingEvent(Predicate<GuildMessageReactionAddEvent> verify, Consumer<GuildMessageReactionAddEvent> consumer) {
             this.consumer = consumer;
             this.verify = verify;
         }
 
-        public Predicate<GuildMessageReactionAddEvent> getVerify() {
-            return verify;
-        }
 
         public Consumer<GuildMessageReactionAddEvent> getConsumer() {
             return consumer;
+        }
+        public void setConsumer(Consumer<GuildMessageReactionAddEvent> consumer) {
+            this.consumer = consumer;
+        }
+        public Predicate<GuildMessageReactionAddEvent> getVerify() {
+            return verify;
         }
     }
 
