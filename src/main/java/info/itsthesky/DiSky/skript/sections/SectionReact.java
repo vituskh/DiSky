@@ -51,40 +51,44 @@ public class SectionReact extends EffectSection {
 
 	@Override
 	public void execute(Event event) {
-		Message message = exprMessage.getSingle(event);
-		Emote emote = exprReact.getSingle(event);
-		if (message == null || emote == null) return;
-		if (exprName != null) {
-			JDA msgJDA = message.getJDA();
-			JDA botJDA = BotManager.getBot(exprName.getSingle(event));
-			if (botJDA == null) return;
-			if (msgJDA != botJDA) return;
-		}
-		String code = Utils.generateCode(5);
+		DiSkyErrorHandler.executeHandleCode(event, e -> {
+			Message message = exprMessage.getSingle(event);
+			Emote emote = exprReact.getSingle(event);
+			if (message == null || emote == null) return;
+			if (exprName != null) {
+				JDA msgJDA = message.getJDA();
+				JDA botJDA = BotManager.getBot(exprName.getSingle(event));
+				if (botJDA == null) return;
+				if (msgJDA != botJDA) return;
+			}
 
-		VariablesMaps.map.put(code, new Pair<>(event, Variables.removeLocals(event)));
+			Object map = Variables.removeLocals(event);
+			VariablesMaps.map.put(event, map);
+			Variables.setLocalVariables(event, map);
 
-		if (emote.isEmote()) {
-			message.addReaction(emote.getEmote()).queue();
-		} else {
-			message.addReaction(emote.getName()).queue();
-		}
+			if (emote.isEmote()) {
+				message.addReaction(emote.getEmote()).queue(null, DiSkyErrorHandler::logException);
+			} else {
+				message.addReaction(emote.getName()).queue(null, DiSkyErrorHandler::logException);
+			}
 
-		final Long msgID = message.getIdLong();
-		final TextChannel channel = message.getTextChannel();
-		ReactListener.events.add(new ReactListener.ReactWaitingEvent(
-				e -> msgID.equals(e.getMessageIdLong())
-						&& e.getChannel().equals(channel)
-						&& !e.getUser().isBot()
-						&& e.getChannel().retrieveMessageById(e.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
-						&& e.getReaction().getReactionEmote().isEmote() ? new Emote(e.getReaction().getReactionEmote().getEmote()).equals(emote) : Utils.unicodeFrom(e.getReaction().getReactionEmote().getAsReactionCode()).equals(emote),
-				e -> {
-					Pair<Event, Object> pair = VariablesMaps.map.get(code);
-					if (pair.getSecond() != null) Variables.setLocalVariables(pair.getFirst(), pair.getSecond());
-					runSection(event);
-					Variables.removeLocals(event);
-				}
-		));
+			JDA botJDA = message.getJDA();
+
+			final Long msgID = message.getIdLong();
+			final TextChannel channel = message.getTextChannel();
+			ReactListener.events.add(new ReactListener.ReactWaitingEvent(
+					ev -> msgID.equals(ev.getMessageIdLong())
+							&& ev.getChannel().equals(channel)
+							&& !botJDA.getSelfUser().getId().equals(ev.getUser().getId())
+							&& ev.getChannel().retrieveMessageById(ev.getMessageIdLong()).complete().getAuthor().equals(message.getAuthor())
+							&& ev.getReaction().getReactionEmote().isEmote() ? new Emote(ev.getReaction().getReactionEmote().getEmote()).equals(emote) : Utils.unicodeFrom(ev.getReaction().getReactionEmote().getAsReactionCode()).equals(emote),
+					ev -> {
+						if (VariablesMaps.map.get(event) != null) Variables.setLocalVariables(event, VariablesMaps.map.get(event));
+						runSection(event);
+						Variables.removeLocals(event);
+					}
+			));
+		});
 	}
 
 	@Override

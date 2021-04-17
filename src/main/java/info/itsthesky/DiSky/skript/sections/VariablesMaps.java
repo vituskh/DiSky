@@ -8,6 +8,6 @@ import java.util.Map;
 
 public class VariablesMaps {
 
-    public static Map<String, Pair<Event, Object>> map = new HashMap<>();
+    public static Map<Event, Object> map = new HashMap<>();
 
 }
