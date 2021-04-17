@@ -72,10 +72,10 @@ public class Utils extends ListenerAdapter {
                 input.contains(".php");
     }
 
-    public static boolean areJDASimilar(JDA jda, String botName) {
-        if (botName == null) return true;
+    public static boolean areJDASimilar(JDA jda, Object bot) {
+        if (bot == null) return true;
         if (jda == null) return false;
-        JDA botJDA = BotManager.getBot(botName);
+        JDA botJDA = bot instanceof JDA ? (JDA) bot : BotManager.getBot(bot.toString());
         if (botJDA == null) return false;
         return jda == botJDA;
     }
