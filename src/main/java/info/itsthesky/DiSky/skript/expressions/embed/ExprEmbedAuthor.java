@@ -58,11 +58,11 @@ public class ExprEmbedAuthor extends SimplePropertyExpression<EmbedBuilder, Stri
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setAuthor(
                             null,
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getIconUrl()
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getIconUrl()
                     );
                 }
                 break;
@@ -72,8 +72,8 @@ public class ExprEmbedAuthor extends SimplePropertyExpression<EmbedBuilder, Stri
                     MessageEmbed builded = embed.build();
                     embed.setAuthor(
                             value,
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getIconUrl()
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getIconUrl()
                     );
                 }
                 break;

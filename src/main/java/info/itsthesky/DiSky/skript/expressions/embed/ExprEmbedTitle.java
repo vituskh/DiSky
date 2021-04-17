@@ -69,10 +69,10 @@ public class ExprEmbedTitle extends SimplePropertyExpression<Object, String> {
                 for (Object entity : getExpr().getArray(e)) {
                     if (entity instanceof AudioTrack) return;
                     EmbedBuilder embed = (EmbedBuilder) entity;
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setTitle(
                             null,
-                            (builded.getTitle() == null) ? null : builded.getUrl()
+                            (builded == null || builded.getTitle() == null) ? null : builded.getUrl()
                     );
                 }
                 break;
@@ -86,10 +86,10 @@ public class ExprEmbedTitle extends SimplePropertyExpression<Object, String> {
                 for (Object entity : getExpr().getArray(e)) {
                     if (entity instanceof AudioTrack) return;
                     EmbedBuilder embed = (EmbedBuilder) entity;
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setTitle(
                             value,
-                            (builded.getTitle() == null) ? null : builded.getUrl()
+                            (builded == null || builded.getTitle() == null) ? null : builded.getUrl()
                     );
                 }
                 break;

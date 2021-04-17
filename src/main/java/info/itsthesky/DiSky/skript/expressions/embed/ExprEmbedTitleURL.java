@@ -59,9 +59,9 @@ public class ExprEmbedTitleURL extends SimplePropertyExpression<EmbedBuilder, St
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setTitle(
-                            (builded.getTitle() == null) ? null : builded.getTitle(),
+                           (builded == null || builded.getTitle() == null) ? null : builded.getTitle(),
                             null
                     );
                 }
@@ -69,10 +69,10 @@ public class ExprEmbedTitleURL extends SimplePropertyExpression<EmbedBuilder, St
             case SET:
                 String value = delta[0].toString();
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     try {
                         embed.setTitle(
-                                (builded.getTitle() == null) ? null : builded.getTitle(),
+                               (builded == null || builded.getTitle() == null) ? null : builded.getTitle(),
                                 value
                         );
                     } catch (IllegalArgumentException ex) {

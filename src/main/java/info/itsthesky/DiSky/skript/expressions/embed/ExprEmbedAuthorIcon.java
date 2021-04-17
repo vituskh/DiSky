@@ -58,10 +58,10 @@ public class ExprEmbedAuthorIcon extends SimplePropertyExpression<EmbedBuilder, 
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setAuthor(
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getName(),
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getName(),
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
                             null
                     );
                 }
@@ -69,10 +69,10 @@ public class ExprEmbedAuthorIcon extends SimplePropertyExpression<EmbedBuilder, 
             case SET:
                 String value = delta[0].toString();
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setAuthor(
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getName(),
-                            (builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getName(),
+                            (builded == null || builded.getAuthor() == null) ? null : builded.getAuthor().getUrl(),
                             value
                     );
                 }
