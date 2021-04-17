@@ -29,7 +29,7 @@ public class ExprEmbedImage extends SimplePropertyExpression<EmbedBuilder, Strin
     @Nullable
     @Override
     public String convert(EmbedBuilder embed) {
-        return embed.build().getImage().getUrl();
+        return embed.isEmpty() ? null : embed.build().getImage().getUrl();
     }
 
     @Override

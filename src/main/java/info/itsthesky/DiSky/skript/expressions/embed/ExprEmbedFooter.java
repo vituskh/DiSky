@@ -31,7 +31,7 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
     @Nullable
     @Override
     public String convert(EmbedBuilder embed) {
-        return embed.build().getDescription();
+        return embed.isEmpty() ? null : embed.build().getFooter().getText();
     }
 
     @Override

@@ -33,7 +33,8 @@ public class ExprEmbedDescription extends SimplePropertyExpression<Object, Strin
     @Override
     public String convert(Object entity) {
         if (entity instanceof EmbedBuilder) {
-            return ((EmbedBuilder) entity).build().getDescription();
+            EmbedBuilder embed = (EmbedBuilder) entity;
+            return embed.isEmpty() ? null : embed.build().getDescription();
         } else if (entity instanceof SlashCommand) {
             return ((SlashCommand) entity).getName();
         }

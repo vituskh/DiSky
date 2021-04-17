@@ -31,7 +31,7 @@ public class ExprEmbedTimeStamp extends SimplePropertyExpression<EmbedBuilder, D
     @Nullable
     @Override
     public Date convert(EmbedBuilder embed) {
-        return new Date(embed.build().getTimestamp().getNano());
+        return embed.isEmpty() ? null : new Date(embed.build().getTimestamp().getNano());
     }
 
     @Override

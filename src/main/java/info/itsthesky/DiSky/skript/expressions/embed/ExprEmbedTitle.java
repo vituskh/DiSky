@@ -35,7 +35,7 @@ public class ExprEmbedTitle extends SimplePropertyExpression<Object, String> {
     @Override
     public String convert(Object entity) {
         if (entity instanceof EmbedBuilder) {
-            return ((EmbedBuilder) entity).build().getTitle();
+            return ((EmbedBuilder) entity).isEmpty() ? null : ((EmbedBuilder) entity).build().getTitle();
         } else if (entity instanceof AudioTrack) {
             return ((AudioTrack) entity).getInfo().title;
         }

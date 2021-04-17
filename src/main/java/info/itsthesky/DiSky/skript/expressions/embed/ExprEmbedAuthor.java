@@ -30,7 +30,7 @@ public class ExprEmbedAuthor extends SimplePropertyExpression<EmbedBuilder, Stri
     @Nullable
     @Override
     public String convert(EmbedBuilder embed) {
-        return embed.build().getFooter().getIconUrl();
+        return embed.isEmpty() ? null : embed.build().getAuthor().getName();
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ExprEmbedTitleURL extends SimplePropertyExpression<EmbedBuilder, St
     @Nullable
     @Override
     public String convert(EmbedBuilder embed) {
-        return embed.build().getUrl();
+        return embed.isEmpty() ? null : embed.build().getUrl();
     }
 
     @Override

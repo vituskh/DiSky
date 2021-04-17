@@ -29,7 +29,7 @@ public class ExprEmbedThumbnail extends SimplePropertyExpression<EmbedBuilder, S
     @Nullable
     @Override
     public String convert(EmbedBuilder embed) {
-        return embed.build().getThumbnail().getUrl();
+        return embed.isEmpty() ? null : embed.build().getThumbnail().getUrl();
     }
 
     @Override
