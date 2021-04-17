@@ -3,6 +3,9 @@ package info.itsthesky.DiSky.skript.events;
 import info.itsthesky.DiSky.DiSky;
 import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.skript.events.skript.*;
+import info.itsthesky.DiSky.skript.events.skript.audio.EventVoiceJoin;
+import info.itsthesky.DiSky.skript.events.skript.audio.EventVoiceLeave;
+import info.itsthesky.DiSky.skript.events.skript.audio.EventVoiceMove;
 import info.itsthesky.DiSky.skript.events.skript.command.EventCommand;
 import info.itsthesky.DiSky.skript.events.skript.guild.EventGuildBan;
 import info.itsthesky.DiSky.skript.events.skript.guild.EventGuildUnban;
@@ -32,6 +35,9 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -88,6 +94,22 @@ public class JDAListener extends ListenerAdapter {
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent e) {
         Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionAdd(e)));
     }
+
+    @Override
+    public void onGuildVoiceMove(GuildVoiceMoveEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventVoiceMove(e)));
+    }
+
+    @Override
+    public void onGuildVoiceLeave(GuildVoiceLeaveEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventVoiceLeave(e)));
+    }
+
+    @Override
+    public void onGuildVoiceJoin(GuildVoiceJoinEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventVoiceJoin(e)));
+    }
+
     @Override
     public void onGuildMessageReactionRemove(GuildMessageReactionRemoveEvent e) {
         Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventReactionRemove(e)));
