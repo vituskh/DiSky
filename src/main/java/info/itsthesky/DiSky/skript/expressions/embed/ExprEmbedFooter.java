@@ -59,10 +59,10 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setFooter(
                             null,
-                            (builded.getFooter() == null) ? null : builded.getFooter().getIconUrl()
+                            (builded == null || builded.getFooter() == null) ? null : builded.getFooter().getIconUrl()
                     );
                 }
                 break;
@@ -74,10 +74,10 @@ public class ExprEmbedFooter extends SimplePropertyExpression<EmbedBuilder, Stri
                     return;
                 }
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setFooter(
                             value,
-                            (builded.getFooter() == null) ? null : builded.getFooter().getIconUrl()
+                            (builded == null || builded.getFooter() == null) ? null : builded.getFooter().getIconUrl()
                     );
                 }
                 break;

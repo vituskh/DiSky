@@ -58,9 +58,9 @@ public class ExprEmbedFooterIcon extends SimplePropertyExpression<EmbedBuilder, 
         switch (mode) {
             case RESET:
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setFooter(
-                            (builded.getFooter() == null) ? null : builded.getFooter().getText(),
+                            (builded == null || builded.getFooter() == null) ? null : builded.getFooter().getText(),
                             null
                     );
                 }
@@ -68,9 +68,9 @@ public class ExprEmbedFooterIcon extends SimplePropertyExpression<EmbedBuilder, 
             case SET:
                 String value = delta[0].toString();
                 for (EmbedBuilder embed : getExpr().getArray(e)) {
-                    MessageEmbed builded = embed.build();
+                    MessageEmbed builded = embed.isEmpty() ? null : embed.build();
                     embed.setFooter(
-                            (builded.getFooter() == null) ? null : builded.getFooter().getText(),
+                            (builded == null || builded.getFooter() == null) ? null : builded.getFooter().getText(),
                             value
                     );
                 }
