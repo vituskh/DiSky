@@ -15,6 +15,7 @@ import ch.njol.skript.util.StringMode;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
+import info.itsthesky.DiSky.managers.BotManager;
 import info.itsthesky.DiSky.tools.EffectSection;
 import net.dv8tion.jda.api.entities.ChannelType;
 import org.bukkit.event.Event;
@@ -240,6 +241,16 @@ public class CommandFactory {
             }
         } else {
             for (String prefix : rawPrefixes.split(listPattern)) {
+                if (prefix.startsWith("\"") && prefix.endsWith("\"")) {
+                    prefix = prefix.substring(1, prefix.length() - 1);
+                }
+                Expression<String> prefixExpr = VariableString.newInstance(prefix, StringMode.MESSAGE);
+                if (((VariableString) prefixExpr).isSimple()) {
+                    prefixExpr = new SimpleLiteral<>(prefix, false);
+                }
+                prefixes.add(prefixExpr);
+            }
+            for (String prefix : BotManager.prefixes.values()) {
                 if (prefix.startsWith("\"") && prefix.endsWith("\"")) {
                     prefix = prefix.substring(1, prefix.length() - 1);
                 }

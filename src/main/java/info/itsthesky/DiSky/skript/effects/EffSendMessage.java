@@ -102,7 +102,6 @@ public class EffSendMessage extends Effect {
                 if (channel1 == null) return;
                 if (!Utils.areJDASimilar(channel1.getJDA(), exprName == null ? null : exprName.getSingle(e))) return;
 
-                System.out.println("debug 6");
                 if (content instanceof EmbedBuilder) {
                     storedMessage = channel1.sendMessage(((EmbedBuilder) content).build()).complete();
                 } else if (content instanceof MessageBuilder) {

@@ -15,7 +15,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,12 +26,30 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
 
+/**
+ * Main bot manager of DiSky
+ * @author ItsTheSky
+ */
 public class BotManager {
 
     private static final Logger logger = DiSky.getInstance().getLogger();
     private static final HashMap<String, JDA> bots = new HashMap<>();
+    public static final HashMap<JDA, String> prefixes = new HashMap<>();
 
     public static HashMap<String, JDA> getBots() { return bots; }
+
+    /**
+     * Change the default prefixes of a bot. Use null to clear it.
+     * @param prefix The prefix, or null to clear it.
+     * @param bot The JDA instance of the target bot
+     */
+    public static void setDefaultPrefixes(@NotNull final JDA bot, @Nullable final String prefix) {
+        if (!bots.containsValue(bot)) return;
+        if (prefix == null) {
+            if (!prefixes.containsKey(bot)) return;
+            prefixes.remove(bot);
+        } else prefixes.put(bot, prefix);
+    }
 
     /**
      * Register a new bot with specific name in the bots list.
