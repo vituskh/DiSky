@@ -59,10 +59,10 @@ public class ScopeEmbed extends EffectSection {
     protected void execute(Event e) {
         if (exprID != null) {
             String id = exprID.getSingle(e);
-            if (id == null) lastEmbed = new EmbedBuilder().setTitle(EmbedBuilder.ZERO_WIDTH_SPACE);
+            if (id == null) lastEmbed = new EmbedBuilder();
             lastEmbed = EmbedManager.getTemplate(id);
         } else {
-            lastEmbed = new EmbedBuilder().setTitle(EmbedBuilder.ZERO_WIDTH_SPACE);
+            lastEmbed = new EmbedBuilder();
         }
         runSection(e);
     }

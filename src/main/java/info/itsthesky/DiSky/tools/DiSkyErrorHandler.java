@@ -36,8 +36,15 @@ public class DiSkyErrorHandler {
         } else if (ex instanceof NullPointerException) {
 
             NullPointerException exception = (NullPointerException) ex;
-            if (Utils.getOrSetDefault("config.yml", "HandleErrors.NullPointerException", false)) exception.printStackTrace();
+            if (Utils.getOrSetDefault("config.yml", "HandleErrors.NullPointerException", false))
+                exception.printStackTrace();
             logger.warning("DiSky tried to do an action on Discord, but got a NullPointerException! Check if all your value are set!");
+
+        } else if (ex instanceof IllegalStateException) {
+
+            if (ex.getMessage().equalsIgnoreCase("Cannot build an empty embed!")) {
+                logger.warning("You're trying to build an embed, however, you don't set any title, author of description! (The embed is empty)");
+            }
 
         } else if (ex instanceof ErrorResponseException) {
 
