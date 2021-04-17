@@ -16,6 +16,10 @@ import info.itsthesky.DiSky.skript.events.skript.messages.EventPrivateMessage;
 import info.itsthesky.DiSky.skript.events.skript.nickname.EventNickChange;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionAdd;
 import info.itsthesky.DiSky.skript.events.skript.reaction.EventReactionRemove;
+import info.itsthesky.DiSky.skript.events.skript.role.EventRoleAdd;
+import info.itsthesky.DiSky.skript.events.skript.role.EventRoleCreate;
+import info.itsthesky.DiSky.skript.events.skript.role.EventRoleDelete;
+import info.itsthesky.DiSky.skript.events.skript.role.EventRoleRemove;
 import info.itsthesky.DiSky.skript.events.skript.slashcommand.EventSlashCommand;
 import info.itsthesky.DiSky.tools.Utils;
 import info.itsthesky.DiSky.tools.object.SlashCommand;
@@ -24,6 +28,8 @@ import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -32,6 +38,8 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.events.role.RoleCreateEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +100,27 @@ public class JDAListener extends ListenerAdapter {
     public void onGuildMessageDelete(GuildMessageDeleteEvent e) {
         Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventMessageDelete(e)));
     }
+
+    @Override
+    public void onRoleCreate(RoleCreateEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventRoleCreate(e)));
+    }
+
+    @Override
+    public void onRoleDelete(RoleDeleteEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventRoleDelete(e)));
+    }
+
+    @Override
+    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventRoleAdd(e)));
+    }
+
+    @Override
+    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
+        Utils.sync(() -> DiSky.getInstance().getServer().getPluginManager().callEvent(new EventRoleRemove(e)));
+    }
+
 
     @Override
     public void onGuildMemberUpdateBoostTime(GuildMemberUpdateBoostTimeEvent e) {
